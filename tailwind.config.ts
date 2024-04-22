@@ -16,6 +16,25 @@ const config: Config = {
       fontSize: {
         "2xs": ".625rem",
       },
+      animation: {
+        "overlay-show": 'overlay-show 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+        "content-show": 'content-show 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+        "habit-card-show": 'habit-card-show 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+      },
+      keyframes: {
+        "overlay-show": {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
+        "content-show": {
+          from: { opacity: '0', transform: 'translate(-50%, -48%) scale(0.96)' },
+          to: { opacity: '1', transform: 'translate(-50%, -50%) scale(1)' },
+        },
+        "habit-card-show": {
+          from: { opacity: '0', transform: 'translateY(1rem) scale(0.90)' },
+          to: { opacity: '1', transform: 'translateY(0) scale(1)' },
+        },
+      }
     },
   },
   plugins: [],

@@ -7,6 +7,7 @@ import useEmblaCarousel, {
 type CarouselApi = UseEmblaCarouselType[1];
 import { useCallback, useEffect, useState } from "react";
 import { ChevronRightIcon, ChevronLeftIcon } from "@radix-ui/react-icons";
+import { cn } from "@/lib/utils";
 
 const friends = [
   {
@@ -18,6 +19,41 @@ const friends = [
     name: "Betul",
     streak: 30,
     progress: 0.6,
+  },
+  {
+    name: "Ghoul",
+    streak: 60,
+    progress: 0.8,
+  },
+  {
+    name: "Ghoul",
+    streak: 60,
+    progress: 0.8,
+  },
+  {
+    name: "Ghoul",
+    streak: 60,
+    progress: 0.8,
+  },
+  {
+    name: "Ghoul",
+    streak: 60,
+    progress: 0.8,
+  },
+  {
+    name: "Ghoul",
+    streak: 60,
+    progress: 0.8,
+  },
+  {
+    name: "Ghoul",
+    streak: 60,
+    progress: 0.8,
+  },
+  {
+    name: "Ghoul",
+    streak: 60,
+    progress: 0.8,
   },
   {
     name: "Ghoul",
@@ -90,14 +126,17 @@ export default function FriendsCard() {
       </button>
 
       <div
-        className="overflow-hidden w-full relative after:absolute after:h-full after:w-20 after:bg-gradient-to-l after:from-white after:hidden after:top-0 after:right-0"
+        className={cn(
+          "overflow-hidden w-full relative",
+          "after:absolute after:h-full after:w-10 after:bg-gradient-to-l after:from-neutral-50 after:top-0 after:right-0",
+        )}
         ref={emblaRef}
       >
         <div className="flex">
           {friends.map((friend, idx) => (
             <div
               key={idx}
-              className="flex gap-2 items-center [flex:0_0_25%] select-none group"
+              className="flex gap-2 items-center min-w-36 select-none group"
             >
               <div className="rounded-full p-0.5 bg-neutral-100 shadow relative isolate">
                 <div
@@ -128,7 +167,7 @@ export default function FriendsCard() {
               </div>
 
               <div>
-                <div className="font-medium">{friend.name}</div>
+                <div className="font-medium text-xs">{friend.name}</div>
                 <div className="text-neutral-500 text-xs mt-1">
                   <span
                     className="font-bold text-neutral-800 px-1 py-px rounded-md"
