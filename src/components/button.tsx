@@ -12,7 +12,7 @@ export default function Button({
   return (
     <button
       className={cn(
-        "inline-flex relative isolate items-center justify-center whitespace-nowrap rounded-md text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400 disabled:pointer-events-none disabled:opacity-50 bg-neutral-800 text-neutral-200 shadow hover:bg-neutral-800/90 px-4 py-2",
+        "inline-flex relative isolate overflow-hidden items-center justify-center whitespace-nowrap rounded-md text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400 disabled:pointer-events-none disabled:opacity-50 bg-neutral-800 text-neutral-200 shadow hover:bg-neutral-800/90 px-4 py-2",
         className,
       )}
       {...props}
@@ -20,7 +20,7 @@ export default function Button({
       {children}
 
       {loading && (
-        <div className="absolute inset-0 bg-neutral-800/50 rounded-md grid place-items-center">
+        <div className="absolute inset-0 bg-neutral-800/50 grid place-items-center">
           <LuLoader className="w-5 h-5 animate-spin text-neutral-200" />
         </div>
       )}

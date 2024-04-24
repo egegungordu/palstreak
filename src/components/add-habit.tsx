@@ -25,12 +25,14 @@ export default function AddHabit() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<AddHabitInputs>();
 
   const onSubmit: SubmitHandler<{ name: string }> = async (data) => {
     startTransition(async () => {
       await addHabit({
         name: data.name,
+        timezoneOffset: new Date().getTimezoneOffset(),
       });
 
       toast("Habit added successfully", {
@@ -42,6 +44,7 @@ export default function AddHabit() {
       });
 
       setIsDialogOpen(false);
+      reset();
     });
   };
 

@@ -12,6 +12,8 @@ export default async function Home() {
       <div className="mt-2" />
 
       <HabitsList />
+
+      <div className="mt-2" />
     </main>
   );
 }

@@ -14,12 +14,17 @@ export const habit = pgTable("habit", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => randomUUID()),
-  userId: text("userId").notNull().references(() => users.id, {
-    onDelete: "cascade",
-  }),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, {
+      onDelete: "cascade",
+    }),
   name: text("name").notNull(),
-  startDate: timestamp("startDate", { mode: "date" }).notNull().defaultNow(),
-  streaks: jsonb("streaks").$type<number[]>().notNull().default([]),
+  createdAt: timestamp("createdAt", { mode: "date", withTimezone: true }).notNull().defaultNow(),
+  streaks: jsonb("streaks")
+    .$type<Record<number, { date: Date; value: number }>>()
+    .notNull()
+    .default({}),
   streak: integer("streak").notNull().default(0),
   timezoneOffset: integer("timezoneOffset").notNull().default(0),
 });
