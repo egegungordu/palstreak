@@ -14,9 +14,8 @@ export default function AccountDropdown({session}: {session: Session}) {
           <Avatar
             size={28}
             name={session.user?.name || ""}
-            variant="marble"
-            // colors={["#2c2b4b", "#a75293", "#9c7a9d", "#9ddacb", "#f8dcb4"]}
-            colors={["#e25858", "#e9d6af", "#ffffdd", "#c0efd2", "#384252"]}
+            variant="beam"
+            colors={["#fee9a6", "#fec0ab", "#fa5894", "#660860", "#9380b7"]}
           />
           {session.user?.name}
         </button>

@@ -26,37 +26,12 @@ const friends = [
     progress: 0.8,
   },
   {
-    name: "Ghoul",
+    name: "Atabey",
     streak: 60,
     progress: 0.8,
   },
   {
-    name: "Ghoul",
-    streak: 60,
-    progress: 0.8,
-  },
-  {
-    name: "Ghoul",
-    streak: 60,
-    progress: 0.8,
-  },
-  {
-    name: "Ghoul",
-    streak: 60,
-    progress: 0.8,
-  },
-  {
-    name: "Ghoul",
-    streak: 60,
-    progress: 0.8,
-  },
-  {
-    name: "Ghoul",
-    streak: 60,
-    progress: 0.8,
-  },
-  {
-    name: "Ghoul",
+    name: "Petneplp",
     streak: 60,
     progress: 0.8,
   },
@@ -154,14 +129,8 @@ export default function FriendsCard() {
                   <Avatar
                     size={42}
                     name={friend.name}
-                    variant="marble"
-                    colors={[
-                      "#e25858",
-                      "#e9d6af",
-                      "#ffffdd",
-                      "#c0efd2",
-                      "#384252",
-                    ]}
+                    variant="beam"
+                    colors={["#fee9a6", "#fec0ab", "#fa5894", "#660860", "#9380b7"]}
                   />
                 </div>
               </div>

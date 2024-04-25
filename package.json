@@ -31,7 +31,10 @@
     "react-icons": "^5.1.0",
     "sonner": "^1.4.41",
     "tailwind-merge": "^2.3.0",
-    "zustand": "^4.5.2"
+    "zustand": "^4.5.2",
+    "@trigger.dev/sdk": "^2.3.18",
+    "@trigger.dev/nextjs": "^2.3.18",
+    "@trigger.dev/react": "^2.3.18"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -43,5 +46,8 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
+  },
+  "trigger.dev": {
+    "endpointId": "sideprojects-mA5z"
   }
 }
