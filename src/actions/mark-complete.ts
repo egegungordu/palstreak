@@ -18,20 +18,49 @@ export default async function markComplete({ habitId }: { habitId: string }) {
   // check if already completed today
   // calculate the nth day of the habit
   // adjust everything with habit.timezoneOffset
-  const firstDay = new Date(targetHabit.createdAt.getTime() - targetHabit.timezoneOffset * 60 * 1000);
-  const firstDayStart = new Date(firstDay.getFullYear(), firstDay.getMonth(), firstDay.getDate());
-  const today = new Date((new Date()).getTime() - targetHabit.timezoneOffset * 60 * 1000);
-  const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  const nthDay = Math.floor((todayStart.getTime() - firstDayStart.getTime()) / (24 * 60 * 60 * 1000));
+  const firstDay = new Date(
+    targetHabit.createdAt.getTime() - targetHabit.timezoneOffset * 60 * 1000,
+  );
+  const firstDayStart = new Date(
+    firstDay.getFullYear(),
+    firstDay.getMonth(),
+    firstDay.getDate(),
+  );
+  const today = new Date(
+    new Date().getTime() - targetHabit.timezoneOffset * 60 * 1000,
+  );
+  const todayStart = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+  );
+  const nthDay = Math.floor(
+    (todayStart.getTime() - firstDayStart.getTime()) / (24 * 60 * 60 * 1000),
+  );
 
   // check if already completed today
   if (targetHabit.streaks[nthDay]) {
     throw new Error("Already completed today");
   }
 
+  const streak = targetHabit.streak + 1;
+  // tomorrow 12:00am
+  const streakEndsAt = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate() + 2,
+  );
+  const longestStreak = Math.max(targetHabit.longestStreak, targetHabit.streak + 1);
+  const lastCompletedAt = new Date();
+
   // update the habit
-  await db.update(habit)
+  await db
+    .update(habit)
     .set({
+      streak,
+      streakEndsAt,
+      longestStreak,
+      lastCompletedAt,
       streaks: {
         ...targetHabit.streaks,
         [nthDay]: {
@@ -39,8 +68,8 @@ export default async function markComplete({ habitId }: { habitId: string }) {
           value: 1,
         },
       },
-    });
+    })
+    .where(eq(habit.id, habitId));
 
   revalidatePath("/");
-    
 }

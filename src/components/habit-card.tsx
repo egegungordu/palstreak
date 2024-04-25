@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn, relativeTime } from "@/lib/utils";
 import Button from "./button";
 import { useMemo, useState, useTransition } from "react";
 import { type Habit } from "./habits-list";
@@ -197,20 +197,30 @@ const EditHabitButton = ({ habit }: { habit: Habit }) => {
 
 const Stats = ({ habit }: { habit: Habit }) => {
   return (
-    <div className="flex justify-center gap-4">
+    <div className="flex justify-center gap-4 items-center">
       <StatSection
         title="Current Streak"
         stat={`${habit.streak} days`}
-        extra=""
       />
 
       <Seperator orientation="vertical" />
 
       <StatSection
         title="Longest Streak"
-        stat={`${habit.streak} days`}
-        extra=""
+        stat={`${habit.longestStreak} days`}
       />
+
+      <Seperator orientation="vertical" />
+
+      {habit.streakEndsAt && <StatSection
+        title="Streak ends"
+        stat={relativeTime({date:habit.streakEndsAt})}
+      />}
+
+      {!habit.streakEndsAt && <StatSection
+        title="Last completed"
+        stat="Never"
+      />}
     </div>
   );
 };
@@ -229,7 +239,7 @@ const StatSection = ({
     <div className="text-base font-bold tracking-tight leading-none text-neutral-800">
       {stat}
     </div>
-    {extra && <div className="text-2xs text-neutral-500">{extra}</div>}
+    {extra && <div className="text-2xs leading-none text-neutral-500">{extra}</div>}
   </div>
 );
 

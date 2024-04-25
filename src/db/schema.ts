@@ -6,6 +6,7 @@ import {
   integer,
   index,
   jsonb,
+  date
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "next-auth/adapters";
 import { randomUUID } from "crypto";
@@ -26,6 +27,9 @@ export const habit = pgTable("habit", {
     .notNull()
     .default({}),
   streak: integer("streak").notNull().default(0),
+  longestStreak: integer("longestStreak").notNull().default(0),
+  streakEndsAt: timestamp("streakEndAt", { mode: "date", withTimezone: true }),
+  lastCompletedAt: timestamp("lastCompletedAt", { mode: "date", withTimezone: true }),
   timezoneOffset: integer("timezoneOffset").notNull().default(0),
 });
 
