@@ -2,13 +2,21 @@
 
 import { cn, relativeTime } from "@/lib/utils";
 import Button from "./button";
-import { useEffect, useMemo, useState, useTransition } from "react";
+import {
+  HTMLAttributes,
+  HTMLProps,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 import { type Habit } from "@/app/page";
 import markComplete from "@/actions/mark-complete";
 import Seperator from "./seperator";
 import {
   LuCheckSquare,
   LuChevronDown,
+  LuGrip,
   LuGripVertical,
   LuLoader,
   LuPencil,
@@ -134,6 +142,7 @@ export default function HabitCard({ habit }: { habit: Habit }) {
             <div className="hidden group-hover:flex gap-1 p-1 bg-white rounded-lg border shadow">
               <EditHabitButton habit={habit} />
               <DeleteHabitButton habit={habit} />
+              <DragHabitButton {...listeners} />
             </div>
 
             <button
@@ -188,6 +197,20 @@ export default function HabitCard({ habit }: { habit: Habit }) {
   );
 }
 
+const DragHabitButton = (props: HTMLAttributes<HTMLButtonElement>) => {
+  return (
+    <Tooltip content="Drag to reorder" side="top">
+      <button
+        {...props}
+        aria-label="Reorder"
+        className="flex rounded-md text-neutral-600 text-xs p-1.5 hover:bg-neutral-100 cursor-grab"
+      >
+        <LuGrip className="w-3.5 h-3.5" />
+      </button>
+    </Tooltip>
+  );
+};
+
 const DeleteHabitButton = ({ habit }: { habit: Habit }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pending, startTransition] = useTransition();
@@ -208,7 +231,10 @@ const DeleteHabitButton = ({ habit }: { habit: Habit }) => {
     <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <Tooltip content="Delete habit" side="top">
         <Dialog.Trigger asChild>
-          <button className="flex rounded-md text-red-600 text-xs p-1.5 hover:bg-neutral-100">
+          <button
+            aria-label="Delete habit"
+            className="flex rounded-md text-red-600 text-xs p-1.5 hover:bg-neutral-100"
+          >
             <LuTrash className="w-3.5 h-3.5" />
           </button>
         </Dialog.Trigger>
@@ -306,7 +332,10 @@ const EditHabitButton = ({ habit }: { habit: Habit }) => {
     <Dialog.Root open={isDialogOpen} onOpenChange={onOpenChange}>
       <Tooltip content="Edit habit" side="top">
         <Dialog.Trigger asChild>
-          <button className="flex rounded-lg text-neutral-600 text-xs p-1.5 hover:bg-neutral-100">
+          <button
+            aria-label="Edit habit"
+            className="flex rounded-lg text-neutral-600 text-xs p-1.5 hover:bg-neutral-100"
+          >
             <LuPencil className="w-3.5 h-3.5" />
           </button>
         </Dialog.Trigger>
