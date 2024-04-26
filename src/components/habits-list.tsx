@@ -27,15 +27,19 @@ import {
   useState,
   useTransition,
 } from "react";
-import { restrictToFirstScrollableAncestor } from "@dnd-kit/modifiers";
 import reorderHabits from "@/actions/reorder-habits";
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
+import { createRestrictToParentElementSmooth } from "@/lib/dnd-modifiers";
+
+const restrictToParentElementSmooth = createRestrictToParentElementSmooth({
+  padding: 32,
+  damping: 32,
+});
 
 export default function HabitsList({ habits }: { habits: Habit[] }) {
   const [pending, startTransition] = useTransition();
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
-  const [shouldDragOverlayPop, setShouldDragOverlayPop] = useState(false);
   const [optimisticState, moveOptimistic] = useOptimistic(
     habits,
     (_, optimisticHabits: Habit[]) => {
@@ -54,8 +58,6 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
-    setShouldDragOverlayPop(false);
-
     const { active, over } = event;
 
     if (over === null || active.id === over.id) {
@@ -78,12 +80,10 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id);
-    setShouldDragOverlayPop(true);
   };
 
   const handleDragCancel = () => {
     setActiveId(null);
-    setShouldDragOverlayPop(false);
   };
 
   useEffect(() => {
@@ -101,7 +101,7 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
   return (
     <DndContext
       measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
-      modifiers={[restrictToFirstScrollableAncestor]}
+      modifiers={[restrictToParentElementSmooth]}
       onDragEnd={handleDragEnd}
       onDragStart={handleDragStart}
       onDragCancel={handleDragCancel}
@@ -130,7 +130,6 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
               key="no-animate-habit"
               habits={habits}
               activeId={activeId}
-              shouldPop={shouldDragOverlayPop}
             />
           ) : null}
         </AnimatePresence>
@@ -142,22 +141,19 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
 interface OverlayHabitProps extends HTMLProps<HTMLDivElement> {
   activeId: UniqueIdentifier;
   habits: Habit[];
-  shouldPop: boolean;
 }
 
 const OverlayHabit = forwardRef<HTMLDivElement, OverlayHabitProps>(
-  function OverlayHabit({ activeId, habits, shouldPop }, ref) {
+  function OverlayHabit({ activeId, habits }, ref) {
     const activeHabit = habits.find((habit) => habit.id === activeId)!;
-    console.log(shouldPop);
 
     return (
-      <motion.div
-        key="some-key"
+      <div
         className="pointer-events-none rounded-2xl origin-center animate-habit-pop"
         ref={ref}
       >
         <HabitCard habit={activeHabit} />
-      </motion.div>
+      </div>
     );
   },
 );

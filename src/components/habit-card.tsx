@@ -4,7 +4,6 @@ import { cn, relativeTime } from "@/lib/utils";
 import Button from "./button";
 import {
   HTMLAttributes,
-  HTMLProps,
   useEffect,
   useMemo,
   useState,
@@ -106,10 +105,10 @@ export default function HabitCard({ habit }: { habit: Habit }) {
         opacity: 0,
       }}
       className="list-none"
+      ref={setNodeRef}
+      {...attributes}
     >
       <div
-        ref={setNodeRef}
-        {...attributes}
         className={cn(
           "bg-white group rounded-2xl shadow-md max-w-min border relative cursor-default overflow-hidden",
           {
