@@ -6,7 +6,7 @@ import {
   integer,
   index,
   jsonb,
-  date
+  serial
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "next-auth/adapters";
 import { randomUUID } from "crypto";
@@ -20,7 +20,7 @@ export const habit = pgTable("habit", {
     .references(() => users.id, {
       onDelete: "cascade",
     }),
-  order: integer("order").notNull(),
+  order: serial("order"),
   name: text("name").notNull(),
   color: text("color").notNull().default("#000000"),
   createdAt: timestamp("createdAt", { mode: "date", withTimezone: true }).notNull().defaultNow(),
