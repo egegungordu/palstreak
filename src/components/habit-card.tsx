@@ -111,7 +111,7 @@ export default function HabitCard({ habit }: { habit: Habit }) {
         ref={setNodeRef}
         {...attributes}
         className={cn(
-          "bg-white group rounded-2xl shadow max-w-min border relative cursor-default overflow-hidden",
+          "bg-white group rounded-2xl shadow-md max-w-min border relative cursor-default overflow-hidden",
           {
             "opacity-40": isDragging,
           },

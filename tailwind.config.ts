@@ -40,8 +40,8 @@ const config: Config = {
           to: { opacity: "1", transform: "translateY(0) scale(1)" },
         },
         "habit-pop": {
-          from: { scale: "1" },
-          to: { scale: "1.02" },
+          from: { scale: "1", boxShadow: "0 0 #0000"},
+          to: { scale: "1.02", boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" },
         },
       },
     },

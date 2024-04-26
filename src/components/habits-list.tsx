@@ -27,9 +27,7 @@ import {
   useState,
   useTransition,
 } from "react";
-import {
-  restrictToFirstScrollableAncestor,
-} from "@dnd-kit/modifiers";
+import { restrictToFirstScrollableAncestor } from "@dnd-kit/modifiers";
 import reorderHabits from "@/actions/reorder-habits";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
@@ -37,6 +35,7 @@ import { AnimatePresence, motion } from "framer-motion";
 export default function HabitsList({ habits }: { habits: Habit[] }) {
   const [pending, startTransition] = useTransition();
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
+  const [shouldDragOverlayPop, setShouldDragOverlayPop] = useState(false);
   const [optimisticState, moveOptimistic] = useOptimistic(
     habits,
     (_, optimisticHabits: Habit[]) => {
@@ -46,7 +45,7 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
 
   const dropAnimationConfig: DropAnimation = {
     easing: "cubic-bezier(0.18, 0.67, 0.6, 1.22)",
-    duration: 400,
+    duration: 290,
     sideEffects: defaultDropAnimationSideEffects({
       className: {
         active: "opacity-40",
@@ -55,6 +54,8 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
+    setShouldDragOverlayPop(false);
+
     const { active, over } = event;
 
     if (over === null || active.id === over.id) {
@@ -77,10 +78,12 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id);
+    setShouldDragOverlayPop(true);
   };
 
   const handleDragCancel = () => {
     setActiveId(null);
+    setShouldDragOverlayPop(false);
   };
 
   useEffect(() => {
@@ -110,11 +113,11 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
       >
         <ol className={cn("flex flex-col items-center")}>
           <AnimatePresence initial={false}>
-          {/*<HabitsHeader habits={habits} />*/}
+            {/*<HabitsHeader habits={habits} />*/}
 
-          {optimisticState.map((habit) => (
-            <HabitCard key={habit.id} habit={habit} />
-          ))}
+            {optimisticState.map((habit) => (
+              <HabitCard key={habit.id} habit={habit} />
+            ))}
           </AnimatePresence>
         </ol>
 
@@ -122,7 +125,14 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
       </SortableContext>
       <DragOverlay dropAnimation={dropAnimationConfig}>
         <AnimatePresence initial={false}>
-        {activeId ? <OverlayHabit key="no-animate-habit" habits={habits} activeId={activeId} /> : null}
+          {activeId ? (
+            <OverlayHabit
+              key="no-animate-habit"
+              habits={habits}
+              activeId={activeId}
+              shouldPop={shouldDragOverlayPop}
+            />
+          ) : null}
         </AnimatePresence>
       </DragOverlay>
     </DndContext>
@@ -132,21 +142,22 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
 interface OverlayHabitProps extends HTMLProps<HTMLDivElement> {
   activeId: UniqueIdentifier;
   habits: Habit[];
+  shouldPop: boolean;
 }
 
 const OverlayHabit = forwardRef<HTMLDivElement, OverlayHabitProps>(
-  function OverlayHabit({ activeId, habits }, ref) {
+  function OverlayHabit({ activeId, habits, shouldPop }, ref) {
     const activeHabit = habits.find((habit) => habit.id === activeId)!;
+    console.log(shouldPop);
 
     return (
-      <div
-        className={cn("pointer-events-none rounded-2xl origin-center animate-habit-pop", {
-          "shadow-2xl": true,
-        })}
+      <motion.div
+        key="some-key"
+        className="pointer-events-none rounded-2xl origin-center animate-habit-pop"
         ref={ref}
       >
         <HabitCard habit={activeHabit} />
-      </div>
+      </motion.div>
     );
   },
 );
