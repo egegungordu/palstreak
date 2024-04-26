@@ -20,7 +20,7 @@ const config: Config = {
         "overlay-show": 'overlay-show 150ms cubic-bezier(0.16, 1, 0.3, 1)',
         "content-show": 'content-show 150ms cubic-bezier(0.16, 1, 0.3, 1)',
         "habit-card-show": 'habit-card-show 150ms cubic-bezier(0.16, 1, 0.3, 1)',
-        "habit-pop": 'habit-pop 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        "habit-pop": 'habit-pop 550ms cubic-bezier(0.16, 1, 0.3, 1)',
       },
       keyframes: {
         "overlay-show": {

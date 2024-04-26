@@ -10,6 +10,7 @@ export default function Toaster({ ...props }: ToasterProps) {
       theme="light"
       className="toaster group"
       toastOptions={{
+        duration: 4000,
         classNames: {
           toast:
             "group toast group-[.toaster]:bg-white group-[.toaster]:shadow-lg",

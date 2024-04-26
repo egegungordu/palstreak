@@ -9,6 +9,7 @@ import {
   DragOverlay,
   DragStartEvent,
   DropAnimation,
+  MeasuringStrategy,
   UniqueIdentifier,
   closestCenter,
   defaultDropAnimationSideEffects,
@@ -25,7 +26,9 @@ import {
   useState,
   useTransition,
 } from "react";
-import { restrictToFirstScrollableAncestor } from "@dnd-kit/modifiers";
+import {
+  restrictToFirstScrollableAncestor,
+} from "@dnd-kit/modifiers";
 import reorderHabits from "@/actions/reorder-habits";
 import { cn } from "@/lib/utils";
 
@@ -40,11 +43,11 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
   );
 
   const dropAnimationConfig: DropAnimation = {
+    easing: "cubic-bezier(.32,.99,.76,1.26)",
+    duration: 300,
     sideEffects: defaultDropAnimationSideEffects({
-      styles: {
-        active: {
-          opacity: "0.5",
-        },
+      className: {
+        active: "opacity-40",
       },
     }),
   };
@@ -74,12 +77,17 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
     setActiveId(event.active.id);
   };
 
+  const handleDragCancel = () => {
+    setActiveId(null);
+  };
+
   return (
     <DndContext
-      // measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
+      measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
       modifiers={[restrictToFirstScrollableAncestor]}
       onDragEnd={handleDragEnd}
       onDragStart={handleDragStart}
+      onDragCancel={handleDragCancel}
       collisionDetection={closestCenter}
     >
       <SortableContext
@@ -112,10 +120,22 @@ const OverlayHabit = forwardRef<HTMLDivElement, OverlayHabitProps>(
   function OverlayHabit({ activeId, habits, ...props }, ref) {
     const activeHabit = habits.find((habit) => habit.id === activeId);
 
+    // useEffect(() => {
+    //   document.body.style.cursor = "grabbing";
+    //
+    //   return () => {
+    //     document.body.style.cursor = "";
+    //   };
+    // }, []);
+
     return (
-      <div {...props} className={cn("pointer-events-none", {
-          "scale-105": false,
-        })} ref={ref}>
+      <div
+        {...props}
+        className={cn("pointer-events-none origin-center", {
+          "shadow-2xl": true,
+        })}
+        ref={ref}
+      >
         <HabitCard habit={activeHabit} />
       </div>
     );

@@ -48,12 +48,8 @@ export default function AddHabit() {
         color: data.color,
       });
 
-      toast("Habit added successfully", {
+      toast.success("Habit added successfully", {
         description: "Be consistent and keep it up! 💪",
-        action: {
-          label: "Undo",
-          onClick: () => {},
-        },
       });
 
       reset();

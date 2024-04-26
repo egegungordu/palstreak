@@ -92,7 +92,7 @@ export default function HabitCard({ habit }: { habit: Habit }) {
       <Tooltip content="Drag to reorder" side="left">
         <button
           {...listeners}
-          className="absolute left-[3px] top-1/2 -translate-y-1/2 text-neutral-300 group-hover:block hidden"
+          className="absolute left-[3px] top-1/2 -translate-y-1/2 text-neutral-300 group-hover:block hidden cursor-grab"
           aria-label="Reorder"
         >
           <LuGripVertical className="w-4 h-4" />
@@ -170,6 +170,10 @@ const DeleteHabitButton = ({ habit }: { habit: Habit }) => {
   const handleClick = () => {
     startTransition(async () => {
       await deleteHabit({ habitId: habit.id });
+
+      toast.success("Habit deleted!", {
+        description: "The habit has been successfully deleted.",
+      });
 
       setIsDialogOpen(false);
     });
@@ -259,12 +263,8 @@ const EditHabitButton = ({ habit }: { habit: Habit }) => {
         color: data.color,
       });
 
-      toast("Habit updated!", {
+      toast.success("Habit updated!", {
         description: "Your habit has been updated successfully.",
-        action: {
-          label: "Undo",
-          onClick: () => {},
-        },
       });
 
       reset({ name: data.name, color: data.color });
