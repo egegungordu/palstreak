@@ -44,12 +44,6 @@ export default async function markComplete({ habitId }: { habitId: string }) {
   }
 
   const streak = targetHabit.streak + 1;
-  // tomorrow 12:00am
-  const streakEndsAt = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate() + 2,
-  );
   const longestStreak = Math.max(targetHabit.longestStreak, targetHabit.streak + 1);
   const lastCompletedAt = new Date();
 
@@ -58,7 +52,6 @@ export default async function markComplete({ habitId }: { habitId: string }) {
     .update(habit)
     .set({
       streak,
-      streakEndsAt,
       longestStreak,
       lastCompletedAt,
       streaks: {

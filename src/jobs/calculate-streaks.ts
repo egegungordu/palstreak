@@ -2,7 +2,7 @@ import { cronTrigger } from "@trigger.dev/sdk";
 import { client } from "@/trigger";
 import { db } from "@/db";
 import { habit, users } from "@/db/schema";
-import { count, eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 
 client.defineJob({
   id: "calculate-streaks",
@@ -11,7 +11,7 @@ client.defineJob({
   trigger: cronTrigger({
     cron: "0 * * * *",
   }),
-  run: async (payload, io, ctx) => {
+  run: async (payload, io) => {
     // this cron runs every hour, the timezoneOffset will be the hour of ts
     const targetStreakResetTimezoneOffset =
       (payload.ts.getUTCHours() - 24) * 60;
@@ -19,25 +19,87 @@ client.defineJob({
       `Target streak reset timezone offset: ${targetStreakResetTimezoneOffset}`,
     );
 
-    const dbHabits = await db
-      .select()
-      .from(habit)
-      .where(eq(habit.timezoneOffset, targetStreakResetTimezoneOffset));
+    // runTask cant serialize the Date ?
+    const resetTimezoneHabits = await io
+      .runTask(
+        "get-reset-timezone-habits",
+        async () =>
+          await db
+            .select()
+            .from(habit)
+            .where(eq(habit.timezoneOffset, targetStreakResetTimezoneOffset)),
+      )
+      .then((res) =>
+        res.map((r) => ({
+          ...r,
+          lastCompletedAt: r.lastCompletedAt
+            ? new Date(r.lastCompletedAt)
+            : null,
+        })),
+      );
 
-    dbHabits.forEach(async (dbHabit) => {
-      io.logger.info(`Calculating streaks for ${dbHabit.id}...`);
-      const firstDay = new Date(dbHabit.createdAt.getTime() - dbHabit.timezoneOffset * 60 * 1000);
-      const firstDayStart = new Date(firstDay.getFullYear(), firstDay.getMonth(), firstDay.getDate());
-      const today = new Date((payload.ts).getTime() - dbHabit.timezoneOffset * 60 * 1000);
-      const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-      const nthDay = Math.floor((todayStart.getTime() - firstDayStart.getTime()) / (24 * 60 * 60 * 1000));
-      io.logger.info(JSON.stringify({ firstDay, firstDayStart, today, todayStart, nthDay }));
+    const habitsToReset = resetTimezoneHabits.filter((dbHabit) => {
+      if (!dbHabit.lastCompletedAt) {
+        return false;
+      }
+
+      const diff = payload.ts.getTime() - dbHabit.lastCompletedAt.getTime();
+      return diff >= 24 * 60 * 60 * 1000;
     });
 
-    // io.logger.info(`Calculating streaks for ${dbUsers.length} users...`);
-    //
-    // io.logger.info(JSON.stringify(dbUsers));
-    //
-    // return dbUsers;
+    io.logger.info(
+      `Habits to reset: (count: ${habitsToReset.length}) ${habitsToReset
+        .map((h) => h.id)
+        .join(", ")}`,
+    );
+
+    await io.runTask("update-habits", async () => {
+      db.transaction(async (tx) => {
+        await tx
+          .update(habit)
+          .set({
+            streak: 0,
+          })
+          .where(
+            inArray(
+              habit.id,
+              habitsToReset.map((h) => h.id),
+            ),
+          );
+
+        const usersAffected = await tx
+          .select()
+          .from(users)
+          .where(
+            inArray(
+              users.id,
+              habitsToReset.map((h) => h.userId),
+            ),
+          );
+
+        io.logger.info(
+          `Users affected: (count: ${usersAffected.length}) ${usersAffected.map((u) => u.id).join(", ")}`,
+        );
+
+        for (const user of usersAffected) {
+          const userHabits = await tx
+            .select()
+            .from(habit)
+            .where(eq(habit.userId, user.id));
+
+          const biggestStreak = userHabits.reduce(
+            (acc, habit) => Math.max(acc, habit.streak),
+            0,
+          );
+
+          await tx
+            .update(users)
+            .set({
+              biggestStreak,
+            })
+            .where(eq(users.id, user.id));
+        }
+      });
+    });
   },
 });

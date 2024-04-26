@@ -28,7 +28,6 @@ export const habit = pgTable("habit", {
     .default({}),
   streak: integer("streak").notNull().default(0),
   longestStreak: integer("longestStreak").notNull().default(0),
-  streakEndsAt: timestamp("streakEndAt", { mode: "date", withTimezone: true }),
   lastCompletedAt: timestamp("lastCompletedAt", { mode: "date", withTimezone: true }),
   timezoneOffset: integer("timezoneOffset").notNull().default(0),
 });

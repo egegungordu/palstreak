@@ -30,25 +30,30 @@ export default function HabitCard({
   const [pending, startTransiiton] = useTransition();
   const currentDayIndex = useMemo(() => {
     const firstDay = new Date(
-      habit.createdAt.getTime() - habit.timezoneOffset * 60 * 1000,
+      habit.createdAt.getTime() + 1000 * 60 * 60 * 24,
     );
     const firstDayStart = new Date(
-      firstDay.getFullYear(),
-      firstDay.getMonth(),
-      firstDay.getDate(),
+      firstDay.getUTCFullYear(),
+      firstDay.getUTCMonth(),
+      firstDay.getUTCDate(),
     );
-    const today = new Date(
-      new Date().getTime() - habit.timezoneOffset * 60 * 1000,
-    );
+    const today = new Date(new Date().getTime() + 1000 * 60 * 60 * 24);
     const todayStart = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate(),
+      today.getUTCFullYear(),
+      today.getUTCMonth(),
+      today.getUTCDate(),
     );
+    console.log({
+      name: habit.name,
+      firstDay,
+      firstDayStart,
+      today,
+      todayStart,
+    });
     return Math.floor(
       (todayStart.getTime() - firstDayStart.getTime()) / (24 * 60 * 60 * 1000),
     );
-  }, [habit.createdAt, habit.timezoneOffset]);
+  }, [habit.createdAt, habit.name]);
   const isTodayCompleted = habit.streaks[currentDayIndex]?.value !== 0;
 
   const completeToday = () => {
@@ -106,7 +111,7 @@ export default function HabitCard({
       <button
         onClick={() => setShowStats(!showStats)}
         className={cn(
-          "w-full hover:bg-gradient-to-t hover:from-neutral-100 flex justify-center",
+          "w-full hover:bg-gradient-to-t hover:from-stone-100 flex justify-center",
           {
             "p-4": showStats,
             "py-1": !showStats,
@@ -196,12 +201,22 @@ const EditHabitButton = ({ habit }: { habit: Habit }) => {
 };
 
 const Stats = ({ habit }: { habit: Habit }) => {
+  const lastCompletedStat = habit.lastCompletedAt
+    ? relativeTime({ date: habit.lastCompletedAt })
+    : null;
+  const streakEndsAtStat = useMemo(() => {
+    if (habit.streak === 0 || habit.lastCompletedAt === null) return null;
+    const lastCompleteDay = new Date(
+      habit.lastCompletedAt.getFullYear(),
+      habit.lastCompletedAt.getMonth(),
+      habit.lastCompletedAt.getDate() + 2,
+    );
+    return relativeTime({ date: lastCompleteDay });
+  }, [habit.streak, habit.lastCompletedAt]);
+
   return (
     <div className="flex justify-center gap-4 items-center">
-      <StatSection
-        title="Current Streak"
-        stat={`${habit.streak} days`}
-      />
+      <StatSection title="Current Streak" stat={`${habit.streak} days`} />
 
       <Seperator orientation="vertical" />
 
@@ -210,17 +225,19 @@ const Stats = ({ habit }: { habit: Habit }) => {
         stat={`${habit.longestStreak} days`}
       />
 
-      <Seperator orientation="vertical" />
+      {lastCompletedStat && (
+        <>
+          <Seperator orientation="vertical" />
+          <StatSection title="Last completed" stat={lastCompletedStat} />
+        </>
+      )}
 
-      {habit.streakEndsAt && <StatSection
-        title="Streak ends"
-        stat={relativeTime({date:habit.streakEndsAt})}
-      />}
-
-      {!habit.streakEndsAt && <StatSection
-        title="Last completed"
-        stat="Never"
-      />}
+      {streakEndsAtStat && (
+        <>
+          <Seperator orientation="vertical" />
+          <StatSection title="Streak ends" stat={streakEndsAtStat} />
+        </>
+      )}
     </div>
   );
 };
@@ -239,7 +256,9 @@ const StatSection = ({
     <div className="text-base font-bold tracking-tight leading-none text-neutral-800">
       {stat}
     </div>
-    {extra && <div className="text-2xs leading-none text-neutral-500">{extra}</div>}
+    {extra && (
+      <div className="text-2xs leading-none text-neutral-500">{extra}</div>
+    )}
   </div>
 );
 

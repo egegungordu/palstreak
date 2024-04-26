@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "db:push": "drizzle-kit push:pg",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "dev:trigger": "npx @trigger.dev/cli dev"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.0.0",
