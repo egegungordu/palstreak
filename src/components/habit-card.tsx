@@ -3,13 +3,12 @@
 import { cn, relativeTime } from "@/lib/utils";
 import Button from "./button";
 import { useEffect, useMemo, useState, useTransition } from "react";
-import { type Habit } from "./habits-list";
+import { type Habit } from "@/app/page";
 import markComplete from "@/actions/mark-complete";
 import Seperator from "./seperator";
 import {
   LuCheckSquare,
   LuChevronDown,
-  LuGripHorizontal,
   LuGripVertical,
   LuLoader,
   LuPencil,
@@ -25,6 +24,7 @@ import { toast } from "sonner";
 import updateHabit from "@/actions/update-habit";
 import { HABIT_COLORS } from "@/globals";
 import { defaultAnimateLayoutChanges, useSortable } from "@dnd-kit/sortable";
+import { motion } from "framer-motion";
 
 export default function HabitCard({ habit }: { habit: Habit }) {
   const [showStats, setShowStats] = useState(false);
@@ -75,91 +75,116 @@ export default function HabitCard({ habit }: { habit: Habit }) {
   }, [isDragging]);
 
   return (
-    <li
-      ref={setNodeRef}
-      {...attributes}
-      className={cn(
-        "bg-white group rounded-2xl shadow max-w-min border relative cursor-default list-none",
-        {
-          "opacity-40": isDragging,
-        },
-      )}
-      style={{
-        transform: `translateY(${transform?.y ?? 0}px)`,
-        transition,
+    <motion.li
+      initial={{
+        height: 0,
+        marginBottom: 0,
+        filter: "blur(6px)",
+        scale: 0.5,
+        opacity: 0,
       }}
+      animate={{
+        height: "auto",
+        marginBottom: 16,
+        filter: "blur(0px)",
+        scale: 1,
+        opacity: 1,
+      }}
+      exit={{
+        height: 0,
+        marginBottom: 0,
+        filter: "blur(6px)",
+        scale: 0.5,
+        opacity: 0,
+      }}
+      className="list-none"
     >
-      <Tooltip content="Drag to reorder" side="left">
-        <button
-          {...listeners}
-          className="absolute left-[3px] top-1/2 -translate-y-1/2 text-neutral-300 group-hover:block hidden cursor-grab"
-          aria-label="Reorder"
-        >
-          <LuGripVertical className="w-4 h-4" />
-          <LuGripVertical className="w-4 h-4 -mt-0.5" />
-          <LuGripVertical className="w-4 h-4 -mt-0.5" />
-        </button>
-      </Tooltip>
-
-      <div className="px-5 pt-3 pb-0">
-        <div className="flex gap-2 items-center min-w-0 h-8 mb-2">
-          <div className="font-base text-neutral-600 leading-none tracking-tight font-semibold">
-            {habit.name}
-          </div>
-
-          <div className="hidden group-hover:flex gap-1 p-1 bg-white rounded-lg border shadow">
-            <EditHabitButton habit={habit} />
-            <DeleteHabitButton habit={habit} />
-          </div>
-
-          <button
-            // loading={pending}
-            disabled={isTodayCompleted}
-            onClick={completeToday}
-            className="rounded-full flex text-xs items-center disabled:text-neutral-400 ml-auto shrink-0 bg-transparent text-neutral-500 shadow-none p-0 hover:bg-neutral hover:text-neutral-950"
-          >
-            {isTodayCompleted ? (
-              <>
-                Completed
-                <LuCheckSquare className="w-4 h-4 ml-1" />
-              </>
-            ) : (
-              <>
-                Mark as done
-                {pending ? (
-                  <LuLoader className="w-4 h-4 ml-1 animate-spin" />
-                ) : (
-                  <LuSquare className="w-4 h-4 ml-1" />
-                )}
-              </>
-            )}
-          </button>
-        </div>
-
-        <ContributionCalendar
-          color={habit.color}
-          streaks={habit.streaks}
-          currentDayIndex={currentDayIndex}
-        />
-      </div>
-
-      <button
-        onClick={() => setShowStats(!showStats)}
+      <div
+        ref={setNodeRef}
+        {...attributes}
         className={cn(
-          "w-full hover:bg-gradient-to-t hover:from-stone-100 flex justify-center",
+          "bg-white group rounded-2xl shadow max-w-min border relative cursor-default overflow-hidden",
           {
-            "p-4": showStats,
-            "py-1": !showStats,
+            "opacity-40": isDragging,
           },
         )}
+        style={{
+          transform: `translateY(${transform?.y ?? 0}px)`,
+          transition,
+        }}
       >
-        {showStats ? (
-          <Stats habit={habit} />
-        ) : (
-          <LuChevronDown className="text-neutral-400" />
-        )}
-      </button>
-    </li>
+        <Tooltip content="Drag to reorder" side="left">
+          <button
+            {...listeners}
+            className="absolute left-[3px] top-1/2 -translate-y-1/2 text-neutral-300 group-hover:block hidden cursor-grab"
+            aria-label="Reorder"
+          >
+            <LuGripVertical className="w-4 h-4" />
+            <LuGripVertical className="w-4 h-4 -mt-0.5" />
+            <LuGripVertical className="w-4 h-4 -mt-0.5" />
+          </button>
+        </Tooltip>
+
+        <div className="px-5 pt-3 pb-0">
+          <div className="flex gap-2 items-center min-w-0 h-8 mb-2">
+            <div className="font-base text-neutral-600 leading-none tracking-tight font-semibold">
+              {habit.name}
+            </div>
+
+            <div className="hidden group-hover:flex gap-1 p-1 bg-white rounded-lg border shadow">
+              <EditHabitButton habit={habit} />
+              <DeleteHabitButton habit={habit} />
+            </div>
+
+            <button
+              // loading={pending}
+              disabled={isTodayCompleted}
+              onClick={completeToday}
+              className="rounded-full flex text-xs items-center disabled:text-neutral-400 ml-auto shrink-0 bg-transparent text-neutral-500 shadow-none p-0 hover:bg-neutral hover:text-neutral-950"
+            >
+              {isTodayCompleted ? (
+                <>
+                  Completed
+                  <LuCheckSquare className="w-4 h-4 ml-1" />
+                </>
+              ) : (
+                <>
+                  Mark as done
+                  {pending ? (
+                    <LuLoader className="w-4 h-4 ml-1 animate-spin" />
+                  ) : (
+                    <LuSquare className="w-4 h-4 ml-1" />
+                  )}
+                </>
+              )}
+            </button>
+          </div>
+
+          <ContributionCalendar
+            color={habit.color}
+            streaks={habit.streaks}
+            currentDayIndex={currentDayIndex}
+          />
+        </div>
+
+        <button
+          onClick={() => setShowStats(!showStats)}
+          className={cn(
+            "w-full hover:bg-gradient-to-t hover:from-stone-100 flex justify-center",
+            {
+              "p-4": showStats,
+              "py-1": !showStats,
+            },
+          )}
+        >
+          {showStats ? (
+            <Stats habit={habit} />
+          ) : (
+            <LuChevronDown className="text-neutral-400" />
+          )}
+        </button>
+      </div>
+    </motion.li>
   );
 }
 

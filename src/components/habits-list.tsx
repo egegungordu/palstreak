@@ -31,6 +31,7 @@ import {
 } from "@dnd-kit/modifiers";
 import reorderHabits from "@/actions/reorder-habits";
 import { cn } from "@/lib/utils";
+import { AnimatePresence } from "framer-motion";
 
 export default function HabitsList({ habits }: { habits: Habit[] }) {
   const [pending, startTransition] = useTransition();
@@ -94,18 +95,22 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
         strategy={verticalListSortingStrategy}
         items={optimisticState.map((habit) => habit.id)}
       >
-        <ol className={cn("flex flex-col gap-3 items-center")}>
+        <ol className={cn("flex flex-col items-center")}>
+          <AnimatePresence initial={false}>
           {/*<HabitsHeader habits={habits} />*/}
 
           {optimisticState.map((habit) => (
             <HabitCard key={habit.id} habit={habit} />
           ))}
+          </AnimatePresence>
         </ol>
 
         <AddHabit />
       </SortableContext>
       <DragOverlay dropAnimation={dropAnimationConfig}>
-        {activeId ? <OverlayHabit habits={habits} activeId={activeId} /> : null}
+        <AnimatePresence initial={false}>
+        {activeId ? <OverlayHabit key="no-animate-habit" habits={habits} activeId={activeId} /> : null}
+        </AnimatePresence>
       </DragOverlay>
     </DndContext>
   );
@@ -118,7 +123,7 @@ interface OverlayHabitProps extends HTMLProps<HTMLDivElement> {
 
 const OverlayHabit = forwardRef<HTMLDivElement, OverlayHabitProps>(
   function OverlayHabit({ activeId, habits, ...props }, ref) {
-    const activeHabit = habits.find((habit) => habit.id === activeId);
+    const activeHabit = habits.find((habit) => habit.id === activeId)!;
 
     // useEffect(() => {
     //   document.body.style.cursor = "grabbing";
@@ -131,7 +136,7 @@ const OverlayHabit = forwardRef<HTMLDivElement, OverlayHabitProps>(
     return (
       <div
         {...props}
-        className={cn("pointer-events-none origin-center", {
+        className={cn("pointer-events-none rounded-2xl origin-center", {
           "shadow-2xl": true,
         })}
         ref={ref}
