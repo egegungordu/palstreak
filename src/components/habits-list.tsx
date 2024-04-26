@@ -1,53 +1,123 @@
-import { db } from "@/db";
+"use client";
+
 import HabitCard from "./habit-card";
-import { habit } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import { auth } from "@/lib/auth";
 import AddHabit from "./add-habit";
-import HabitsHeader from "./habits-header";
+import { type Habit } from "@/app/page";
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  DropAnimation,
+  UniqueIdentifier,
+  closestCenter,
+  defaultDropAnimationSideEffects,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import {
+  HTMLProps,
+  forwardRef,
+  useOptimistic,
+  useState,
+  useTransition,
+} from "react";
+import { restrictToFirstScrollableAncestor } from "@dnd-kit/modifiers";
+import reorderHabits from "@/actions/reorder-habits";
+import { cn } from "@/lib/utils";
 
-async function getHabits(userId: string) {
-  let habits = await db.select().from(habit).where(eq(habit.userId, userId));
+export default function HabitsList({ habits }: { habits: Habit[] }) {
+  const [pending, startTransition] = useTransition();
+  const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
+  const [optimisticState, moveOptimistic] = useOptimistic(
+    habits,
+    (_, optimisticHabits: Habit[]) => {
+      return optimisticHabits;
+    },
+  );
 
-  // fill empty streaks
-  habits = habits.map((habit) => {
-    const startDate = habit.createdAt;
+  const dropAnimationConfig: DropAnimation = {
+    sideEffects: defaultDropAnimationSideEffects({
+      styles: {
+        active: {
+          opacity: "0.5",
+        },
+      },
+    }),
+  };
 
-    const streaks = Array.from({ length: 7 * 52 }).map((_, i) => ({
-      // make date from start by adding days
-      date: habit.streaks[i]?.date || new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000),
-      value: habit.streaks[i]?.value || 0,
-    }));
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
 
-    return {
-      ...habit,
-      streaks,
-    };
-  });
+    if (over === null || active.id === over.id) {
+      return;
+    }
 
-  return habits;
-}
+    const oldIndex = habits.findIndex((habit) => habit.id === active.id);
+    const newIndex = habits.findIndex((habit) => habit.id === over.id);
+    const newOrderedHabits = arrayMove(habits, oldIndex, newIndex);
 
-export type Habit = Awaited<ReturnType<typeof getHabits>>[0];
+    startTransition(async () => {
+      moveOptimistic(newOrderedHabits);
+      await reorderHabits({
+        newOrder: newOrderedHabits.map((habit) => habit.id),
+      });
+    });
 
-export default async function HabitsList() {
-  const session = await auth();
+    setActiveId(null);
+  };
 
-  if (!session || !session.user || !session.user.id) {
-    return null;
-  }
-
-  const habits = await getHabits(session.user.id);
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id);
+  };
 
   return (
-    <div className="flex flex-col gap-3 items-center">
-      {/*<HabitsHeader habits={habits} />*/}
+    <DndContext
+      // measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
+      modifiers={[restrictToFirstScrollableAncestor]}
+      onDragEnd={handleDragEnd}
+      onDragStart={handleDragStart}
+      collisionDetection={closestCenter}
+    >
+      <SortableContext
+        strategy={verticalListSortingStrategy}
+        items={optimisticState.map((habit) => habit.id)}
+      >
+        <ol className={cn("flex flex-col gap-3 items-center")}>
+          {/*<HabitsHeader habits={habits} />*/}
 
-      {habits.map((habit) => (
-        <HabitCard key={habit.id} habit={habit} />
-      ))}
+          {optimisticState.map((habit) => (
+            <HabitCard key={habit.id} habit={habit} />
+          ))}
+        </ol>
 
-      <AddHabit />
-    </div>
+        <AddHabit />
+      </SortableContext>
+      <DragOverlay dropAnimation={dropAnimationConfig}>
+        {activeId ? <OverlayHabit habits={habits} activeId={activeId} /> : null}
+      </DragOverlay>
+    </DndContext>
   );
 }
+
+interface OverlayHabitProps extends HTMLProps<HTMLDivElement> {
+  activeId: UniqueIdentifier;
+  habits: Habit[];
+}
+
+const OverlayHabit = forwardRef<HTMLDivElement, OverlayHabitProps>(
+  function OverlayHabit({ activeId, habits, ...props }, ref) {
+    const activeHabit = habits.find((habit) => habit.id === activeId);
+
+    return (
+      <div {...props} className={cn("pointer-events-none", {
+          "scale-105": false,
+        })} ref={ref}>
+        <HabitCard habit={activeHabit} />
+      </div>
+    );
+  },
+);

@@ -20,6 +20,7 @@ export const habit = pgTable("habit", {
     .references(() => users.id, {
       onDelete: "cascade",
     }),
+  order: integer("order").notNull(),
   name: text("name").notNull(),
   color: text("color").notNull().default("#000000"),
   createdAt: timestamp("createdAt", { mode: "date", withTimezone: true }).notNull().defaultNow(),

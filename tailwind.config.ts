@@ -20,6 +20,7 @@ const config: Config = {
         "overlay-show": 'overlay-show 150ms cubic-bezier(0.16, 1, 0.3, 1)',
         "content-show": 'content-show 150ms cubic-bezier(0.16, 1, 0.3, 1)',
         "habit-card-show": 'habit-card-show 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+        "habit-pop": 'habit-pop 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
       },
       keyframes: {
         "overlay-show": {
@@ -33,6 +34,10 @@ const config: Config = {
         "habit-card-show": {
           from: { opacity: '0', transform: 'translateY(1rem) scale(0.90)' },
           to: { opacity: '1', transform: 'translateY(0) scale(1)' },
+        },
+        "habit-pop": {
+          from: { scale: '1' },
+          to: { scale: '1.02' },
         },
       }
     },

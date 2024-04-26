@@ -2,13 +2,15 @@
 
 import { cn, relativeTime } from "@/lib/utils";
 import Button from "./button";
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { type Habit } from "./habits-list";
 import markComplete from "@/actions/mark-complete";
 import Seperator from "./seperator";
 import {
   LuCheckSquare,
   LuChevronDown,
+  LuGripHorizontal,
+  LuGripVertical,
   LuLoader,
   LuPencil,
   LuSquare,
@@ -22,12 +24,9 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 import updateHabit from "@/actions/update-habit";
 import { HABIT_COLORS } from "@/globals";
+import { defaultAnimateLayoutChanges, useSortable } from "@dnd-kit/sortable";
 
-export default function HabitCard({
-  habit,
-}: {
-  habit: Habit;
-}) {
+export default function HabitCard({ habit }: { habit: Habit }) {
   const [showStats, setShowStats] = useState(false);
   const [pending, startTransiiton] = useTransition();
   const currentDayIndex = useMemo(() => {
@@ -49,6 +48,18 @@ export default function HabitCard({
   }, [habit.createdAt]);
   const isTodayCompleted = habit.streaks[currentDayIndex]?.value !== 0;
 
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: habit.id,
+    animateLayoutChanges: defaultAnimateLayoutChanges,
+  });
+
   const completeToday = () => {
     startTransiiton(async () => {
       await markComplete({
@@ -57,8 +68,39 @@ export default function HabitCard({
     });
   };
 
+  useEffect(() => {
+    if (isDragging) {
+      setShowStats(false);
+    }
+  }, [isDragging]);
+
   return (
-    <div className="bg-white group rounded-2xl shadow max-w-min border animate-habit-card-show relative">
+    <li
+      ref={setNodeRef}
+      {...attributes}
+      className={cn(
+        "bg-white group rounded-2xl shadow max-w-min border relative cursor-default list-none",
+        {
+          "opacity-40": isDragging,
+        },
+      )}
+      style={{
+        transform: `translateY(${transform?.y ?? 0}px)`,
+        transition,
+      }}
+    >
+      <Tooltip content="Drag to reorder" side="left">
+        <button
+          {...listeners}
+          className="absolute left-[3px] top-1/2 -translate-y-1/2 text-neutral-300 group-hover:block hidden"
+          aria-label="Reorder"
+        >
+          <LuGripVertical className="w-4 h-4" />
+          <LuGripVertical className="w-4 h-4 -mt-0.5" />
+          <LuGripVertical className="w-4 h-4 -mt-0.5" />
+        </button>
+      </Tooltip>
+
       <div className="px-5 pt-3 pb-0">
         <div className="flex gap-2 items-center min-w-0 h-8 mb-2">
           <div className="font-base text-neutral-600 leading-none tracking-tight font-semibold">
@@ -117,7 +159,7 @@ export default function HabitCard({
           <LuChevronDown className="text-neutral-400" />
         )}
       </button>
-    </div>
+    </li>
   );
 }
 
@@ -206,11 +248,6 @@ const EditHabitButton = ({ habit }: { habit: Habit }) => {
   });
 
   const selectedColor = watch("color");
-
-  console.log({
-    selectedColor,
-    habitColor: habit.color,
-  });
 
   const onSubmit: SubmitHandler<{ name: string; color: string }> = async (
     data,
