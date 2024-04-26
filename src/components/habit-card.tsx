@@ -21,13 +21,12 @@ import deleteHabit from "@/actions/delete-habit";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 import updateHabit from "@/actions/update-habit";
+import { HABIT_COLORS } from "@/globals";
 
 export default function HabitCard({
   habit,
-  color,
 }: {
   habit: Habit;
-  color: string;
 }) {
   const [showStats, setShowStats] = useState(false);
   const [pending, startTransiiton] = useTransition();
@@ -44,17 +43,10 @@ export default function HabitCard({
       today.getUTCMonth(),
       today.getUTCDate(),
     );
-    console.log({
-      name: habit.name,
-      firstDay,
-      firstDayStart,
-      today,
-      todayStart,
-    });
     return Math.floor(
       (todayStart.getTime() - firstDayStart.getTime()) / (24 * 60 * 60 * 1000),
     );
-  }, [habit.createdAt, habit.name]);
+  }, [habit.createdAt]);
   const isTodayCompleted = habit.streaks[currentDayIndex]?.value !== 0;
 
   const completeToday = () => {
@@ -103,7 +95,7 @@ export default function HabitCard({
         </div>
 
         <ContributionCalendar
-          color={color}
+          color={habit.color}
           streaks={habit.streaks}
           currentDayIndex={currentDayIndex}
         />
@@ -193,6 +185,7 @@ const DeleteHabitButton = ({ habit }: { habit: Habit }) => {
 
 type EditHabitInputs = {
   name: string;
+  color: string;
 };
 
 const EditHabitButton = ({ habit }: { habit: Habit }) => {
@@ -204,13 +197,29 @@ const EditHabitButton = ({ habit }: { habit: Habit }) => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<EditHabitInputs>();
+    watch,
+  } = useForm<EditHabitInputs>({
+    defaultValues: {
+      name: habit.name,
+      color: habit.color,
+    },
+  });
 
-  const onSubmit: SubmitHandler<{ name: string }> = async (data) => {
+  const selectedColor = watch("color");
+
+  console.log({
+    selectedColor,
+    habitColor: habit.color,
+  });
+
+  const onSubmit: SubmitHandler<{ name: string; color: string }> = async (
+    data,
+  ) => {
     startTransition(async () => {
       await updateHabit({
         habitId: habit.id,
         name: data.name,
+        color: data.color,
       });
 
       toast("Habit updated!", {
@@ -221,6 +230,7 @@ const EditHabitButton = ({ habit }: { habit: Habit }) => {
         },
       });
 
+      reset({ name: data.name, color: data.color });
       setIsDialogOpen(false);
     });
   };
@@ -254,34 +264,61 @@ const EditHabitButton = ({ habit }: { habit: Habit }) => {
           </Dialog.Description>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            <fieldset className="gap-5">
-              <div className="flex items-center gap-5">
-                <label
-                  className="w-[90px] text-right text-xs text-neutral-600"
-                  htmlFor="habit-name"
-                >
-                  Name
-                </label>
-                <input
-                  className={cn(
-                    "inline-flex h-[35px] w-full flex-1 border items-center justify-center rounded-md px-4 leading-none shadow outline-none",
-                    errors.name && "border-red-500",
-                  )}
-                  type="text"
-                  autoComplete="off"
-                  id="habit-name"
-                  placeholder="Do 100 pushups"
-                  {...register("name", { required: true, value: habit.name  })}
-                />
+            <div className="flex items-center gap-5">
+              <label
+                className="w-[90px] text-right text-xs text-neutral-600"
+                htmlFor="habit-name"
+              >
+                Name
+              </label>
+              <input
+                className={cn(
+                  "inline-flex h-[35px] w-full flex-1 border items-center justify-center rounded-md px-4 leading-none shadow outline-none",
+                  errors.name && "border-red-500",
+                )}
+                type="text"
+                autoComplete="off"
+                id="habit-name"
+                placeholder="Do 100 pushups"
+                {...register("name", { required: true })}
+              />
+            </div>
+
+            {errors.name && (
+              <div className="mt-2 text-end text-red-500 text-xs">
+                This field is required
               </div>
+            )}
 
-              {errors.name && (
-                <div className="mt-2 text-end text-red-500 text-xs">
-                  This field is required
-                </div>
-              )}
-            </fieldset>
-
+            <div className="flex items-center gap-5 mt-3">
+              <label className="w-[90px] text-right text-xs text-neutral-600">
+                Color
+              </label>
+              <div className="grid grid-cols-6 items-center gap-1">
+                {HABIT_COLORS.map((color) => (
+                  <label
+                    key={color}
+                    className="inline-flex items-center justify-center rounded-full cursor-pointer"
+                  >
+                    <input
+                      type="radio"
+                      className="sr-only"
+                      value={color}
+                      {...register("color", { required: true })}
+                    />
+                    <span
+                      className={cn(
+                        "block w-5 h-5 border border-white rounded-md hover:brightness-110",
+                        {
+                          "ring-2 ring-black/90": selectedColor === color,
+                        },
+                      )}
+                      style={{ backgroundColor: color }}
+                    />
+                  </label>
+                ))}
+              </div>
+            </div>
             <div className="mt-5 flex justify-end">
               <Button disabled={pending} loading={pending}>
                 Save

@@ -44,7 +44,7 @@ export default async function HabitsList() {
       {/*<HabitsHeader habits={habits} />*/}
 
       {habits.map((habit) => (
-        <HabitCard key={habit.id} habit={habit} color="#000" />
+        <HabitCard key={habit.id} habit={habit} />
       ))}
 
       <AddHabit />

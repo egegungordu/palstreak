@@ -21,6 +21,7 @@ export const habit = pgTable("habit", {
       onDelete: "cascade",
     }),
   name: text("name").notNull(),
+  color: text("color").notNull().default("#000000"),
   createdAt: timestamp("createdAt", { mode: "date", withTimezone: true }).notNull().defaultNow(),
   streaks: jsonb("streaks")
     .$type<Record<number, { date: Date; value: number }>>()

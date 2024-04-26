@@ -10,9 +10,11 @@ import { cn } from "@/lib/utils";
 import addHabit from "@/actions/add-habit";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
+import { HABIT_COLORS } from "@/globals";
 
 type AddHabitInputs = {
   name: string;
+  color: string;
 };
 
 export default function AddHabit() {
@@ -26,23 +28,35 @@ export default function AddHabit() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<AddHabitInputs>();
+    watch,
+  } = useForm<AddHabitInputs>({
+    defaultValues: {
+      name: "",
+      color: HABIT_COLORS[HABIT_COLORS.length - 1],
+    },
+  });
 
-  const onSubmit: SubmitHandler<{ name: string }> = async (data) => {
+  const selectedColor = watch("color");
+
+  const onSubmit: SubmitHandler<{ name: string; color: string }> = async (
+    data,
+  ) => {
     startTransition(async () => {
       await addHabit({
-        name: data.name,
         timezoneOffset: new Date().getTimezoneOffset(),
+        name: data.name,
+        color: data.color,
       });
 
       toast("Habit added successfully", {
         description: "Be consistent and keep it up! 💪",
         action: {
           label: "Undo",
-          onClick: () => {}
+          onClick: () => {},
         },
       });
 
+      reset();
       setIsDialogOpen(false);
     });
   };
@@ -76,33 +90,58 @@ export default function AddHabit() {
           </Dialog.Description>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            <fieldset className="gap-5">
-              <div className="flex items-center gap-5">
-                <label
-                  className="w-[90px] text-right text-xs text-neutral-600"
-                  htmlFor="habit-name"
-                >
-                  Name
-                </label>
-                <input
-                  className={cn(
-                    "inline-flex h-[35px] w-full flex-1 border items-center justify-center rounded-md px-4 leading-none shadow outline-none",
-                    errors.name && "border-red-500",
-                  )}
-                  type="text"
-                  autoComplete="off"
-                  id="habit-name"
-                  placeholder="Do 100 pushups"
-                  {...register("name", { required: true })}
-                />
-              </div>
+            <div className="flex items-center gap-5">
+              <label
+                className="w-[90px] text-right text-xs text-neutral-600"
+                htmlFor="habit-name"
+              >
+                Name
+              </label>
+              <input
+                className={cn(
+                  "inline-flex h-[35px] w-full flex-1 border items-center justify-center rounded-md px-4 leading-none shadow outline-none",
+                  errors.name && "border-red-500",
+                )}
+                type="text"
+                autoComplete="off"
+                id="habit-name"
+                placeholder="Do 100 pushups"
+                {...register("name", { required: true })}
+              />
+            </div>
 
-              {errors.name && (
-                <div className="mt-2 text-end text-red-500 text-xs">
-                  This field is required
-                </div>
-              )}
-            </fieldset>
+            {errors.name && (
+              <div className="mt-2 text-end text-red-500 text-xs">
+                This field is required
+              </div>
+            )}
+
+            <div className="flex items-center gap-5 mt-3">
+              <label className="w-[90px] text-right text-xs text-neutral-600">
+                Color
+              </label>
+              <div className="grid grid-cols-6 items-center gap-1">
+                {HABIT_COLORS.map((color) => (
+                  <label
+                    key={color}
+                    className="inline-flex items-center justify-center rounded-full cursor-pointer"
+                  >
+                    <input
+                      type="radio"
+                      className="sr-only"
+                      value={color}
+                      {...register("color", { required: true })}
+                    />
+                    <span
+                      className={cn("block w-5 h-5 border border-white rounded-md hover:brightness-110", {
+                        "ring-2 ring-black/90": selectedColor === color,
+                      })}
+                      style={{ backgroundColor: color }}
+                    />
+                  </label>
+                ))}
+              </div>
+            </div>
 
             <small className="block text-xs text-neutral-600 mt-4">
               Streaks reset at 12:00 AM in your local timezone (GMT
