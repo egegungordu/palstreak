@@ -18,6 +18,9 @@ import Tooltip from "./tooltip";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import deleteHabit from "@/actions/delete-habit";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { toast } from "sonner";
+import updateHabit from "@/actions/update-habit";
 
 export default function HabitCard({
   habit,
@@ -29,9 +32,7 @@ export default function HabitCard({
   const [showStats, setShowStats] = useState(false);
   const [pending, startTransiiton] = useTransition();
   const currentDayIndex = useMemo(() => {
-    const firstDay = new Date(
-      habit.createdAt.getTime() + 1000 * 60 * 60 * 24,
-    );
+    const firstDay = new Date(habit.createdAt.getTime() + 1000 * 60 * 60 * 24);
     const firstDayStart = new Date(
       firstDay.getUTCFullYear(),
       firstDay.getUTCMonth(),
@@ -190,13 +191,115 @@ const DeleteHabitButton = ({ habit }: { habit: Habit }) => {
   );
 };
 
+type EditHabitInputs = {
+  name: string;
+};
+
 const EditHabitButton = ({ habit }: { habit: Habit }) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [pending, startTransition] = useTransition();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<EditHabitInputs>();
+
+  const onSubmit: SubmitHandler<{ name: string }> = async (data) => {
+    startTransition(async () => {
+      await updateHabit({
+        habitId: habit.id,
+        name: data.name,
+      });
+
+      toast("Habit updated!", {
+        description: "Your habit has been updated successfully.",
+        action: {
+          label: "Undo",
+          onClick: () => {},
+        },
+      });
+
+      setIsDialogOpen(false);
+    });
+  };
+
+  const onOpenChange = (isOpen: boolean) => {
+    reset();
+    setIsDialogOpen(isOpen);
+  };
+
   return (
-    <Tooltip content="Edit habit" side="top">
-      <button className="flex rounded-lg text-neutral-600 text-xs p-1.5 hover:bg-neutral-100">
-        <LuPencil className="w-3.5 h-3.5" />
-      </button>
-    </Tooltip>
+    <Dialog.Root open={isDialogOpen} onOpenChange={onOpenChange}>
+      <Tooltip content="Edit habit" side="top">
+        <Dialog.Trigger asChild>
+          <button className="flex rounded-lg text-neutral-600 text-xs p-1.5 hover:bg-neutral-100">
+            <LuPencil className="w-3.5 h-3.5" />
+          </button>
+        </Dialog.Trigger>
+      </Tooltip>
+      <Dialog.Portal>
+        <Dialog.Overlay className="bg-black/60 data-[state=open]:animate-overlay-show backdrop-blur-sm fixed inset-0" />
+        <Dialog.Content
+          onCloseAutoFocus={(e) => e.preventDefault()}
+          className="data-[state=open]:animate-content-show fixed top-1/2 left-1/2 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white p-6 shadow focus:outline-none"
+        >
+          <Dialog.Title className="m-0 text-base font-medium">
+            Edit habit
+          </Dialog.Title>
+
+          <Dialog.Description className="mt-3 mb-5 leading-normal">
+            Make changes to your habit.
+          </Dialog.Description>
+
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <fieldset className="gap-5">
+              <div className="flex items-center gap-5">
+                <label
+                  className="w-[90px] text-right text-xs text-neutral-600"
+                  htmlFor="habit-name"
+                >
+                  Name
+                </label>
+                <input
+                  className={cn(
+                    "inline-flex h-[35px] w-full flex-1 border items-center justify-center rounded-md px-4 leading-none shadow outline-none",
+                    errors.name && "border-red-500",
+                  )}
+                  type="text"
+                  autoComplete="off"
+                  id="habit-name"
+                  placeholder="Do 100 pushups"
+                  {...register("name", { required: true, value: habit.name  })}
+                />
+              </div>
+
+              {errors.name && (
+                <div className="mt-2 text-end text-red-500 text-xs">
+                  This field is required
+                </div>
+              )}
+            </fieldset>
+
+            <div className="mt-5 flex justify-end">
+              <Button disabled={pending} loading={pending}>
+                Save
+              </Button>
+            </div>
+          </form>
+
+          <Dialog.Close asChild>
+            <button
+              className="text-violet11 hover:bg-violet4 focus:shadow-violet7 absolute top-[10px] right-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full focus:shadow-[0_0_0_2px] focus:outline-none"
+              aria-label="Close"
+            >
+              <Cross2Icon />
+            </button>
+          </Dialog.Close>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 };
 

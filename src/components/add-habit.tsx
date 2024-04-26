@@ -44,12 +44,16 @@ export default function AddHabit() {
       });
 
       setIsDialogOpen(false);
-      reset();
     });
   };
 
+  const onOpenChange = (isOpen: boolean) => {
+    reset();
+    setIsDialogOpen(isOpen);
+  };
+
   return (
-    <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+    <Dialog.Root open={isDialogOpen} onOpenChange={onOpenChange}>
       <Tooltip content="Create new habit" side="bottom">
         <Dialog.Trigger asChild>
           <button className="bg-stone-100 w-8 h-8 rounded-full flex items-center justify-center text-neutral-500 hover:bg-stone-200">
