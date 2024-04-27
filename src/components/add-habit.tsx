@@ -66,8 +66,8 @@ export default function AddHabit() {
     <Dialog.Root open={isDialogOpen} onOpenChange={onOpenChange}>
       <Tooltip content="Create new habit" side="bottom">
         <Dialog.Trigger asChild>
-          <button className="bg-stone-100 w-8 h-8 rounded-full flex items-center justify-center text-neutral-500 hover:bg-stone-200">
-            <LuPlus className="w-4 h-4 text-neutral-800" />
+          <button className="bg-foreground-darker w-8 h-8 rounded-full flex items-center justify-center hover:bg-foreground-dark">
+            <LuPlus className="w-4 h-4 text-text-faded" />
           </button>
         </Dialog.Trigger>
       </Tooltip>
@@ -75,7 +75,7 @@ export default function AddHabit() {
         <Dialog.Overlay className="bg-black/60 data-[state=open]:animate-overlay-show backdrop-blur-sm fixed inset-0" />
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
-          className="data-[state=open]:animate-content-show fixed top-1/2 left-1/2 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white p-6 shadow focus:outline-none"
+          className="data-[state=open]:animate-content-show fixed top-1/2 left-1/2 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-foreground p-6 border border-border shadow shadow-shadow focus:outline-none"
         >
           <Dialog.Title className="m-0 text-base font-medium">
             New habit
@@ -88,14 +88,14 @@ export default function AddHabit() {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex items-center gap-5">
               <label
-                className="w-[90px] text-right text-xs text-neutral-600"
+                className="w-[90px] text-right text-xs text-faded"
                 htmlFor="habit-name"
               >
                 Name
               </label>
               <input
                 className={cn(
-                  "inline-flex h-[35px] w-full flex-1 border items-center justify-center rounded-md px-4 leading-none shadow outline-none",
+                  "inline-flex h-[35px] w-full flex-1 border border-border items-center justify-center rounded-md px-4 leading-none shadow shadow-shadow outline-none",
                   errors.name && "border-red-500",
                 )}
                 type="text"
@@ -113,7 +113,7 @@ export default function AddHabit() {
             )}
 
             <div className="flex items-center gap-5 mt-3">
-              <label className="w-[90px] text-right text-xs text-neutral-600">
+              <label className="w-[90px] text-right text-xs text-text-faded">
                 Color
               </label>
               <div className="grid grid-cols-6 items-center gap-1">
@@ -129,9 +129,12 @@ export default function AddHabit() {
                       {...register("color", { required: true })}
                     />
                     <span
-                      className={cn("block w-5 h-5 border border-white rounded-md hover:brightness-110", {
-                        "ring-2 ring-black/90": selectedColor === color,
-                      })}
+                      className={cn(
+                        "block w-5 h-5 border border-border rounded-md hover:brightness-110",
+                        {
+                          "ring-2 ring-text-strong": selectedColor === color,
+                        },
+                      )}
                       style={{ backgroundColor: color }}
                     />
                   </label>
@@ -139,7 +142,7 @@ export default function AddHabit() {
               </div>
             </div>
 
-            <small className="block text-xs text-neutral-600 mt-4">
+            <small className="block text-xs text-text-disabled mt-4">
               Streaks reset at 12:00 AM in your local timezone (GMT
               {timezoneSign}
               {timezone})

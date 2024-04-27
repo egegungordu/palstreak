@@ -6,8 +6,24 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
   theme: {
     extend: {
+      colors: {
+        "background": "var(--background)",
+        "foreground": "var(--foreground)",
+        "text": "var(--text)",
+        "text-faded": "var(--text-faded)",
+        "text-disabled": "var(--text-disabled)",
+        "text-strong": "var(--text-strong)",
+        "border": "var(--border)",
+        "shadow": "var(--shadow)",
+        "background-button-hover": "var(--background-button-hover)",
+        "foreground-dark": "var(--foreground-dark)",
+        "foreground-darker": "var(--foreground-darker)",
+        "border-grid": "var(--border-grid)",
+        "background-grid": "var(--background-grid)",
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":

@@ -32,6 +32,7 @@ import updateHabit from "@/actions/update-habit";
 import { HABIT_COLORS } from "@/globals";
 import { defaultAnimateLayoutChanges, useSortable } from "@dnd-kit/sortable";
 import { motion } from "framer-motion";
+import { useTheme } from "next-themes";
 
 export default function HabitCard({ habit }: { habit: Habit }) {
   const [showStats, setShowStats] = useState(false);
@@ -116,7 +117,7 @@ export default function HabitCard({ habit }: { habit: Habit }) {
     >
       <div
         className={cn(
-          "bg-white group rounded-2xl shadow-md max-w-min border relative cursor-default overflow-hidden",
+          "bg-foreground group rounded-2xl shadow-md shadow-shadow max-w-min border border-border relative cursor-default overflow-hidden",
           {
             "opacity-40": isDragging,
           },
@@ -129,7 +130,7 @@ export default function HabitCard({ habit }: { habit: Habit }) {
         <Tooltip content="Drag to reorder" side="left">
           <button
             {...listeners}
-            className="absolute left-[3px] top-1/2 -translate-y-1/2 text-neutral-300 group-hover:block hidden cursor-grab"
+            className="absolute left-[3px] top-1/2 -translate-y-1/2 text-text-disabled group-hover:block hidden cursor-grab"
             aria-label="Reorder"
           >
             <LuGripVertical className="w-4 h-4" />
@@ -140,11 +141,11 @@ export default function HabitCard({ habit }: { habit: Habit }) {
 
         <div className="px-5 pt-3 pb-0">
           <div className="flex gap-2 items-center min-w-0 h-8 mb-2">
-            <div className="font-base text-neutral-600 leading-none tracking-tight font-semibold">
+            <div className="font-base text-text-faded leading-none tracking-tight font-semibold">
               {habit.name}
             </div>
 
-            <div className="hidden group-hover:flex gap-1 p-1 bg-white rounded-lg border shadow">
+            <div className="hidden group-hover:flex gap-1 p-1 bg-foreground rounded-lg border border-border shadow shadow-shadow">
               <EditHabitButton habit={habit} />
               <DeleteHabitButton habit={habit} />
               <DragHabitButton {...listeners} />
@@ -153,7 +154,7 @@ export default function HabitCard({ habit }: { habit: Habit }) {
             <button
               disabled={isTodayCompleted}
               onClick={completeToday}
-              className="rounded-full flex text-xs items-center leading-none tracking-tight font-semibold disabled:font-medium disabled:text-neutral-400 ml-auto shrink-0 bg-transparent text-neutral-700 shadow-none p-0 hover:bg-neutral hover:text-neutral-950"
+              className="rounded-full flex text-xs items-center leading-none tracking-tight font-semibold disabled:font-medium disabled:text-text-disabled ml-auto shrink-0 bg-transparent text-text-faded shadow-none p-0 hover:text-text-strong"
             >
               {isTodayCompleted ? (
                 <>
@@ -183,7 +184,7 @@ export default function HabitCard({ habit }: { habit: Habit }) {
         <button
           onClick={() => setShowStats(!showStats)}
           className={cn(
-            "w-full hover:bg-gradient-to-t hover:from-stone-100 flex justify-center",
+            "w-full hover:bg-gradient-to-t hover:from-foreground-dark flex justify-center",
             {
               "p-4": showStats,
               "py-1": !showStats,
@@ -193,7 +194,7 @@ export default function HabitCard({ habit }: { habit: Habit }) {
           {showStats ? (
             <Stats habit={habit} />
           ) : (
-            <LuChevronDown className="text-neutral-400" />
+            <LuChevronDown className="text-text-disabled" />
           )}
         </button>
       </div>
@@ -207,7 +208,7 @@ const DragHabitButton = (props: HTMLAttributes<HTMLButtonElement>) => {
       <button
         {...props}
         aria-label="Reorder"
-        className="flex rounded-md text-neutral-600 text-xs p-1.5 hover:bg-neutral-100 cursor-grab"
+        className="flex rounded-md text-text-faded text-xs p-1.5 hover:bg-background-button-hover cursor-grab"
       >
         <LuGrip className="w-3.5 h-3.5" />
       </button>
@@ -237,7 +238,7 @@ const DeleteHabitButton = ({ habit }: { habit: Habit }) => {
         <Dialog.Trigger asChild>
           <button
             aria-label="Delete habit"
-            className="flex rounded-md text-red-600 text-xs p-1.5 hover:bg-neutral-100"
+            className="flex rounded-md text-red-600 text-xs p-1.5 hover:bg-background-button-hover"
           >
             <LuTrash className="w-3.5 h-3.5" />
           </button>
@@ -247,7 +248,7 @@ const DeleteHabitButton = ({ habit }: { habit: Habit }) => {
         <Dialog.Overlay className="bg-black/60 data-[state=open]:animate-overlay-show backdrop-blur-sm fixed inset-0" />
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
-          className="data-[state=open]:animate-content-show fixed top-1/2 left-1/2 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white p-6 shadow focus:outline-none"
+          className="data-[state=open]:animate-content-show fixed top-1/2 left-1/2 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-foreground p-6 border border-border shadow shadow-shadow focus:outline-none"
         >
           <Dialog.Title className="m-0 text-base font-medium">
             Delete habit
@@ -260,7 +261,7 @@ const DeleteHabitButton = ({ habit }: { habit: Habit }) => {
 
           <div className="mt-5 flex justify-end">
             <Dialog.Close asChild>
-              <Button className="mr-3 bg-transparent hover:bg-neutral-100 text-neutral-800 shadow-none border-none">
+              <Button className="mr-3 bg-transparent hover:bg-foreground-dark text-text shadow-none border-none">
                 Cancel
               </Button>
             </Dialog.Close>
@@ -272,7 +273,7 @@ const DeleteHabitButton = ({ habit }: { habit: Habit }) => {
 
           <Dialog.Close asChild>
             <button
-              className="text-violet11 hover:bg-violet4 focus:shadow-violet7 absolute top-[10px] right-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full focus:shadow-[0_0_0_2px] focus:outline-none"
+              className="absolute top-[10px] right-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full focus:outline-none"
               aria-label="Close"
             >
               <Cross2Icon />
@@ -338,7 +339,7 @@ const EditHabitButton = ({ habit }: { habit: Habit }) => {
         <Dialog.Trigger asChild>
           <button
             aria-label="Edit habit"
-            className="flex rounded-lg text-neutral-600 text-xs p-1.5 hover:bg-neutral-100"
+            className="flex rounded-lg text-text-faded text-xs p-1.5 hover:bg-background-button-hover"
           >
             <LuPencil className="w-3.5 h-3.5" />
           </button>
@@ -348,7 +349,7 @@ const EditHabitButton = ({ habit }: { habit: Habit }) => {
         <Dialog.Overlay className="bg-black/60 data-[state=open]:animate-overlay-show backdrop-blur-sm fixed inset-0" />
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
-          className="data-[state=open]:animate-content-show fixed top-1/2 left-1/2 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white p-6 shadow focus:outline-none"
+          className="data-[state=open]:animate-content-show fixed top-1/2 left-1/2 max-h-[85vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-foreground p-6 border border-border shadow shadow-shadow focus:outline-none"
         >
           <Dialog.Title className="m-0 text-base font-medium">
             Edit habit
@@ -361,14 +362,14 @@ const EditHabitButton = ({ habit }: { habit: Habit }) => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex items-center gap-5">
               <label
-                className="w-[90px] text-right text-xs text-neutral-600"
+                className="w-[90px] text-right text-xs text-text-faded"
                 htmlFor="habit-name"
               >
                 Name
               </label>
               <input
                 className={cn(
-                  "inline-flex h-[35px] w-full flex-1 border items-center justify-center rounded-md px-4 leading-none shadow outline-none",
+                  "inline-flex h-[35px] w-full flex-1 border border-border items-center justify-center rounded-md px-4 leading-none shadow shadow-shadow outline-none",
                   errors.name && "border-red-500",
                 )}
                 type="text"
@@ -386,7 +387,7 @@ const EditHabitButton = ({ habit }: { habit: Habit }) => {
             )}
 
             <div className="flex items-center gap-5 mt-3">
-              <label className="w-[90px] text-right text-xs text-neutral-600">
+              <label className="w-[90px] text-right text-xs text-text-faded">
                 Color
               </label>
               <div className="grid grid-cols-6 items-center gap-1">
@@ -403,9 +404,9 @@ const EditHabitButton = ({ habit }: { habit: Habit }) => {
                     />
                     <span
                       className={cn(
-                        "block w-5 h-5 border border-white rounded-md hover:brightness-110",
+                        "block w-5 h-5 border border-border rounded-md hover:brightness-110",
                         {
-                          "ring-2 ring-black/90": selectedColor === color,
+                          "ring-2 ring-text-strong": selectedColor === color,
                         },
                       )}
                       style={{ backgroundColor: color }}
@@ -423,7 +424,7 @@ const EditHabitButton = ({ habit }: { habit: Habit }) => {
 
           <Dialog.Close asChild>
             <button
-              className="text-violet11 hover:bg-violet4 focus:shadow-violet7 absolute top-[10px] right-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full focus:shadow-[0_0_0_2px] focus:outline-none"
+              className="absolute top-[10px] right-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full focus:outline-none"
               aria-label="Close"
             >
               <Cross2Icon />
@@ -487,13 +488,11 @@ const StatSection = ({
   extra?: string;
 }) => (
   <div className="flex flex-col gap-1 items-center">
-    <div className="text-2xs text-neutral-500 leading-none">{title}</div>
-    <div className="text-base font-bold tracking-tight leading-none text-neutral-800">
+    <div className="text-2xs text-text-faded leading-none">{title}</div>
+    <div className="text-base font-bold tracking-tight leading-none text-text">
       {stat}
     </div>
-    {extra && (
-      <div className="text-2xs leading-none text-neutral-500">{extra}</div>
-    )}
+    {extra && <div className="text-2xs leading-none text-faded">{extra}</div>}
   </div>
 );
 
@@ -516,6 +515,7 @@ const ContributionCalendar = ({
       ),
     [streaks],
   );
+  const { resolvedTheme } = useTheme();
 
   return (
     <div className="overflow-auto max-w-[calc(100vw-4rem)]">
@@ -536,12 +536,15 @@ const ContributionCalendar = ({
               {week.map(({ value }, dayIndex) => (
                 <td key={dayIndex}>
                   <div
-                    className={cn("w-3 h-3 rounded border border-black/10", {
-                      "border-black/10": value === 0,
-                    })}
-                    style={{
-                      backgroundColor: value === 0 ? "#efefef" : color,
-                    }}
+                    suppressHydrationWarning
+                    className="w-3 h-3 rounded border border-border-grid bg-background-grid"
+                    style={
+                      value !== 0
+                        ? {
+                            backgroundColor: color,
+                          }
+                        : undefined
+                    }
                   />
                 </td>
               ))}

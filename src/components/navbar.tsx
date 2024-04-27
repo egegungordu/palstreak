@@ -9,7 +9,7 @@ export default async function Navbar() {
   const loggedIn = session !== null;
 
   return (
-    <nav className="shadow w-full bg-stone-100 border-b h-12">
+    <nav className="shadow shadow-shadow w-full bg-foreground border-b border-border h-12">
       <div className="max-w-screen-md flex p-1 items-center mx-auto h-full">
         {/* <NavLinks /> */}
 

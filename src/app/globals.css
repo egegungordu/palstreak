@@ -1,3 +1,36 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+:root {
+  --background: theme('colors.neutral.50');
+  --foreground: theme('colors.white');
+  --text: theme('colors.neutral.800');
+  --text-faded: theme('colors.neutral.500');
+  --text-disabled: theme('colors.neutral.400');
+  --text-strong: theme('colors.neutral.950');
+  --border: theme('colors.gray.200');
+  --shadow: rgba(0, 0, 0, 0.1);
+  --background-button-hover: theme('colors.neutral.100');
+  --foreground-dark: theme('colors.neutral.100');
+  --foreground-darker: theme('colors.neutral.200');
+  --border-grid: theme('colors.black / 10%');
+  --background-grid: theme('colors.stone.100');
+}
+
+[data-theme='dark'] {
+  --background: theme('colors.neutral.900');
+  --foreground: theme('colors.neutral.950');
+  --text: theme('colors.neutral.100');
+  --text-faded: theme('colors.neutral.300');
+  --text-disabled: theme('colors.neutral.500');
+  --text-strong: theme('colors.neutral.50');
+  --border: theme('colors.stone.800');
+  --shadow: rgba(0, 0, 0, 0.5);
+  --background-button-hover: theme('colors.neutral.800');
+  --foreground-dark: theme('colors.neutral.800');
+  --foreground-darker: theme('colors.neutral.700');
+  --border-grid: theme('colors.white / 10%');
+  --background-grid: theme('colors.neutral.800');
+}

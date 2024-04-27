@@ -21,12 +21,12 @@ export default function Tooltip({
         <_Tooltip.Portal>
           {show && (
             <_Tooltip.Content
-              className="select-none rounded-md text-xs bg-white px-4 py-2 leading-none shadow will-change-[transform,opacity]"
+              className="select-none rounded-md text-xs bg-foreground px-4 py-2 leading-none shadow shadow-shadow border border-border will-change-[transform,opacity]"
               sideOffset={5}
               side={side}
             >
               {content}
-              <_Tooltip.Arrow className="fill-white" />
+              <_Tooltip.Arrow className="fill-foreground" />
             </_Tooltip.Content>
           )}
         </_Tooltip.Portal>

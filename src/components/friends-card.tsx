@@ -95,7 +95,7 @@ export default function FriendsCard() {
       <button
         onClick={scrollPrev}
         disabled={!canScrollPrev}
-        className="rounded-full p-2 border bg-neutral-100 hover:bg-neutral-200 disabled:pointer-events-none disabled:opacity-0 transition-all"
+        className="rounded-full p-2 border border-border bg-foreground hover:bg-background-button-hover disabled:pointer-events-none disabled:opacity-0 transition-all"
       >
         <ChevronLeftIcon />
       </button>
@@ -103,7 +103,7 @@ export default function FriendsCard() {
       <div
         className={cn(
           "overflow-hidden w-full relative",
-          "after:absolute after:h-full after:w-10 after:bg-gradient-to-l after:from-neutral-50 after:top-0 after:right-0",
+          "after:absolute after:h-full after:w-10 after:bg-gradient-to-l after:from-background after:top-0 after:right-0",
         )}
         ref={emblaRef}
       >
@@ -113,31 +113,28 @@ export default function FriendsCard() {
               key={idx}
               className="flex gap-2 items-center min-w-36 select-none group"
             >
-              <div className="rounded-full p-0.5 bg-neutral-100 shadow relative isolate">
-                <div
-                  style={{
-                    maskImage: `linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,1) ${friend.progress * 100}%, rgba(0,0,0,0) ${friend.progress * 100 + 1}%)`,
-                  }}
-                  className="absolute h-full w-full bg-black rounded-full inset-0 -z-10"
-                ></div>
-
-                <div className="p-0.5 rounded-full bg-white relative">
-                  <div className="hidden group-hover:grid absolute inset-0 w-full h-full place-items-center bg-white/60 rounded-full font-bold">
-                    {friend.progress * 100}%
-                  </div>
-
-                  <Avatar
-                    size={42}
-                    name={friend.name}
-                    variant="beam"
-                    colors={["#fee9a6", "#fec0ab", "#fa5894", "#660860", "#9380b7"]}
-                  />
+              <div className="rounded-full p-1 bg-foreground shadow relative isolate">
+                <div className="hidden text-text group-hover:grid absolute inset-0 w-full h-full place-items-center bg-foreground rounded-full font-bold">
+                  {friend.progress * 100}%
                 </div>
+
+                <Avatar
+                  size={42}
+                  name={friend.name}
+                  variant="beam"
+                  colors={[
+                    "#fee9a6",
+                    "#fec0ab",
+                    "#fa5894",
+                    "#660860",
+                    "#9380b7",
+                  ]}
+                />
               </div>
 
               <div>
                 <div className="font-medium text-xs">{friend.name}</div>
-                <div className="text-neutral-500 text-xs mt-1">
+                <div className="text-text-faded text-xs mt-1">
                   <span
                     className="font-bold text-neutral-800 px-1 py-px rounded-md"
                     style={{
@@ -158,7 +155,7 @@ export default function FriendsCard() {
       <button
         onClick={scrollNext}
         disabled={!canScrollNext}
-        className="rounded-full p-2 border bg-neutral-100 hover:bg-neutral-200 disabled:pointer-events-none disabled:opacity-0 transition-all"
+        className="rounded-full p-2 border border-border bg-foreground hover:bg-background-button-hover disabled:pointer-events-none disabled:opacity-0 transition-all"
       >
         <ChevronRightIcon />
       </button>
