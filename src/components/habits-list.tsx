@@ -86,18 +86,6 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
     setActiveId(null);
   };
 
-  useEffect(() => {
-    if (!activeId) {
-      return;
-    }
-
-    document.body.style.cursor = "grabbing";
-
-    return () => {
-      document.body.style.cursor = "";
-    };
-  }, [activeId]);
-
   return (
     <DndContext
       measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
@@ -146,6 +134,18 @@ interface OverlayHabitProps extends HTMLProps<HTMLDivElement> {
 const OverlayHabit = forwardRef<HTMLDivElement, OverlayHabitProps>(
   function OverlayHabit({ activeId, habits }, ref) {
     const activeHabit = habits.find((habit) => habit.id === activeId)!;
+
+    useEffect(() => {
+      if (!activeId) {
+        return;
+      }
+
+      document.body.style.cursor = "grabbing";
+
+      return () => {
+        document.body.style.cursor = "";
+      };
+    }, [activeId]);
 
     return (
       <div
