@@ -31,7 +31,7 @@ import { toast } from "sonner";
 import updateHabit from "@/actions/update-habit";
 import { HABIT_COLORS } from "@/globals";
 import { defaultAnimateLayoutChanges, useSortable } from "@dnd-kit/sortable";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useTheme } from "next-themes";
 
 export default function HabitCard({ habit }: { habit: Habit }) {
@@ -533,21 +533,45 @@ const ContributionCalendar = ({
         <tbody>
           {contributions.map((week, weekIndex) => (
             <tr key={weekIndex}>
-              {week.map(({ value }, dayIndex) => (
-                <td key={dayIndex}>
-                  <div
-                    suppressHydrationWarning
-                    className="w-3 h-3 rounded border border-border-grid bg-background-grid"
-                    style={
-                      value !== 0
-                        ? {
-                            backgroundColor: color,
-                          }
-                        : undefined
-                    }
-                  />
-                </td>
-              ))}
+              <AnimatePresence>
+                {week.map(({ value }, dayIndex) =>
+                  value !== 0 ? (
+                    <motion.td
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{
+                        delay: (dayIndex * 7 + weekIndex) / 20,
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 10,
+                        mass: 0.5,
+                      }}
+                      key={dayIndex}
+                      className="relative"
+                    >
+                      <div
+                        className="w-3 h-3 rounded border border-border-grid"
+                        style={{
+                          backgroundColor: color,
+                        }}
+                      />
+                    </motion.td>
+                  ) : (
+                    <td key={dayIndex}>
+                      <div
+                        className="w-3 h-3 rounded border border-border-grid bg-background-grid"
+                        style={
+                          value !== 0
+                            ? {
+                                backgroundColor: color,
+                              }
+                            : undefined
+                        }
+                      />
+                    </td>
+                  ),
+                )}
+              </AnimatePresence>
             </tr>
           ))}
         </tbody>

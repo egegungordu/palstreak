@@ -10,14 +10,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        "background": "var(--background)",
-        "foreground": "var(--foreground)",
-        "text": "var(--text)",
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        text: "var(--text)",
         "text-faded": "var(--text-faded)",
         "text-disabled": "var(--text-disabled)",
         "text-strong": "var(--text-strong)",
-        "border": "var(--border)",
-        "shadow": "var(--shadow)",
+        border: "var(--border)",
+        shadow: "var(--shadow)",
         "background-button-hover": "var(--background-button-hover)",
         "foreground-dark": "var(--foreground-dark)",
         "foreground-darker": "var(--foreground-darker)",
@@ -56,8 +56,11 @@ const config: Config = {
           to: { opacity: "1", transform: "translateY(0) scale(1)" },
         },
         "habit-pop": {
-          from: { scale: "1", boxShadow: "0 0 #0000"},
-          to: { scale: "1.02", boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" },
+          from: { scale: "1", boxShadow: "0 0 #0000" },
+          to: {
+            scale: "1.02",
+            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+          },
         },
       },
     },
