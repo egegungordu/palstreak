@@ -57,11 +57,6 @@ export default function HabitCard({ habit }: { habit: Habit }) {
       (todayStart.getTime() - firstDayStart.getTime()) / (24 * 60 * 60 * 1000),
     );
 
-    console.log({
-      firstDayYear: firstDay.getUTCFullYear(),
-      firstDayMonth: firstDay.getUTCMonth(),
-      firstDayDate: firstDay.getUTCDate(),
-    });
     return nthDay;
   }, [habit.createdAt, habit.timezoneOffset]);
   const isTodayCompleted = habit.streaks[currentDayIndex]?.value !== 0;
