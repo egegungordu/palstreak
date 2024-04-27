@@ -23,8 +23,8 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="h-full fixed shadow shadow-shadow border-r border-border w-10 xl:w-56 bg-foreground hidden lg:block p-1 shrink-0 box-content z-10">
-      <div className="h-12" />
+    <div className="h-full fixed shadow shadow-shadow border-r border-border w-10 xl:w-56 bg-foreground hidden lg:block p-1.5 shrink-0 box-content z-10">
+      <div className="h-14" />
 
       <div className="flex flex-col gap-1">
         {LINKS.map(({ href, Icon, name }) => (
