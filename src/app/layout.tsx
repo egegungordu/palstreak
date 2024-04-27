@@ -5,6 +5,9 @@ import { cn } from "@/lib/utils";
 import Navbar from "@/components/navbar";
 import Toaster from "@/components/toaster";
 import ThemeProvider from "@/providers/theme-provider";
+import SessionProvider from "@/providers/session-provider";
+import { auth } from "@/lib/auth";
+import Sidebar from "@/components/sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,20 +16,30 @@ export const metadata: Metadata = {
   description: "Track your habits with friends",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={cn(inter.className, "text-sm bg-background")}>
+    <html lang="en" suppressHydrationWarning className="h-full">
+      <body
+        className={cn(
+          inter.className,
+          "text-sm bg-background h-full",
+        )}
+      >
         <ThemeProvider>
-          <Navbar />
+          <SessionProvider session={session}>
+            <Sidebar />
+            <Navbar />
 
-          {children}
+            {children}
 
-          <Toaster />
+            <Toaster />
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -8,7 +8,12 @@ import { revalidatePath } from "next/cache";
 
 export default async function deleteHabit({ habitId }: { habitId: string }) {
   const session = await auth();
-  if (!session || !session.user || !session.user.id) {
+  if (
+    !session ||
+    !session.user ||
+    !session.user.id ||
+    !session.user.onboardingFinished
+  ) {
     throw new Error("Unauthorized");
   }
 

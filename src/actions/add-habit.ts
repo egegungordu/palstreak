@@ -15,9 +15,15 @@ export default async function addHabit({
   color: string;
 }) {
   const session = await auth();
-  if (!session || !session.user || !session.user.id) {
+  if (
+    !session ||
+    !session.user ||
+    !session.user.id ||
+    !session.user.onboardingFinished
+  ) {
     throw new Error("Unauthorized");
   }
+
   const userId = session.user.id;
 
   await db.insert(habit).values({

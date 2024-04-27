@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { habit } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
 async function getHabits(userId: string) {
   let habits = await db.select().from(habit).where(eq(habit.userId, userId));
@@ -46,8 +47,12 @@ async function Habits() {
 export default async function Home() {
   const session = await auth();
 
+  if (session && !session.user.onboardingFinished) {
+    redirect("/onboarding");
+  }
+
   return (
-    <main className="flex flex-col items-center gap-4 py-10 px-2">
+    <main className="flex flex-col items-center gap-4 py-8 px-2 pt-20">
       <FriendsCard />
 
       <div className="mt-2" />

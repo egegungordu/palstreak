@@ -136,10 +136,10 @@ export default function FriendsCard() {
                 <div className="font-medium text-xs">{friend.name}</div>
                 <div className="text-text-faded text-xs mt-1">
                   <span
-                    className="font-bold text-neutral-800 px-1 py-px rounded-md"
-                    style={{
-                      backgroundColor: streakToColor(friend.streak),
-                    }}
+                    className="font-bold text-text-strong px-1 py-px rounded-md bg-foreground shadow shadow-shadow"
+                    // style={{
+                    //   backgroundColor: streakToColor(friend.streak),
+                    // }}
                   >
                     {friend.streak}
                   </span>{" "}

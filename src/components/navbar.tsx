@@ -9,13 +9,13 @@ export default async function Navbar() {
   const loggedIn = session !== null;
 
   return (
-    <nav className="shadow shadow-shadow w-full bg-foreground border-b border-border h-12">
-      <div className="max-w-screen-md flex p-1 items-center mx-auto h-full">
+    <nav className="shadow top-0 left-0 fixed shadow-shadow w-full bg-foreground border-b border-border h-12 px-6 z-10">
+      <div className="flex p-1 items-center mx-auto h-full">
         {/* <NavLinks /> */}
 
         <div className="flex-1" />
 
-        {loggedIn && <AccountDropdown session={session}/>}
+        {loggedIn && <AccountDropdown session={session} />}
         {!loggedIn && <SignIn />}
       </div>
     </nav>

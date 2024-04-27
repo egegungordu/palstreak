@@ -24,8 +24,6 @@ export default function AccountDropdown({ session }: { session: Session }) {
     setTheme(theme);
   };
 
-  console.log("hello", theme);
-
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
@@ -38,7 +36,7 @@ export default function AccountDropdown({ session }: { session: Session }) {
               colors={["#fee9a6", "#fec0ab", "#fa5894", "#660860", "#9380b7"]}
             />
           </div>
-          {session.user?.name}
+          {session.user.username ?? "Account"}
         </button>
       </DropdownMenu.Trigger>
 
@@ -47,17 +45,8 @@ export default function AccountDropdown({ session }: { session: Session }) {
           onCloseAutoFocus={(e) => e.preventDefault()}
           className="min-w-[220px] bg-foreground rounded-md p-1 shadow shadow-shadow"
           sideOffset={10}
+          align="end"
         >
-          <DropdownMenu.Item asChild>
-            <button
-              onClick={() => signOut()}
-              className="leading-none rounded-md flex items-center h-8 px-3 relative select-none outline-none hover:bg-background-button-hover transition-colors w-full"
-            >
-              <LuLogOut className="w-4 h-4 mr-2" />
-              Sign out
-            </button>
-          </DropdownMenu.Item>
-
           <DropdownMenu.Item asChild>
             <Select.Root onValueChange={handleThemeChange} defaultValue={theme}>
               <Select.Trigger
@@ -88,32 +77,43 @@ export default function AccountDropdown({ session }: { session: Session }) {
               <Select.Portal>
                 <Select.Content
                   position="popper"
-                  sideOffset={6}
+                  side="left"
+                  sideOffset={8}
                   align="start"
-                  alignOffset={22}
+                  alignOffset={-4}
                   className="overflow-hidden bg-foreground rounded-lg shadow shadow-shadow"
                 >
                   <Select.Viewport className="p-[5px]">
                     <Select.Group>
                       {THEMES.map(({ value }) => {
-                        console.log({ value, eq: value === theme });
                         return (
-                        <Select.Item
-                          value={value}
-                          key={value}
-                          className="leading-none capitalize rounded-md flex items-center text-xs gap-2 h-7 px-2 min-w-20 relative select-none hover:bg-background-button-hover outline-none"
-                        >
-                          <Select.ItemText>{value}</Select.ItemText>
-                          <Select.ItemIndicator>
-                            {value === theme && <CheckIcon />}
-                          </Select.ItemIndicator>
-                        </Select.Item>
-                      )})}
+                          <Select.Item
+                            value={value}
+                            key={value}
+                            className="leading-none capitalize rounded-md flex items-center text-xs gap-2 h-7 px-2 min-w-20 relative select-none hover:bg-background-button-hover outline-none"
+                          >
+                            <Select.ItemText>{value}</Select.ItemText>
+                            <Select.ItemIndicator>
+                              {value === theme && <CheckIcon />}
+                            </Select.ItemIndicator>
+                          </Select.Item>
+                        );
+                      })}
                     </Select.Group>
                   </Select.Viewport>
                 </Select.Content>
               </Select.Portal>
             </Select.Root>
+          </DropdownMenu.Item>
+
+          <DropdownMenu.Item asChild>
+            <button
+              onClick={() => signOut()}
+              className="leading-none rounded-md flex items-center h-8 px-3 relative select-none outline-none hover:bg-background-button-hover transition-colors w-full"
+            >
+              <LuLogOut className="w-4 h-4 mr-2" />
+              Sign out
+            </button>
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>

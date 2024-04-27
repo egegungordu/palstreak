@@ -8,10 +8,15 @@ import { auth } from "@/lib/auth";
 
 export default async function markComplete({ habitId }: { habitId: string }) {
   const session = await auth();
-  if (!session || !session.user || !session.user.id) {
+  if (
+    !session ||
+    !session.user ||
+    !session.user.id ||
+    !session.user.onboardingFinished
+  ) {
     throw new Error("Unauthorized");
   }
-
+ 
   const userId = session.user.id;
 
   const dbHabit = await db.select().from(habit).where(eq(habit.id, habitId));

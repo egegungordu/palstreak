@@ -31,6 +31,7 @@ import reorderHabits from "@/actions/reorder-habits";
 import { cn } from "@/lib/utils";
 import { AnimatePresence } from "framer-motion";
 import { createRestrictToParentElementSmooth } from "@/lib/dnd-modifiers";
+import { useSession } from "next-auth/react";
 
 const restrictToParentElementSmooth = createRestrictToParentElementSmooth({
   padding: 32,
