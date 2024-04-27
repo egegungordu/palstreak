@@ -37,22 +37,33 @@ export default function HabitCard({ habit }: { habit: Habit }) {
   const [showStats, setShowStats] = useState(false);
   const [pending, startTransiiton] = useTransition();
   const currentDayIndex = useMemo(() => {
-    const firstDay = new Date(habit.createdAt.getTime() + 1000 * 60 * 60 * 24);
+    const firstDay = new Date(
+      habit.createdAt.getTime() - habit.timezoneOffset * 60 * 1000,
+    );
     const firstDayStart = new Date(
       firstDay.getUTCFullYear(),
       firstDay.getUTCMonth(),
       firstDay.getUTCDate(),
     );
-    const today = new Date(new Date().getTime() + 1000 * 60 * 60 * 24);
+    const today = new Date(
+      new Date().getTime() - habit.timezoneOffset * 60 * 1000,
+    );
     const todayStart = new Date(
       today.getUTCFullYear(),
       today.getUTCMonth(),
       today.getUTCDate(),
     );
-    return Math.floor(
+    const nthDay = Math.floor(
       (todayStart.getTime() - firstDayStart.getTime()) / (24 * 60 * 60 * 1000),
     );
-  }, [habit.createdAt]);
+
+    console.log({
+      firstDayYear: firstDay.getUTCFullYear(),
+      firstDayMonth: firstDay.getUTCMonth(),
+      firstDayDate: firstDay.getUTCDate(),
+    });
+    return nthDay;
+  }, [habit.createdAt, habit.timezoneOffset]);
   const isTodayCompleted = habit.streaks[currentDayIndex]?.value !== 0;
 
   const {
@@ -145,7 +156,6 @@ export default function HabitCard({ habit }: { habit: Habit }) {
             </div>
 
             <button
-              // loading={pending}
               disabled={isTodayCompleted}
               onClick={completeToday}
               className="rounded-full flex text-xs items-center disabled:text-neutral-400 ml-auto shrink-0 bg-transparent text-neutral-500 shadow-none p-0 hover:bg-neutral hover:text-neutral-950"

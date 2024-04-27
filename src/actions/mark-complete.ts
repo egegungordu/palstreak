@@ -1,11 +1,19 @@
 "use server";
 
 import { db } from "@/db";
-import { habit } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { habit, users } from "@/db/schema";
+import { eq, max } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { auth } from "@/lib/auth";
 
 export default async function markComplete({ habitId }: { habitId: string }) {
+  const session = await auth();
+  if (!session || !session.user || !session.user.id) {
+    throw new Error("Unauthorized");
+  }
+
+  const userId = session.user.id;
+
   const dbHabit = await db.select().from(habit).where(eq(habit.id, habitId));
 
   // TODO: should this be an error or something else?
@@ -22,17 +30,17 @@ export default async function markComplete({ habitId }: { habitId: string }) {
     targetHabit.createdAt.getTime() - targetHabit.timezoneOffset * 60 * 1000,
   );
   const firstDayStart = new Date(
-    firstDay.getFullYear(),
-    firstDay.getMonth(),
-    firstDay.getDate(),
+    firstDay.getUTCFullYear(),
+    firstDay.getUTCMonth(),
+    firstDay.getUTCDate(),
   );
   const today = new Date(
     new Date().getTime() - targetHabit.timezoneOffset * 60 * 1000,
   );
   const todayStart = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate(),
+    today.getUTCFullYear(),
+    today.getUTCMonth(),
+    today.getUTCDate(),
   );
   const nthDay = Math.floor(
     (todayStart.getTime() - firstDayStart.getTime()) / (24 * 60 * 60 * 1000),
@@ -44,25 +52,46 @@ export default async function markComplete({ habitId }: { habitId: string }) {
   }
 
   const streak = targetHabit.streak + 1;
-  const longestStreak = Math.max(targetHabit.longestStreak, targetHabit.streak + 1);
+  const longestStreak = Math.max(targetHabit.longestStreak, streak);
   const lastCompletedAt = new Date();
 
-  // update the habit
-  await db
-    .update(habit)
-    .set({
-      streak,
-      longestStreak,
-      lastCompletedAt,
-      streaks: {
-        ...targetHabit.streaks,
-        [nthDay]: {
-          date: new Date(),
-          value: 1,
+  await db.transaction(async (tx) => {
+    await tx
+      .update(habit)
+      .set({
+        streak,
+        longestStreak,
+        lastCompletedAt,
+        streaks: {
+          ...targetHabit.streaks,
+          [nthDay]: {
+            date: new Date(),
+            value: 1,
+          },
         },
-      },
-    })
-    .where(eq(habit.id, habitId));
+      })
+      .where(eq(habit.id, habitId));
+
+    // update the user's longest streak
+    const { longestCurrentStreak } = (
+      await tx
+        .select({
+          longestCurrentStreak: users.longestCurrentStreak,
+        })
+        .from(users)
+        .where(eq(users.id, userId))
+    )[0];
+
+    await tx
+      .update(users)
+      .set({
+        longestCurrentStreak: Math.max(
+          longestCurrentStreak || 0,
+          longestStreak,
+        ),
+      })
+      .where(eq(users.id, userId));
+  });
 
   revalidatePath("/");
 }

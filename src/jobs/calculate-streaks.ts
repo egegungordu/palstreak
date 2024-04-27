@@ -87,7 +87,7 @@ client.defineJob({
             .from(habit)
             .where(eq(habit.userId, user.id));
 
-          const biggestStreak = userHabits.reduce(
+          const longestCurrentStreak = userHabits.reduce(
             (acc, habit) => Math.max(acc, habit.streak),
             0,
           );
@@ -95,7 +95,7 @@ client.defineJob({
           await tx
             .update(users)
             .set({
-              biggestStreak,
+              longestCurrentStreak,
             })
             .where(eq(users.id, user.id));
         }

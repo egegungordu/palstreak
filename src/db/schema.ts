@@ -40,7 +40,7 @@ export const users = pgTable("user", {
     .$defaultFn(() => randomUUID()),
   name: text("name"),
   email: text("email").notNull().unique(),
-  biggestStreak: integer("biggestStreak").notNull().default(0),
+  longestCurrentStreak: integer("longestCurrentStreak").notNull().default(0),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
 });
