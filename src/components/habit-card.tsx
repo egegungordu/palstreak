@@ -515,7 +515,6 @@ const ContributionCalendar = ({
       ),
     [streaks],
   );
-  const { resolvedTheme } = useTheme();
 
   return (
     <div className="overflow-auto max-w-[calc(100vw-4rem)]">
@@ -525,52 +524,31 @@ const ContributionCalendar = ({
         className="table table-auto border-spacing-1 relative"
       >
         <caption className="sr-only">Streak Calendar</caption>
+
         <thead>
           {/*<tr className="h-4">
           {renderWeekHeaders()}
         </tr>*/}
         </thead>
+
         <tbody>
           {contributions.map((week, weekIndex) => (
             <tr key={weekIndex}>
               <AnimatePresence>
-                {week.map(({ value }, dayIndex) =>
-                  value !== 0 ? (
-                    <motion.td
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{
-                        delay: (dayIndex * 7 + weekIndex) / 20,
-                        type: "spring",
-                        stiffness: 200,
-                        damping: 10,
-                        mass: 0.5,
-                      }}
-                      key={dayIndex}
-                      className="relative"
-                    >
-                      <div
-                        className="w-3 h-3 rounded border border-border-grid"
-                        style={{
-                          backgroundColor: color,
-                        }}
-                      />
-                    </motion.td>
-                  ) : (
-                    <td key={dayIndex}>
-                      <div
-                        className="w-3 h-3 rounded border border-border-grid bg-background-grid"
-                        style={
-                          value !== 0
-                            ? {
-                                backgroundColor: color,
-                              }
-                            : undefined
-                        }
-                      />
-                    </td>
-                  ),
-                )}
+                {week.map(({ value }, dayIndex) => (
+                  <td key={dayIndex}>
+                    <div
+                      className="w-3 h-3 rounded border border-border-grid bg-background-grid"
+                      style={
+                        value !== 0
+                          ? {
+                              backgroundColor: color,
+                            }
+                          : undefined
+                      }
+                    />
+                  </td>
+                ))}
               </AnimatePresence>
             </tr>
           ))}
