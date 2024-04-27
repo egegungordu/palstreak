@@ -158,20 +158,20 @@ export default function HabitCard({ habit }: { habit: Habit }) {
             <button
               disabled={isTodayCompleted}
               onClick={completeToday}
-              className="rounded-full flex text-xs items-center disabled:text-neutral-400 ml-auto shrink-0 bg-transparent text-neutral-500 shadow-none p-0 hover:bg-neutral hover:text-neutral-950"
+              className="rounded-full flex text-xs items-center leading-none tracking-tight font-semibold disabled:font-medium disabled:text-neutral-400 ml-auto shrink-0 bg-transparent text-neutral-700 shadow-none p-0 hover:bg-neutral hover:text-neutral-950"
             >
               {isTodayCompleted ? (
                 <>
                   Completed
-                  <LuCheckSquare className="w-4 h-4 ml-1" />
+                  <LuCheckSquare className="w-4 h-4 ml-1.5" />
                 </>
               ) : (
                 <>
                   Mark as done
                   {pending ? (
-                    <LuLoader className="w-4 h-4 ml-1 animate-spin" />
+                    <LuLoader className="w-4 h-4 ml-1.5 animate-spin" />
                   ) : (
-                    <LuSquare className="w-4 h-4 ml-1" />
+                    <LuSquare className="w-4 h-4 ml-1.5" />
                   )}
                 </>
               )}
@@ -542,10 +542,10 @@ const ContributionCalendar = ({
                 <td key={dayIndex}>
                   <div
                     className={cn("w-3 h-3 rounded border border-black/10", {
-                      "border-white/60": value === 0,
+                      "border-black/10": value === 0,
                     })}
                     style={{
-                      backgroundColor: value === 0 ? "#ddd" : color,
+                      backgroundColor: value === 0 ? "#efefef" : color,
                     }}
                   />
                 </td>
