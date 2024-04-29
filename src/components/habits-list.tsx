@@ -1,7 +1,6 @@
 "use client";
 
 import HabitCard from "./habit-card";
-import AddHabit from "./add-habit";
 import { type Habit } from "@/app/page";
 import {
   DndContext,
