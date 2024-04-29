@@ -1,6 +1,7 @@
 "use client";
 
 import * as _Tabs from "@radix-ui/react-tabs";
+import { AnimatePresence, motion } from "framer-motion";
 import { Children } from "react";
 
 function TabTrigger({ name, value }: { name: string; value: string }) {
@@ -36,12 +37,21 @@ export default function Tabs({
           <TabTrigger key={index} name={name} value={name} />
         ))}
       </_Tabs.List>
-      {children &&
-        Children.map(children, (child, index) => (
-          <_Tabs.Content key={index} value={tabNames[index]}>
-            {child}
-          </_Tabs.Content>
-        ))}
+      <AnimatePresence mode="sync">
+        {children &&
+          Children.map(children, (child, index) => (
+            <_Tabs.Content value={tabNames[index]}>
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+              >
+                {child}
+              </motion.div>
+            </_Tabs.Content>
+          ))}
+      </AnimatePresence>
     </_Tabs.Root>
   );
 }
