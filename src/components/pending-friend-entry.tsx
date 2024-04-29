@@ -3,13 +3,13 @@
 import { LuCheck, LuX } from "react-icons/lu";
 import CircleButton from "./circle-button";
 import { HiMiniArrowDownLeft, HiMiniArrowUpRight } from "react-icons/hi2";
-import Avatar from "boring-avatars";
 import Tooltip from "./tooltip";
 import FriendEntry from "./friend-entry";
 import { useTransition } from "react";
 import acceptFriendRequest from "@/actions/accept-friend-request";
 import declineFriendRequest from "@/actions/decline-friend-request";
 import withdrawFriendRequest from "@/actions/withdraw-friend-request";
+import { toast } from "sonner";
 
 export default function PendingFriendEntry({
   friend,
@@ -29,16 +29,28 @@ export default function PendingFriendEntry({
   const handleAccept = () => {
     startAcceptTransition(async () => {
       await acceptFriendRequest({ friendId: friend.id });
+
+      toast.success("Friend request accepted!", {
+        description: "The friend request has been successfully accepted.",
+      });
     });
   };
   const handleDecline = () => {
     startDeclineTransition(async () => {
       await declineFriendRequest({ friendId: friend.id });
+
+      toast.success("Friend request declined!", {
+        description: "The friend request has been successfully declined.",
+      });
     });
   };
   const handleWithdraw = () => {
     startWithdrawTransition(async () => {
       await withdrawFriendRequest({ friendId: friend.id });
+
+      toast.success("Friend request withdrawn!", {
+        description: "The friend request has been successfully withdrawn.",
+      });
     });
   };
 

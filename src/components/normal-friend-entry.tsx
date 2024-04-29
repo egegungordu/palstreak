@@ -10,6 +10,7 @@ import Button from "./button";
 import { useTransition, useState } from "react";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import removeFriend from "@/actions/remove-friend";
+import { toast } from "sonner";
 
 export default function NormalFriendEntry({
   friend,
@@ -58,8 +59,8 @@ const RemoveFriendButton = ({ friendId }: { friendId: string }) => {
     startTransition(async () => {
       await removeFriend({ friendId });
 
-      toast.success("Habit deleted!", {
-        description: "The habit has been successfully deleted.",
+      toast.success("Friend removed", {
+        description: "You have successfully removed this friend",
       });
 
       setIsDialogOpen(false);
