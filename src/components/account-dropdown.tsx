@@ -31,7 +31,7 @@ export default function AccountDropdown({ session }: { session: Session }) {
           <div className="relative after:absolute after:inset-0 after:ring-inset after:ring-2 after:ring-white/40 after:rounded-full">
             <Avatar
               size={30}
-              name={session.user?.name || ""}
+              name={session.user?.username || ""}
               variant="beam"
               colors={["#fee9a6", "#fec0ab", "#fa5894", "#660860", "#9380b7"]}
             />

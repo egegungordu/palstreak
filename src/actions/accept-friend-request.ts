@@ -5,6 +5,7 @@ import { friendRequests, friends, users } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { and, count, eq } from "drizzle-orm";
+import { sortIds } from "@/db/utils";
 
 export default async function acceptFriendRequest({
   friendId,
@@ -24,38 +25,25 @@ export default async function acceptFriendRequest({
   const userId = session.user.id;
 
   await db.transaction(async (tx) => {
-    const friend = await tx.select().from(users).where(eq(users.id, friendId));
-
-    if (friend.length === 0) {
-      return;
-    }
-
-    const incomingFriendRequests = await db
-      .select()
-      .from(friendRequests)
-      .where(
-        and(
-          eq(friendRequests.fromUserId, friendId),
-          eq(friendRequests.toUserId, userId),
-        ),
-      );
-
-    if (incomingFriendRequests.length === 0) {
-      return;
-    }
-
-    await db
+    const deletedFriendRequest = await tx
       .delete(friendRequests)
       .where(
         and(
           eq(friendRequests.fromUserId, friendId),
           eq(friendRequests.toUserId, userId),
         ),
-      );
+      )
+      .returning();
+
+    if (deletedFriendRequest.length === 0) {
+      return;
+    }
+
+    const [smallId, bigId] = sortIds(userId, friendId);
 
     await db.insert(friends).values({
-      userId: userId,
-      friendId: friendId,
+      userId: smallId,
+      friendId: bigId,
     });
   });
 

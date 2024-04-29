@@ -120,7 +120,7 @@ export default function FriendsCard() {
 
                 <Avatar
                   size={42}
-                  name={friend.name}
+                  name={friend.username}
                   variant="beam"
                   colors={[
                     "#fee9a6",
