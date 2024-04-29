@@ -12,17 +12,19 @@ export default function Tooltip({
   content,
   side = "top",
   show = true,
+  asChild = true,
 }: {
   children: React.ReactNode;
   tooltipClassName?: string;
   content?: string;
   side?: Side;
   show?: boolean;
+  asChild?: boolean;
 }) {
   return (
     <_Tooltip.Provider>
       <_Tooltip.Root delayDuration={100}>
-        <_Tooltip.Trigger asChild>{children}</_Tooltip.Trigger>
+        <_Tooltip.Trigger asChild={asChild}>{children}</_Tooltip.Trigger>
         <_Tooltip.Portal>
           {show && (
             <_Tooltip.Content

@@ -26,7 +26,7 @@ async function getPendingFriends() {
 
   return [...outgoingRequests, ...incomingRequests].map(
     ({ friendRequest, user }) => ({
-      id: friendRequest.id,
+      id: user.id,
       direction:
         friendRequest.fromUserId === session.user.id
           ? ("outgoing" as const)

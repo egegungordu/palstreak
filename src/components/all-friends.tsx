@@ -2,7 +2,6 @@ import { db } from "@/db";
 import { friends, users } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
-import Avatar from "boring-avatars";
 import NormalFriendEntry from "./normal-friend-entry";
 
 async function getAllFriends() {

@@ -1,10 +1,10 @@
 "use server";
 
 import { db } from "@/db";
-import { friendRequests, friends, users } from "@/db/schema";
+import { friendRequests, friends } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
-import { and, count, eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { sortIds } from "@/db/utils";
 
 export default async function acceptFriendRequest({
@@ -25,6 +25,7 @@ export default async function acceptFriendRequest({
   const userId = session.user.id;
 
   await db.transaction(async (tx) => {
+    console.log({ userId, friendId });
     const deletedFriendRequest = await tx
       .delete(friendRequests)
       .where(
@@ -34,6 +35,8 @@ export default async function acceptFriendRequest({
         ),
       )
       .returning();
+
+    console.log({ deletedFriendRequest });
 
     if (deletedFriendRequest.length === 0) {
       return;

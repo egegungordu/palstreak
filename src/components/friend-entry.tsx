@@ -1,10 +1,6 @@
 "use client";
 
-import { LuCheck, LuX } from "react-icons/lu";
-import CircleButton from "./circle-button";
-import { HiMiniArrowDownLeft, HiMiniArrowUpRight } from "react-icons/hi2";
 import Avatar from "boring-avatars";
-import Tooltip from "./tooltip";
 
 export default function FriendEntry({
   friend,

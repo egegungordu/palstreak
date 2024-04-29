@@ -43,7 +43,7 @@ export default function AccountDropdown({ session }: { session: Session }) {
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
-          className="min-w-[220px] bg-foreground rounded-md p-1 shadow shadow-shadow"
+          className="min-w-[220px] bg-foreground rounded-md p-1 shadow shadow-shadow flex flex-col gap-1"
           sideOffset={10}
           align="end"
         >
