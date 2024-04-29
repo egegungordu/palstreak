@@ -109,8 +109,6 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
             ))}
           </AnimatePresence>
         </ol>
-
-        <AddHabit />
       </SortableContext>
       <DragOverlay dropAnimation={dropAnimationConfig}>
         <AnimatePresence initial={false}>

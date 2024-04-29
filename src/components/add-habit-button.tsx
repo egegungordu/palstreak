@@ -17,7 +17,7 @@ type AddHabitInputs = {
   color: string;
 };
 
-export default function AddHabit() {
+export default function AddHabitButton() {
   const timezone = -new Date().getTimezoneOffset() / 60;
   const timezoneSign = timezone > 0 ? "+" : "-";
   const [pending, startTransition] = useTransition();
@@ -64,11 +64,12 @@ export default function AddHabit() {
 
   return (
     <Dialog.Root open={isDialogOpen} onOpenChange={onOpenChange}>
-      <Tooltip content="Create new habit" side="bottom">
+      <Tooltip content="Delete habit" side="top">
         <Dialog.Trigger asChild>
-          <button className="bg-foreground-darker w-8 h-8 rounded-full flex items-center justify-center hover:bg-foreground-dark">
-            <LuPlus className="w-4 h-4 text-text-faded" />
-          </button>
+          <Button className="ml-4 rounded-full gap-1.5 pr-3">
+            Add habit
+            <LuPlus className="w-4 h-4" />
+          </Button>
         </Dialog.Trigger>
       </Tooltip>
       <Dialog.Portal>

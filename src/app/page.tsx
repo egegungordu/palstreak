@@ -1,3 +1,5 @@
+import AddFriendButton from "@/components/add-friend-button";
+import AddHabitButton from "@/components/add-habit-button";
 import FriendsCard from "@/components/friends-card";
 import HabitsList from "@/components/habits-list";
 import { db } from "@/db";
@@ -53,14 +55,20 @@ export default async function Home() {
   }
 
   return (
-    <main className="flex flex-col items-center gap-4 py-8 px-2 pt-20">
+    <main className="mx-auto py-8 px-2 pt-20 max-w-screen-md flex flex-col items-center">
       <FriendsCard />
 
-      <div className="mt-2" />
+      <div className="flex items-center justify-between w-full self-start mt-8">
+        <h1 className="font-bold text-lg">Habits</h1>
+
+        <AddHabitButton />
+      </div>
+
+      <div className="mt-6" />
 
       <Habits />
 
       <div className="mt-2" />
     </main>
-  );
+  )
 }
