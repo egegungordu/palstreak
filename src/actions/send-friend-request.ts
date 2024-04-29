@@ -37,6 +37,11 @@ export default async function sendFriendRequest({
       return false;
     }
 
+    // sadly, you can't be friends with yourself
+    if (friend[0].id === userId) {
+      return false;
+    }
+
     const deletedExistingIncomingRequest = await tx
       .delete(friendRequests)
       .where(

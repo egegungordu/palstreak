@@ -14,10 +14,10 @@ export default async function Friends() {
 
   return (
     <main className="mx-auto py-8 px-2 pt-20 max-w-screen-md">
-      <div className="flex items-center">
+      <div className="flex items-center justify-between">
         <h1 className="font-bold text-lg">Friends</h1>
 
-        <AddFriendButton />
+        <AddFriendButton username={session.user.username}/>
       </div>
 
       <div className="my-6" />

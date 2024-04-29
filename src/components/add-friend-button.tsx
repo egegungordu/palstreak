@@ -15,7 +15,7 @@ type AddFriendInputs = {
   username: string;
 };
 
-export default function AddFriendButton() {
+export default function AddFriendButton({ username }: { username: string }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pending, startTransition] = useTransition();
 
@@ -24,6 +24,7 @@ export default function AddFriendButton() {
     handleSubmit,
     formState: { errors },
     reset,
+    setError,
   } = useForm<AddFriendInputs>({
     defaultValues: {
       username: "",
@@ -31,6 +32,14 @@ export default function AddFriendButton() {
   });
 
   const onSubmit: SubmitHandler<AddFriendInputs> = async (data) => {
+    if (data.username === username) {
+      setError("username", {
+        type: "manual",
+        message: "You can't add yourself as a friend, silly!",
+      });
+      return;
+    }
+
     startTransition(async () => {
       const success = await sendFriendRequest({
         friendUsername: data.username,
@@ -96,13 +105,15 @@ export default function AddFriendButton() {
                 autoComplete="off"
                 id="username"
                 placeholder="Username"
-                {...register("username", { required: true })}
+                {...register("username", {
+                  required: { value: true, message: "This field is required" },
+                })}
               />
             </div>
 
             {errors.username && (
               <div className="mt-2 text-end text-red-500 text-xs">
-                This field is required
+                {errors.username.message}
               </div>
             )}
 
