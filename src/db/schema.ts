@@ -60,9 +60,6 @@ export const users = pgTable("user", {
 });
 
 export const friendRequests = pgTable("friendRequest", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => randomUUID()),
   fromUserId: text("fromUserId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
@@ -73,7 +70,7 @@ export const friendRequests = pgTable("friendRequest", {
     .notNull()
     .defaultNow(),
 }, (table) => ({
-  fromIdx: index().on(table.fromUserId),
+  compoundKey: primaryKey({ columns: [table.fromUserId, table.toUserId] }),
   toIdx: index().on(table.toUserId),
 }));
 
