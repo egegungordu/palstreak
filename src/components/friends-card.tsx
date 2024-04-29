@@ -11,27 +11,27 @@ import { cn } from "@/lib/utils";
 
 const friends = [
   {
-    name: "Shadow",
+    username: "Shadow",
     streak: 14,
     progress: 0.2,
   },
   {
-    name: "Betul",
+    username: "Betul",
     streak: 30,
     progress: 0.6,
   },
   {
-    name: "Ghoul",
+    username: "Ghoul",
     streak: 60,
     progress: 0.8,
   },
   {
-    name: "Atabey",
+    username: "Atabey",
     streak: 60,
     progress: 0.8,
   },
   {
-    name: "Petneplp",
+    username: "Petneplp",
     streak: 60,
     progress: 0.8,
   },
