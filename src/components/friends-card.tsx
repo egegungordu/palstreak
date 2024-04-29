@@ -133,7 +133,7 @@ export default function FriendsCard() {
               </div>
 
               <div>
-                <div className="font-medium text-xs">{friend.name}</div>
+                <div className="font-medium text-xs">{friend.username}</div>
                 <div className="text-text-faded text-xs mt-1">
                   <span
                     className="font-bold text-text-strong px-1 py-px rounded-md bg-foreground shadow shadow-shadow"
