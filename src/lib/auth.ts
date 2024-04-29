@@ -28,6 +28,7 @@ declare module "next-auth/jwt" {
   }
 }
 
+// this is a lie
 declare module "@auth/core/adapters" {
   interface AdapterUser {
     username: string | null;
@@ -36,6 +37,19 @@ declare module "@auth/core/adapters" {
 }
 
 let drizzleAdapter = DrizzleAdapter(db);
+
+drizzleAdapter.createUser = async (user) => {
+  console.log("CREATE USER CALLED", {user});
+  const [dbUser] = await db.insert(users).values({
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    // do not use the image from google
+    image: null,
+    emailVerified: user.emailVerified,
+  }).returning();
+  return dbUser;
+}
 
 drizzleAdapter.getUser = async (id) => {
   const user = await db.select().from(users).where(eq(users.id, id));
