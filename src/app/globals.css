@@ -19,6 +19,8 @@
   --background-grid: theme('colors.stone.100');
   --logo: theme('colors.sky.800');
   --logo-light: theme('colors.sky.400');
+  --shadow-grid: theme('colors.white / 40%');
+  --background-grid-today: theme('colors.stone.300');
 }
 
 [data-theme='dark'] {
@@ -34,7 +36,9 @@
   --foreground-dark: theme('colors.neutral.800');
   --foreground-darker: theme('colors.neutral.700');
   --border-grid: theme('colors.white / 10%');
-  --background-grid: theme('colors.neutral.800');
+  --background-grid: theme('colors.neutral.900');
   --logo: theme('colors.sky.400');
   --logo-light: theme('colors.sky.100');
+  --shadow-grid: theme('colors.black / 40%');
+  --background-grid-today: theme('colors.neutral.700');
 }

@@ -535,20 +535,28 @@ const ContributionCalendar = ({
           {contributions.map((week, weekIndex) => (
             <tr key={weekIndex}>
               <AnimatePresence>
-                {week.map(({ value }, dayIndex) => (
-                  <td key={dayIndex}>
-                    <div
-                      className="w-3 h-3 rounded border border-border-grid bg-background-grid"
-                      style={
-                        value !== 0
-                          ? {
-                              backgroundColor: color,
-                            }
-                          : undefined
-                      }
-                    />
-                  </td>
-                ))}
+                {week.map(({ value }, dayIndex) => {
+                  const isToday = dayIndex * 7 + weekIndex === currentDayIndex;
+                  const isBeforeToday = dayIndex * 7 + weekIndex < currentDayIndex;
+                  return (
+                    <td key={dayIndex}>
+                      <div
+                        className={cn("w-3 h-3 rounded border border-border-grid bg-background-grid", {
+                          "shadow-inner shadow-shadow-grid": value !== 0,
+                          "bg-background-grid-today": isToday,
+                          "bg-foreground": isBeforeToday,
+                        })}
+                        style={
+                          value !== 0
+                            ? {
+                                backgroundColor: color,
+                              }
+                            : undefined
+                        }
+                      />
+                    </td>
+                  );
+                })}
               </AnimatePresence>
             </tr>
           ))}

@@ -7,6 +7,7 @@ import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 
 async function getHabits(userId: string) {
+  // TODO: drizzle returns string for the date field in the jsonb column, fix this
   let habits = await db.select().from(habit).where(eq(habit.userId, userId));
 
   // fill empty streaks
@@ -15,9 +16,9 @@ async function getHabits(userId: string) {
 
     const streaks = Array.from({ length: 7 * 52 }).map((_, i) => ({
       // make date from start by adding days
-      date:
-        habit.streaks[i]?.date ||
-        new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000),
+      date: habit.streaks[i]?.date
+        ? new Date(habit.streaks[i].date)
+        : new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000),
       value: habit.streaks[i]?.value || 0,
     }));
 

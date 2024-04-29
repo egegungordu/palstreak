@@ -25,6 +25,8 @@ const config: Config = {
         "background-grid": "var(--background-grid)",
         logo: "var(--logo)",
         "logo-light": "var(--logo-light)",
+        "shadow-grid": "var(--shadow-grid)",
+        "background-grid-today": "var(--background-grid-today)",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
