@@ -23,6 +23,8 @@ const config: Config = {
         "foreground-darker": "var(--foreground-darker)",
         "border-grid": "var(--border-grid)",
         "background-grid": "var(--background-grid)",
+        logo: "var(--logo)",
+        "logo-light": "var(--logo-light)",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
@@ -38,6 +40,7 @@ const config: Config = {
         "habit-card-show":
           "habit-card-show 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         "habit-pop": "habit-pop 250ms ease-in-out forwards",
+        "logo-show": "logo-show 300ms cubic-bezier(.17,.67,.78,1.32)",
       },
       keyframes: {
         "overlay-show": {
@@ -61,6 +64,10 @@ const config: Config = {
             scale: "1.02",
             boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
           },
+        },
+        "logo-show": {
+          from: { opacity: "0", scale: "0.4", transform: "rotate(-45deg)" },
+          to: { opacity: "1", scale: "1", transform: "rotate(0deg)" },
         },
       },
     },

@@ -17,6 +17,8 @@
   --foreground-darker: theme('colors.neutral.200');
   --border-grid: theme('colors.black / 10%');
   --background-grid: theme('colors.stone.100');
+  --logo: theme('colors.sky.800');
+  --logo-light: theme('colors.sky.400');
 }
 
 [data-theme='dark'] {
@@ -33,4 +35,6 @@
   --foreground-darker: theme('colors.neutral.700');
   --border-grid: theme('colors.white / 10%');
   --background-grid: theme('colors.neutral.800');
+  --logo: theme('colors.sky.400');
+  --logo-light: theme('colors.sky.100');
 }
