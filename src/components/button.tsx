@@ -20,7 +20,7 @@ export default function Button({
       {children}
 
       {loading && (
-        <div className="absolute inset-0 bg-neutral-800/50 grid place-items-center">
+        <div className="absolute inset-0 bg-neutral-800/30 grid place-items-center">
           <LuLoader className="w-5 h-5 animate-spin text-neutral-200" />
         </div>
       )}
