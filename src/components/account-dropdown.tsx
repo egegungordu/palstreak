@@ -189,6 +189,8 @@ const SettingsButton = forwardRef(function SettingsButton(
 
       reset({ username: data.username });
 
+      setIsOpened(false);
+
       router.refresh();
     });
   };
