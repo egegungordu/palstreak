@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import completeOnboarding from "@/actions/complete-onboarding";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { USERNAME_REGEX } from "@/globals";
 
 type OnboardingInputs = {
   username: string;
@@ -62,7 +63,7 @@ export default function OnboardingForm() {
             message: "This field is required",
           },
           pattern: {
-            value: /^(\w){3,15}$/,
+            value: USERNAME_REGEX,
             message: "Invalid username format",
           },
         })}

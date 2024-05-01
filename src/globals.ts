@@ -14,3 +14,5 @@ export const HABIT_COLORS = [
   "#000000",
 ];
 
+
+export const USERNAME_REGEX = /^(\w){3,15}$/;
