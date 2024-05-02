@@ -52,7 +52,7 @@ export default async function TopLeaderboard() {
   return (
     <TopLeaderboardList
       leaderboardUsers={leaderboardUsers}
-      username={session.user.username}
+      username={session.user.username || ""}
     />
   );
 }

@@ -1,5 +1,4 @@
 import AddHabitButton from "@/components/add-habit-button";
-import FriendsStatus, { FriendsStatusSkeleton } from "@/components/friends-status";
 import HabitsList from "@/components/habits-list";
 import Loader from "@/components/loader";
 import { db } from "@/db";
