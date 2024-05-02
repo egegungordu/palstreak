@@ -2,11 +2,13 @@ import AddFriendButton from "@/components/add-friend-button";
 import AddHabitButton from "@/components/add-habit-button";
 import FriendsCard from "@/components/friends-card";
 import HabitsList from "@/components/habits-list";
+import Loader from "@/components/loader";
 import { db } from "@/db";
 import { habit } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
 async function getHabits(userId: string) {
   // TODO: drizzle returns string for the date field in the jsonb column, fix this
@@ -66,7 +68,9 @@ export default async function Home() {
 
       <div className="mt-6" />
 
-      <Habits />
+      <Suspense fallback={<Loader />}>
+        <Habits />
+      </Suspense>
 
       <div className="mt-2" />
     </main>

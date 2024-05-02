@@ -1,7 +1,9 @@
 import AddFriendButton from "@/components/add-friend-button";
 import FriendsTabs from "@/components/friends-tabs";
+import Loader from "@/components/loader";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
 export default async function Friends() {
   const session = await auth();
@@ -24,7 +26,9 @@ export default async function Friends() {
 
       <div className="my-6" />
 
-      <FriendsTabs />
+      <Suspense fallback={<Loader />}>
+        <FriendsTabs />
+      </Suspense>
     </main>
   );
 }

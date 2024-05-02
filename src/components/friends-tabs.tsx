@@ -69,8 +69,14 @@ async function getPendingFriends() {
 }
 
 export default async function FriendsTabs() {
-  const allFriends = await getAllFriends();
-  const pendingFriends = await getPendingFriends();
+  const [allFriends, pendingFriends] = await Promise.allSettled([
+    getAllFriends(),
+    getPendingFriends(),
+  ]);
+
+  if (allFriends.status === "rejected" || pendingFriends.status === "rejected") {
+    throw new Error("Failed to load friends");
+  }
 
   return (
     <Tabs defaultValue="All">
@@ -78,7 +84,7 @@ export default async function FriendsTabs() {
         <TabsTrigger value="All">All</TabsTrigger>
         <TabsTrigger value="Pending" className="relative">
           Pending
-          {pendingFriends.length > 0 && (
+          {pendingFriends.value.length > 0 && (
             <>
               <div className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-500 rounded-full animate-ping" />
               <div className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-500 rounded-full" />
@@ -87,15 +93,15 @@ export default async function FriendsTabs() {
         </TabsTrigger>
       </TabsList>
       <TabsContent value="All">
-        {allFriends.length > 0 && (
+        {allFriends.value.length > 0 && (
           <div className="ml-4 mt-4 mb-4 text-xs text-text-faded">
-            {allFriends.length} friends
+            {allFriends.value.length} friends
           </div>
         )}
-        {allFriends.map((friend) => (
+        {allFriends.value.map((friend) => (
           <NormalFriendEntry key={friend.id} friend={friend} />
         ))}
-        {allFriends.length === 0 && (
+        {allFriends.value.length === 0 && (
           <div className="mt-4 text-text-disabled text-center">
             <LuSquirrel className="mx-auto w-12 h-12 text-foreground-darker mb-6" />
             No friends yet. Add some friends to see them here.
@@ -103,15 +109,15 @@ export default async function FriendsTabs() {
         )}
       </TabsContent>
       <TabsContent value="Pending">
-        {pendingFriends.length > 0 && (
+        {pendingFriends.value.length > 0 && (
           <div className="ml-4 mt-4 mb-4 text-xs text-text-faded">
-            {pendingFriends.length} requests
+            {pendingFriends.value.length} requests
           </div>
         )}
-        {pendingFriends.map((friend) => (
+        {pendingFriends.value.map((friend) => (
           <PendingFriendEntry key={friend.id} friend={friend} />
         ))}
-        {pendingFriends.length === 0 && (
+        {pendingFriends.value.length === 0 && (
           <div className="mt-4 text-text-disabled text-center">
             <LuSquirrel className="mx-auto w-12 h-12 text-foreground-darker mb-6" />
             No pending friend requests.
