@@ -29,7 +29,7 @@ export default function Tooltip({
           {show && (
             <_Tooltip.Content
               className={cn(
-                "select-none rounded-md text-xs bg-foreground px-4 py-2 leading-none shadow shadow-shadow border border-border will-change-[transform,opacity]",
+                "z-10 select-none rounded-md text-xs bg-foreground px-4 py-2 leading-none shadow shadow-shadow border border-border will-change-[transform,opacity]",
                 tooltipClassName,
               )}
               sideOffset={5}
