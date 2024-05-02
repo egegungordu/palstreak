@@ -8,7 +8,6 @@ import Tooltip from "./tooltip";
 import Sidebar from "./sidebar";
 import { useSession } from "next-auth/react";
 import AccountDropdown from "./account-dropdown";
-import { SignIn } from "./sign-in";
 
 const LINKS = [
   {
@@ -25,7 +24,11 @@ const LINKS = [
 
 export default function LeftSidebar() {
   const pathname = usePathname();
-  const { data, status } = useSession();
+  const { data } = useSession();
+
+  if (!data) {
+    throw Error("Session is not available");
+  }
 
   return (
     <Sidebar className="static border-r border-border w-10 xl:w-48 hidden md:block p-1.5 py-6 shrink-0 box-content">
@@ -55,8 +58,7 @@ export default function LeftSidebar() {
 
         <div className="flex-1" />
 
-        {status === "authenticated" && <AccountDropdown session={data} />}
-        {status !== "authenticated" && <SignIn />}
+        <AccountDropdown session={data} />
       </div>
     </Sidebar>
   );

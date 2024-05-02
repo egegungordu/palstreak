@@ -21,6 +21,7 @@
   --logo-light: theme('colors.sky.400');
   --shadow-grid: theme('colors.white / 40%');
   --background-grid-today: theme('colors.stone.300');
+  --landing-grid: theme('colors.neutral.200 / 60%');
 }
 
 [data-theme='dark'] {
@@ -41,4 +42,5 @@
   --logo-light: theme('colors.sky.100');
   --shadow-grid: theme('colors.black / 40%');
   --background-grid-today: theme('colors.neutral.700');
+  --landing-grid: theme('colors.neutral.800');
 }

@@ -32,7 +32,6 @@ import updateHabit from "@/actions/update-habit";
 import { HABIT_COLORS } from "@/globals";
 import { defaultAnimateLayoutChanges, useSortable } from "@dnd-kit/sortable";
 import { AnimatePresence, motion } from "framer-motion";
-import { useTheme } from "next-themes";
 
 export default function HabitCard({ habit }: { habit: Habit }) {
   const [showStats, setShowStats] = useState(false);
@@ -496,24 +495,26 @@ const StatSection = ({
   </div>
 );
 
-const ContributionCalendar = ({
+export const ContributionCalendar = ({
   color,
   streaks,
   currentDayIndex,
+  weeks = 52,
 }: {
   color: string;
   streaks: Habit["streaks"];
   currentDayIndex: number;
+  weeks?: number;
 }) => {
   const contributions = useMemo(
     () =>
       Array.from({ length: 7 }).map((_, i) =>
-        Array.from({ length: 52 }).map((_, j) => {
+        Array.from({ length: weeks }).map((_, j) => {
           const index = i + j * 7;
           return streaks[index] || 0;
         }),
       ),
-    [streaks],
+    [streaks, weeks],
   );
 
   return (

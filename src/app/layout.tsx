@@ -38,10 +38,14 @@ export default async function RootLayout({
                 <LeftSidebar />
                 {children}
                 <RightSidebar />
+
+                <MobileBottomNavbar />
               </div>
             )}
 
-            <MobileBottomNavbar />
+            <div className="pt-14 h-full">
+              {!isLoggedIn && children}
+            </div>
 
             <Toaster />
           </SessionProvider>

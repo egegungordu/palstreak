@@ -1,9 +1,10 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
-export default function Logo() {
+export default function Logo({ className }: { className?: string }) {
   const { resolvedTheme = "" } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
 
@@ -12,7 +13,7 @@ export default function Logo() {
   }, []);
 
   return (
-    <div className="w-8 h-8">
+    <div className={cn("w-8 h-8", className)}>
       {isMounted && (
         <img
           src={
@@ -20,7 +21,7 @@ export default function Logo() {
               ? "/palstreak-light.svg"
               : "/palstreak-dark.svg"
           }
-          className="h-8 w-8 group-hover:brightness-110 transition-all animate-logo-show"
+          className={cn("h-8 w-8 group-hover:brightness-110 transition-all", className)}
           alt=""
         />
       )}
