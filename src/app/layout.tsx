@@ -7,7 +7,9 @@ import Toaster from "@/components/toaster";
 import ThemeProvider from "@/providers/theme-provider";
 import SessionProvider from "@/providers/session-provider";
 import { auth } from "@/lib/auth";
-import Sidebar from "@/components/sidebar";
+import LeftSidebar from "@/components/left-sidebar";
+import RightSidebar from "@/components/right-sidebar";
+import MobileBottomNavbar from "@/components/mobile-bottom-navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,21 +24,24 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
+  const isLoggedIn = session !== null;
 
   return (
     <html lang="en" suppressHydrationWarning className="h-full">
-      <body
-        className={cn(
-          inter.className,
-          "text-sm bg-background h-full",
-        )}
-      >
+      <body className={cn(inter.className, "text-sm bg-background h-full")}>
         <ThemeProvider>
           <SessionProvider session={session}>
-            <Sidebar />
             <Navbar />
 
-            {children}
+            {isLoggedIn && (
+              <div className="flex justify-center lg:justify-between xl:justify-center gap-4 xl:gap-8 2xl:gap-12 h-full pt-14">
+                <LeftSidebar />
+                {children}
+                <RightSidebar />
+              </div>
+            )}
+
+            <MobileBottomNavbar />
 
             <Toaster />
           </SessionProvider>

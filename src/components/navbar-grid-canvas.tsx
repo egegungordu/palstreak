@@ -55,8 +55,8 @@ export default function NavbarGridCanvas() {
 
     for (let i = 0; i < 40; i++) {
       for (let j = 0; j < 20; j++) {
-        ctx.fillStyle = resolvedTheme === "light" ? "#ddd" : "#333";
-        ctx.strokeStyle = resolvedTheme === "light" ? "#888" : "#777";
+        ctx.fillStyle = resolvedTheme === "light" ? "#eee" : "#222";
+        ctx.strokeStyle = resolvedTheme === "light" ? "#aaa" : "#555";
         // ctx.globalAlpha = 1;
         for (let k = 0; k < trailStack.current.length; k++) {
           if (trailStack.current[k].x === i && trailStack.current[k].y === j) {
@@ -142,10 +142,10 @@ export default function NavbarGridCanvas() {
     >
       <canvas
         style={{
-          maskImage: "linear-gradient(150deg, black, transparent 60%)",
+          maskImage: "linear-gradient(120deg, transparent 15%, black, transparent 80%)",
         }}
         ref={canvasRef}
-        className="w-full h-full"
+        className="w-full h-full -translate-x-16"
         width={384}
         height={48}
       />

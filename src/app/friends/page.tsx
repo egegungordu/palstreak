@@ -17,7 +17,7 @@ export default async function Friends() {
   }
 
   return (
-    <main className="mx-auto py-8 px-2 pt-20 max-w-screen-md">
+    <main className="w-full pt-8 pb-4 mx-auto lg:mx-0 px-4 md:px-2 max-w-screen-sm">
       <div className="flex items-center justify-between">
         <h1 className="font-bold text-lg">Friends</h1>
 

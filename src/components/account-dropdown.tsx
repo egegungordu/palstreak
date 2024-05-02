@@ -29,7 +29,7 @@ export default function AccountDropdown({ session }: { session: Session }) {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button className="mt-auto text-xs hover:bg-background-button-hover transition-colors rounded-lg px-4 py-1 flex items-center gap-2">
+        <button className="mt-auto text-xs hover:bg-background-button-hover transition-colors rounded-lg p-2 xl:px-4 xl:py-1 flex justify-center xl:justify-start items-center gap-2">
           <div className="relative after:absolute after:inset-0 after:ring-inset after:ring-2 after:ring-white/40 after:rounded-full">
             <Avatar
               size={30}
@@ -38,16 +38,18 @@ export default function AccountDropdown({ session }: { session: Session }) {
               colors={["#fee9a6", "#fec0ab", "#fa5894", "#660860", "#9380b7"]}
             />
           </div>
-          {session.user.username ?? "Account"}
+          <span className="font-medium xl:block hidden">
+            {session.user.username ?? "Account"}
+          </span>
         </button>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
-          className="min-w-[220px] bg-foreground rounded-md p-1 shadow shadow-shadow flex flex-col gap-1"
+          className="min-w-[190px] bg-foreground rounded-md p-1 shadow shadow-shadow flex flex-col gap-1"
           sideOffset={10}
-          align="end"
+          align="start"
         >
           <DropdownMenu.Item asChild>
             <ThemeSelector />
@@ -108,7 +110,7 @@ const ThemeSelector = forwardRef(function ThemeSelector(_, ref) {
       <Select.Portal>
         <Select.Content
           position="popper"
-          side="left"
+          side="right"
           sideOffset={8}
           align="start"
           alignOffset={-4}

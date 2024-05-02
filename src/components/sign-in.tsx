@@ -3,10 +3,10 @@ import { signIn } from "@/lib/auth";
 export function SignIn() {
   return (
     <form
-      action={async () => {
-        "use server";
-        await signIn("google");
-      }}
+      // action={async () => {
+      //   "use server";
+      //   await signIn("google");
+      // }}
     >
       <button
         type="submit"

@@ -56,12 +56,8 @@ export default async function Home() {
   }
 
   return (
-    <main className="mx-auto py-8 px-2 pt-20 max-w-screen-md flex flex-col items-center">
-      <Suspense fallback={<FriendsStatusSkeleton />}>
-        <FriendsStatus />
-      </Suspense>
-
-      <div className="flex items-center justify-between w-full self-start mt-8">
+    <main className="w-full pt-8 pb-4 mx-auto lg:mx-0 px-4 md:px-2 max-w-screen-sm flex flex-col items-center">
+      <div className="flex items-center justify-between w-full self-start">
         <h1 className="font-bold text-lg">Habits</h1>
 
         <AddHabitButton />

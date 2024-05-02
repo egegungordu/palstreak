@@ -541,7 +541,7 @@ const ContributionCalendar = ({
                   return (
                     <td key={dayIndex}>
                       <div
-                        className={cn("w-3 h-3 rounded border border-border-grid bg-background-grid", {
+                        className={cn("w-[10px] h-[10px] rounded border border-border-grid bg-background-grid", {
                           "shadow-inner shadow-shadow-grid": value !== 0,
                           "bg-background-grid-today": isToday,
                           "bg-foreground": isBeforeToday,
