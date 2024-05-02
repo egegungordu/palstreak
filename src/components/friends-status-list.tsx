@@ -9,34 +9,6 @@ import { useCallback, useEffect, useState } from "react";
 import { ChevronRightIcon, ChevronLeftIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 
-const friends = [
-  {
-    username: "Shadow",
-    streak: 14,
-    progress: 0.2,
-  },
-  {
-    username: "Betul",
-    streak: 30,
-    progress: 0.6,
-  },
-  {
-    username: "Ghoul",
-    streak: 60,
-    progress: 0.8,
-  },
-  {
-    username: "Atabey",
-    streak: 60,
-    progress: 0.8,
-  },
-  {
-    username: "Petneplp",
-    streak: 60,
-    progress: 0.8,
-  },
-];
-
 const streakColors = {
   // grey
   0: "#d1d5db",
@@ -51,7 +23,10 @@ function streakToColor(streak: number) {
   return streakColors[0];
 }
 
-export default function FriendsCard() {
+export default function FriendsStatusList({ friends }: { friends: {
+  username: string | null;
+  longestCurrentStreak: number;
+}[] }) {
   const [emblaRef, api] = useEmblaCarousel();
 
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -91,11 +66,11 @@ export default function FriendsCard() {
   }, [api, onSelect]);
 
   return (
-    <div className="flex gap-2 w-full max-w-screen-md items-center">
+    <div className="flex gap-2 w-full max-w-screen-md items-center relative">
       <button
         onClick={scrollPrev}
         disabled={!canScrollPrev}
-        className="rounded-full p-2 border border-border bg-foreground hover:bg-background-button-hover disabled:pointer-events-none disabled:opacity-0 transition-all"
+        className="absolute top-1/2 z-10 left-4 shadow shadow-shadow -translate-y-1/2 rounded-full p-2 border border-border bg-foreground hover:bg-background-button-hover disabled:pointer-events-none disabled:opacity-0 transition-all"
       >
         <ChevronLeftIcon />
       </button>
@@ -114,13 +89,13 @@ export default function FriendsCard() {
               className="flex gap-2 items-center min-w-36 select-none group"
             >
               <div className="rounded-full p-1 bg-foreground shadow relative isolate">
-                <div className="hidden text-text group-hover:grid absolute inset-0 w-full h-full place-items-center bg-foreground rounded-full font-bold">
+                {/*<div className="hidden text-text group-hover:grid absolute inset-0 w-full h-full place-items-center bg-foreground rounded-full font-bold">
                   {friend.progress * 100}%
-                </div>
+                </div>*/}
 
                 <Avatar
                   size={42}
-                  name={friend.username}
+                  name={friend.username ?? ""}
                   variant="beam"
                   colors={[
                     "#fee9a6",
@@ -141,7 +116,7 @@ export default function FriendsCard() {
                     //   backgroundColor: streakToColor(friend.streak),
                     // }}
                   >
-                    {friend.streak}
+                    {friend.longestCurrentStreak}
                   </span>{" "}
                   days
                 </div>
@@ -155,7 +130,7 @@ export default function FriendsCard() {
       <button
         onClick={scrollNext}
         disabled={!canScrollNext}
-        className="rounded-full p-2 border border-border bg-foreground hover:bg-background-button-hover disabled:pointer-events-none disabled:opacity-0 transition-all"
+        className="absolute top-1/2 right-4 shadow shadow-shadow -translate-y-1/2 rounded-full p-2 border border-border bg-foreground hover:bg-background-button-hover disabled:pointer-events-none disabled:opacity-0 transition-all"
       >
         <ChevronRightIcon />
       </button>

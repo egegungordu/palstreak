@@ -1,6 +1,5 @@
-import AddFriendButton from "@/components/add-friend-button";
 import AddHabitButton from "@/components/add-habit-button";
-import FriendsCard from "@/components/friends-card";
+import FriendsStatus, { FriendsStatusSkeleton } from "@/components/friends-status";
 import HabitsList from "@/components/habits-list";
 import Loader from "@/components/loader";
 import { db } from "@/db";
@@ -58,7 +57,9 @@ export default async function Home() {
 
   return (
     <main className="mx-auto py-8 px-2 pt-20 max-w-screen-md flex flex-col items-center">
-      <FriendsCard />
+      <Suspense fallback={<FriendsStatusSkeleton />}>
+        <FriendsStatus />
+      </Suspense>
 
       <div className="flex items-center justify-between w-full self-start mt-8">
         <h1 className="font-bold text-lg">Habits</h1>
