@@ -41,5 +41,28 @@ export default async function FriendsStatus() {
 }
 
 export function FriendsStatusSkeleton() {
-  return <div></div>;
+  return (
+    <div className="flex gap-2 w-full max-w-screen-md items-center relative">
+      <div
+        className="overflow-hidden w-full relative">
+        <div className="flex">
+          {Array.from({ length: 6 }).map((_, idx) => (
+            <div
+              key={idx}
+              className="flex gap-2 items-center min-w-36 select-none group"
+            >
+              <div className="rounded-full p-1 bg-foreground shadow relative isolate">
+                <div className="w-[42px] h-[42px] bg-foreground-darker rounded-full animate-pulse"></div>
+              </div>
+
+              <div>
+                <div className="rounded-md w-14 h-4 bg-foreground-darker animate-pulse"/>
+                <div className="rounded-md w-8 h-4 bg-foreground-darker mt-1 animate-pulse"/>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
 }
