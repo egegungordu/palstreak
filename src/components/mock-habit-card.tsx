@@ -1,19 +1,32 @@
 "use client";
 
-import { Habit } from "@/app/page";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { LuCheckSquare, LuLoader, LuSquare } from "react-icons/lu";
 import { ContributionCalendar } from "./habit-card";
 
-export default function MockHabitCard({ habit }: { habit: Habit }) {
+export default function MockHabitCard({
+  habit,
+}: {
+  habit: {
+    name: string;
+    color: string;
+    streaks: Record<
+      number,
+      {
+        date: Date;
+        value: number;
+      }
+    >;
+  };
+}) {
   const [isTodayCompleted, setTodayCompleted] = useState(false);
   const [pending, setPending] = useState(false);
 
   return (
     <div
       className={cn(
-        "bg-foreground group rounded-2xl shadow-md shadow-shadow max-w-min border border-border relative cursor-default overflow-hidden hover:brightness-105 transition-all hover:scale-[101%] hover:shadow-2xl",
+        "bg-foreground group rounded-2xl shadow-md shadow-shadow max-w-min border border-border relative cursor-default overflow-hidden",
       )}
     >
       <div className="px-5 pt-3 pb-4">
@@ -54,7 +67,7 @@ export default function MockHabitCard({ habit }: { habit: Habit }) {
         <ContributionCalendar
           color={habit.color}
           streaks={habit.streaks}
-          currentDayIndex={0}
+          currentDayIndex={-1}
           weeks={28}
         />
       </div>

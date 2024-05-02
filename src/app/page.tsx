@@ -51,16 +51,8 @@ async function Habits() {
 }
 
 const MOCK_HABIT1 = {
-  id: "1",
-  name: "Drink water",
-  userId: "1",
-  order: 0,
-  color: "#a5b4fc",
-  createdAt: new Date(),
-  // streaks: Record<number, {
-  //     date: Date;
-  //     value: number;
-  // }>;
+  name: "📚 Read atleast 10 pages",
+  color: "#b465db",
   streaks: Object.fromEntries(
     Array.from({ length: 7 * 52 }).map((_, i) => [
       i,
@@ -70,10 +62,34 @@ const MOCK_HABIT1 = {
       },
     ]),
   ),
-  streak: 5,
-  longestStreak: 7,
-  lastCompletedAt: new Date(),
-  timezoneOffset: 0,
+};
+
+const MOCK_HABIT2 = {
+  name: "💧 Drink water",
+  color: "#ed8d51",
+  streaks: Object.fromEntries(
+    Array.from({ length: 7 * 52 }).map((_, i) => [
+      i,
+      {
+        date: new Date(),
+        value: Math.floor(Math.random() * 2),
+      },
+    ]),
+  ),
+};
+
+const MOCK_HABIT3 = {
+  name: "🏋️ Workout",
+  color: "#99d98c",
+  streaks: Object.fromEntries(
+    Array.from({ length: 7 * 52 }).map((_, i) => [
+      i,
+      {
+        date: new Date(),
+        value: Math.floor(Math.random() * 2),
+      },
+    ]),
+  ),
 };
 
 export default async function Home() {
@@ -94,7 +110,7 @@ export default async function Home() {
               key={idx}
               style={{
                 animationDelay: `${Math.random() * 2}s`,
-                animationDuration: '2s',
+                animationDuration: "2s",
               }}
               className="w-full border border-border-grid aspect-square rounded-lg bg-landing-grid animate-pulse"
             />
@@ -105,12 +121,26 @@ export default async function Home() {
 
         <Logo className="w-20 h-20 mx-auto mt-20" />
 
-        <h1 className="text-center text-3xl sm:text-4xl font-bold mt-4">
-          Track your habits with friends
+        <h1 className="text-center text-3xl md:text-4xl lg:text-5xl font-bold mt-4">
+          <span className="bg-gradient-to-br from-logo to-logo-light text-transparent bg-clip-text">
+            Habits
+          </span>{" "}
+          <span className="text-xl">with</span>{" "}
+          <span className="italic">friends</span>
         </h1>
 
-        <div className="w-full flex flex-col items-center mt-6">
-          <MockHabitCard habit={MOCK_HABIT1} />
+        <div className="mt-10 relative max-w-fit mx-auto">
+          <div className="p-3 bg-white/10 rounded-3xl border border-border scale-75 absolute -left-[50%] top-4 -rotate-12">
+            <MockHabitCard habit={MOCK_HABIT1} />
+          </div>
+
+          <div className="p-3 bg-white/10 rounded-3xl border border-border shadow shadow-shadow backdrop-blur hover:brightness-[101%] transition-all hover:scale-[101%] hover:shadow-xl">
+            <MockHabitCard habit={MOCK_HABIT2} />
+          </div>
+
+          <div className="p-3 bg-white/10 rounded-3xl border border-border scale-75 absolute -right-[50%] top-4 rotate-12 -z-10">
+            <MockHabitCard habit={MOCK_HABIT3} />
+          </div>
         </div>
 
         <div className="flex mx-auto mt-8 items-center justify-center">
