@@ -17,7 +17,7 @@
   --foreground-darker: theme('colors.neutral.200');
   --border-grid: theme('colors.black / 10%');
   --background-grid: theme('colors.stone.100');
-  --logo: theme('colors.sky.800');
+  --logo: theme('colors.sky.700');
   --logo-light: theme('colors.sky.400');
   --shadow-grid: theme('colors.white / 40%');
   --background-grid-today: theme('colors.stone.300');

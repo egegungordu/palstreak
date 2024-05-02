@@ -42,7 +42,7 @@ export default function MockHabitCard({
               setTimeout(() => {
                 setTodayCompleted(true);
                 setPending(false);
-              }, 1000);
+              }, 500);
             }}
             className="rounded-full flex text-xs items-center leading-none tracking-tight font-semibold disabled:font-medium disabled:text-text-disabled ml-auto shrink-0 bg-transparent text-text-faded shadow-none p-0 hover:text-text-strong"
           >

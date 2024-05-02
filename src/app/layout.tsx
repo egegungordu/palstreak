@@ -43,9 +43,9 @@ export default async function RootLayout({
               </div>
             )}
 
-            <div className="pt-14 h-full">
-              {!isLoggedIn && children}
-            </div>
+            {!isLoggedIn && <div className="pt-14 h-full">
+              {children}
+            </div>}
 
             <Toaster />
           </SessionProvider>
