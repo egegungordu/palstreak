@@ -1,12 +1,10 @@
 import AddHabitButton from "@/components/add-habit-button";
 import HabitsList from "@/components/habits-list";
+import LandingPage from "@/components/landing-page";
 import Loader from "@/components/loader";
-import Logo from "@/components/logo";
-import MockHabitCard from "@/components/mock-habit-card";
 import { db } from "@/db";
 import { habit } from "@/db/schema";
-import { auth, signIn } from "@/lib/auth";
-import { cn } from "@/lib/utils";
+import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
@@ -50,119 +48,12 @@ async function Habits() {
   return <HabitsList habits={habits} />;
 }
 
-const MOCK_HABIT1 = {
-  name: "📚 Read atleast 10 pages",
-  color: "#b465db",
-  streaks: Object.fromEntries(
-    Array.from({ length: 7 * 52 }).map((_, i) => [
-      i,
-      {
-        date: new Date(),
-        value: Math.floor(Math.random() * 2),
-      },
-    ]),
-  ),
-};
-
-const MOCK_HABIT2 = {
-  name: "💧 Drink water",
-  color: "#ed8d51",
-  streaks: Object.fromEntries(
-    Array.from({ length: 7 * 52 }).map((_, i) => [
-      i,
-      {
-        date: new Date(),
-        value: Math.floor(Math.random() * 2),
-      },
-    ]),
-  ),
-};
-
-const MOCK_HABIT3 = {
-  name: "🏋️ Workout",
-  color: "#99d98c",
-  streaks: Object.fromEntries(
-    Array.from({ length: 7 * 52 }).map((_, i) => [
-      i,
-      {
-        date: new Date(),
-        value: Math.floor(Math.random() * 2),
-      },
-    ]),
-  ),
-};
-
 export default async function Home() {
   const session = await auth();
 
   if (!session) {
     return (
-      <main className="w-full max-w-screen-lg mx-auto relative isolate h-full overflow-hidden px-4">
-        {/* TODO: do this with svgs or canvas, this might be slow on mobile */}
-        <div
-          className="absolute grid grid-cols-12 gap-2 -z-10 -top-10 min-w-[500px] w-full left-1/2 -translate-x-1/2"
-          style={{
-            maskImage: "linear-gradient(180deg, #000 20%, transparent 80%)",
-          }}
-        >
-          {Array.from({ length: 12 * 5 }).map((_, idx) => (
-            <div
-              key={idx}
-              style={{
-                animationDelay: `${Math.random() * 2}s`,
-                animationDuration: "2s",
-              }}
-              className="w-full border border-border-grid aspect-square rounded-lg bg-landing-grid animate-pulse"
-            />
-          ))}
-          <div className="absolute w-32 h-full bg-gradient-to-r from-background left-0 top-0" />
-          <div className="absolute w-32 h-full bg-gradient-to-l from-background right-0 top-0" />
-        </div>
-
-        <Logo className="w-20 h-20 mx-auto mt-20" />
-
-        <h1 className="text-center text-3xl md:text-4xl lg:text-5xl font-bold mt-4">
-          <span className="bg-gradient-to-br from-logo to-logo-light text-transparent bg-clip-text">
-            Habits
-          </span>{" "}
-          <span className="text-xl">with</span>{" "}
-          <span className="italic">friends</span>
-        </h1>
-
-        <div className="mt-10 relative max-w-fit mx-auto">
-          <div className="p-3 bg-white/10 rounded-3xl border border-border scale-75 absolute -left-[50%] top-4 -rotate-12">
-            <MockHabitCard habit={MOCK_HABIT1} />
-          </div>
-
-          <div className="p-3 bg-white/10 rounded-3xl border border-border shadow shadow-shadow backdrop-blur hover:brightness-[101%] transition-all hover:scale-[101%] hover:shadow-xl">
-            <MockHabitCard habit={MOCK_HABIT2} />
-          </div>
-
-          <div className="p-3 bg-white/10 rounded-3xl border border-border scale-75 absolute -right-[50%] top-4 rotate-12 -z-10">
-            <MockHabitCard habit={MOCK_HABIT3} />
-          </div>
-        </div>
-
-        <div className="flex mx-auto mt-8 items-center justify-center">
-          <form
-            action={async () => {
-              "use server";
-              await signIn("google");
-            }}
-          >
-            <button
-              type="submit"
-              className="mt-auto text-neutral-100 shadow shadow-shadow bg-sky-500 font-semibold rounded-full px-4 py-2 flex items-center gap-2 ring ring-inset ring-white/20 hover:shadow-md hover:scale-105 duration-150 hover:brightness-105 transition-all"
-            >
-              Start tracking your habits
-            </button>
-
-            <div className="text-xs text-text-faded text-center mt-1">
-              100% Free, forever
-            </div>
-          </form>
-        </div>
-      </main>
+      <LandingPage />
     );
   }
 
