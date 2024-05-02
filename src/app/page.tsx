@@ -152,10 +152,14 @@ export default async function Home() {
           >
             <button
               type="submit"
-              className="mt-auto text-neutral-100 shadow shadow-shadow bg-sky-600 text-xs font-semibold rounded-full hover:brightness-110 transition-all px-4 py-2 flex items-center gap-2 hover:shadow-lg hover:scale-105 duration-150"
+              className="mt-auto text-neutral-100 shadow shadow-shadow bg-sky-500 font-semibold rounded-full px-4 py-2 flex items-center gap-2 ring ring-inset ring-white/20 hover:shadow-md hover:scale-105 duration-150 hover:brightness-105 transition-all"
             >
               Start tracking your habits
             </button>
+
+            <div className="text-xs text-text-faded text-center mt-1">
+              100% Free, forever
+            </div>
           </form>
         </div>
       </main>
