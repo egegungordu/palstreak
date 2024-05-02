@@ -28,6 +28,7 @@ export default async function sendFriendRequest({
   await new Promise((resolve) => setTimeout(resolve, 2000));
 
   const success = await db.transaction(async (tx) => {
+    // TODO: might not need this since db has foreign key constraints?
     const friend = await tx
       .select()
       .from(users)
@@ -39,6 +40,22 @@ export default async function sendFriendRequest({
 
     // sadly, you can't be friends with yourself
     if (friend[0].id === userId) {
+      return false;
+    }
+
+    const [smallId, bigId] = sortIds(userId, friend[0].id);
+
+    const existingFriend = await tx
+      .select()
+      .from(friends)
+      .where(
+        and(
+          eq(friends.userId, smallId),
+          eq(friends.friendId, bigId),
+        ),
+      );
+
+    if (existingFriend.length > 0) {
       return false;
     }
 
@@ -54,8 +71,6 @@ export default async function sendFriendRequest({
 
     // if we deleted an existing incoming request, we are now friends (yay!)
     if (deletedExistingIncomingRequest.length > 0) {
-      const [smallId, bigId] = sortIds(userId, friend[0].id);
-
       await tx.insert(friends).values({
         userId: smallId,
         friendId: bigId,
