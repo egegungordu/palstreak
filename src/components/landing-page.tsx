@@ -9,11 +9,12 @@ const MOCK_HABIT1 = {
   name: "📚 Read atleast 10 pages",
   color: "#b465db",
   streaks: Object.fromEntries(
-    Array.from({ length: 7 * 52 }).map((_, i) => [
+    Array.from({ length: 7 * 7 + 5 }).map((_, i) => [
       i,
       {
         date: new Date(),
-        value: Math.floor(Math.random() * 2),
+        value:
+          Math.cos(i / 3) - Math.tan(i / 2) + Math.abs(Math.sin( i / 2 ) * 2) > 0 ? 1 : 0,
       },
     ]),
   ),
@@ -22,12 +23,14 @@ const MOCK_HABIT1 = {
 const MOCK_HABIT2 = {
   name: "💧 Drink water",
   color: "#ed8d51",
+  currentDayIndex: 7 * 21 + 3,
   streaks: Object.fromEntries(
-    Array.from({ length: 7 * 52 }).map((_, i) => [
+    Array.from({ length: 7 * 21 + 3 }).map((_, i) => [
       i,
       {
         date: new Date(),
-        value: Math.floor(Math.random() * 2),
+        value:
+          Math.cos(i / 4) - Math.tan(i / 3) + Math.abs(Math.sin( i / 2 ) * 3) > 0 ? 1 : 0,
       },
     ]),
   ),
@@ -37,11 +40,12 @@ const MOCK_HABIT3 = {
   name: "🏋️ Workout",
   color: "#99d98c",
   streaks: Object.fromEntries(
-    Array.from({ length: 7 * 52 }).map((_, i) => [
+    Array.from({ length: 7 * 21 + 3 }).map((_, i) => [
       i,
       {
         date: new Date(),
-        value: Math.floor(Math.random() * 2),
+        value:
+          Math.cos(i / 3) - Math.tan(i / 2) + Math.abs(Math.sin( i / 2 ) * 2) > 0 ? 1 : 0,
       },
     ]),
   ),
@@ -95,16 +99,16 @@ export default function LandingPage() {
 
       <div className="mt-10 relative max-w-fit mx-auto">
         <motion.div
-          initial={{ opacity: 0, scale: 0.3, left: "0%" }}
-          animate={{ opacity: 1, scale: 0.75, left: "-50%", rotate: -12 }}
+          initial={{ opacity: 0, scale: 0.3 }}
+          animate={{ opacity: 1, scale: 0.75, rotate: -12 }}
           transition={{
-            delay: 0.7,
+            delay: 0.6,
             stiffness: 200,
             damping: 20,
             mass: 1,
             type: "spring",
           }}
-          className="p-3 bg-white/10 rounded-3xl border border-border absolute top-4"
+          className="p-3 bg-white/10 rounded-3xl -left-1/2 border border-border absolute top-4"
         >
           <MockHabitCard habit={MOCK_HABIT1} />
         </motion.div>
@@ -125,16 +129,16 @@ export default function LandingPage() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.3, right: "0%" }}
-          animate={{ opacity: 1, scale: 0.75, right: "-50%", rotate: 12 }}
+          initial={{ opacity: 0, scale: 0.3 }}
+          animate={{ opacity: 1, scale: 0.75, rotate: 12 }}
           transition={{
-            delay: 0.7,
+            delay: 0.6,
             stiffness: 200,
             damping: 20,
             mass: 1,
             type: "spring",
           }}
-          className="p-3 bg-white/10 rounded-3xl border border-border absolute top-4 -z-10"
+          className="p-3 bg-white/10 rounded-3xl -right-1/2 border border-border absolute top-4 -z-10"
         >
           <MockHabitCard habit={MOCK_HABIT3} />
         </motion.div>

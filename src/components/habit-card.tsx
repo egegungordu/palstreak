@@ -511,7 +511,10 @@ export const ContributionCalendar = ({
       Array.from({ length: 7 }).map((_, i) =>
         Array.from({ length: weeks }).map((_, j) => {
           const index = i + j * 7;
-          return streaks[index] || 0;
+          return {
+            value: streaks[index] ? streaks[index].value : 0,
+            date: streaks[index]?.date,
+          }
         }),
       ),
     [streaks, weeks],

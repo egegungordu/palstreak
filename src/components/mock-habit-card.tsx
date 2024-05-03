@@ -7,12 +7,13 @@ import { ContributionCalendar } from "./habit-card";
 
 export default function MockHabitCard({
   weeks = 28,
-  habit,
+  habit: initialHabit,
 }: {
   weeks?: number;
   habit: {
     name: string;
     color: string;
+    currentDayIndex?: number;
     streaks: Record<
       number,
       {
@@ -22,6 +23,7 @@ export default function MockHabitCard({
     >;
   };
 }) {
+  const [habit, setHabit] = useState(initialHabit);
   const [isTodayCompleted, setTodayCompleted] = useState(false);
   const [pending, setPending] = useState(false);
 
@@ -43,8 +45,23 @@ export default function MockHabitCard({
               setPending(true);
               setTimeout(() => {
                 setTodayCompleted(true);
+                setHabit((prev) => {
+                  if (prev.currentDayIndex === undefined) {
+                    return prev;
+                  }
+                  return {
+                    ...prev,
+                    streaks: {
+                      ...prev.streaks,
+                      [prev.currentDayIndex]: {
+                        date: new Date(),
+                        value: 1,
+                      },
+                    },
+                  };
+                });
                 setPending(false);
-              }, 500);
+              }, 200);
             }}
             className="rounded-full flex text-xs items-center leading-none tracking-tight font-semibold disabled:font-medium disabled:text-text-disabled ml-auto shrink-0 bg-transparent text-text-faded shadow-none p-0 hover:text-text-strong"
           >
@@ -69,7 +86,7 @@ export default function MockHabitCard({
         <ContributionCalendar
           color={habit.color}
           streaks={habit.streaks}
-          currentDayIndex={-1}
+          currentDayIndex={habit.currentDayIndex ?? -1}
           weeks={weeks}
         />
       </div>
