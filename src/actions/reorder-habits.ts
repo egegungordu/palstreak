@@ -5,12 +5,17 @@ import { habit } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
-export default async function reorderHabits({
-  newOrder,
-}: {
-  newOrder: string[];
-}) {
+const reorderHabitsSchema = z.object({
+  newOrder: z.array(z.string()),
+});
+
+export default async function reorderHabits(
+  params: z.infer<typeof reorderHabitsSchema>,
+) {
+  const { newOrder } = reorderHabitsSchema.parse(params);
+
   const session = await auth();
   if (
     !session ||

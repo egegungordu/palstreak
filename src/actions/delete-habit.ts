@@ -5,8 +5,17 @@ import { habit } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { and, eq, max } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
-export default async function deleteHabit({ habitId }: { habitId: string }) {
+const deleteHabitSchema = z.object({
+  habitId: z.string(),
+});
+
+export default async function deleteHabit(
+  props: z.infer<typeof deleteHabitSchema>,
+) {
+  const { habitId } = deleteHabitSchema.parse(props);
+
   const session = await auth();
   if (
     !session ||

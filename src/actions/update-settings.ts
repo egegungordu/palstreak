@@ -2,15 +2,21 @@
 
 import { db } from "@/db";
 import { users } from "@/db/schema";
+import { USERNAME_REGEX } from "@/globals";
 import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
-export default async function updateSettings({
-  username,
-}: {
-  username: string;
-}) {
+const updateSettingsSchema = z.object({
+  username: z.string().regex(USERNAME_REGEX),
+});
+
+export default async function updateSettings(
+  props: z.infer<typeof updateSettingsSchema>,
+) {
+  const { username } = updateSettingsSchema.parse(props);
+
   const session = await auth();
   if (
     !session ||

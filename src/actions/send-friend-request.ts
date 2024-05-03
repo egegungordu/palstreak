@@ -6,12 +6,17 @@ import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { and, eq } from "drizzle-orm";
 import { sortIds } from "@/db/utils";
+import { z } from "zod";
 
-export default async function sendFriendRequest({
-  friendUsername,
-}: {
-  friendUsername: string;
-}) {
+const sendFriendRequestSchema = z.object({
+  friendUsername: z.string(),
+});
+
+export default async function sendFriendRequest(
+  params: z.infer<typeof sendFriendRequestSchema>,
+) {
+  const { friendUsername } = sendFriendRequestSchema.parse(params);
+
   const session = await auth();
   if (
     !session ||
@@ -48,12 +53,7 @@ export default async function sendFriendRequest({
     const existingFriend = await tx
       .select()
       .from(friends)
-      .where(
-        and(
-          eq(friends.userId, smallId),
-          eq(friends.friendId, bigId),
-        ),
-      );
+      .where(and(eq(friends.userId, smallId), eq(friends.friendId, bigId)));
 
     if (existingFriend.length > 0) {
       return false;

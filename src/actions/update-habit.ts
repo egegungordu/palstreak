@@ -5,16 +5,19 @@ import { habit } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
-export default async function updateHabit({
-  habitId,
-  name,
-  color,
-}: {
-  habitId: string;
-  name: string;
-  color: string;
-}) {
+const updateHabitSchema = z.object({
+  habitId: z.string(),
+  name: z.string(),
+  color: z.string(),
+});
+
+export default async function updateHabit(
+  params: z.infer<typeof updateHabitSchema>,
+) {
+  const { habitId, name, color } = updateHabitSchema.parse(params);
+
   const session = await auth();
   if (
     !session ||

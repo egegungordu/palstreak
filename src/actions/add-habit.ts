@@ -4,16 +4,17 @@ import { db } from "@/db";
 import { habit } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
-export default async function addHabit({
-  timezoneOffset,
-  name,
-  color,
-}: {
-  timezoneOffset: number;
-  name: string;
-  color: string;
-}) {
+const addHabitSchema = z.object({
+  timezoneOffset: z.number(),
+  name: z.string(),
+  color: z.string(),
+});
+
+export default async function addHabit(params: z.infer<typeof addHabitSchema>) {
+  const { timezoneOffset, name, color } = addHabitSchema.parse(params);
+
   const session = await auth();
   if (
     !session ||

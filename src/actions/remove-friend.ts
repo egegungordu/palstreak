@@ -1,13 +1,20 @@
 "use server";
 
 import { db } from "@/db";
-import { friendRequests, friends } from "@/db/schema";
+import {  friends } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { and, eq } from "drizzle-orm";
 import { sortIds } from "@/db/utils";
+import { z } from "zod";
 
-export default async function removeFriend({ friendId }: { friendId: string }) {
+const removeFriendSchema = z.object({
+  friendId: z.string(),
+});
+
+export default async function removeFriend(params: z.infer<typeof removeFriendSchema>) {
+  const { friendId } = removeFriendSchema.parse(params);
+
   const session = await auth();
   if (
     !session ||

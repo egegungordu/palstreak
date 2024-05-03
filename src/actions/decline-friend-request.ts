@@ -1,17 +1,21 @@
 "use server";
 
 import { db } from "@/db";
-import { friendRequests, friends } from "@/db/schema";
+import { friendRequests } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { and, eq } from "drizzle-orm";
-import { sortIds } from "@/db/utils";
+import { z } from "zod";
 
-export default async function declineFriendRequest({
-  friendId,
-}: {
-  friendId: string;
-}) {
+const declineFriendRequestSchema = z.object({
+  friendId: z.string(),
+});
+
+export default async function declineFriendRequest(
+  props: z.infer<typeof declineFriendRequestSchema>,
+) {
+  const { friendId } = declineFriendRequestSchema.parse(props);
+
   const session = await auth();
   if (
     !session ||

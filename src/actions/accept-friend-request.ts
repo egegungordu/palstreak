@@ -6,12 +6,17 @@ import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { and, eq } from "drizzle-orm";
 import { sortIds } from "@/db/utils";
+import { z } from "zod";
 
-export default async function acceptFriendRequest({
-  friendId,
-}: {
-  friendId: string;
-}) {
+const acceptFriendRequestSchema = z.object({
+  friendId: z.string(),
+});
+
+export default async function acceptFriendRequest(
+  params: z.infer<typeof acceptFriendRequestSchema>,
+) {
+  const { friendId } = acceptFriendRequestSchema.parse(params);
+
   const session = await auth();
   if (
     !session ||

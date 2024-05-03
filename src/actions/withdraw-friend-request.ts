@@ -5,12 +5,17 @@ import { friendRequests } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { and, eq } from "drizzle-orm";
+import { z } from "zod";
 
-export default async function withdrawFriendRequest({
-  friendId,
-}: {
-  friendId: string;
-}) {
+const withdrawFriendRequestSchema = z.object({
+  friendId: z.string(),
+});
+
+export default async function withdrawFriendRequest(
+  params: z.infer<typeof withdrawFriendRequestSchema>,
+) {
+  const { friendId } = withdrawFriendRequestSchema.parse(params);
+
   const session = await auth();
   if (
     !session ||

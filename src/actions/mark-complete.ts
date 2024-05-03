@@ -2,11 +2,20 @@
 
 import { db } from "@/db";
 import { habit, users } from "@/db/schema";
-import { eq, max } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
+import { z } from "zod";
 
-export default async function markComplete({ habitId }: { habitId: string }) {
+const markCompleteSchema = z.object({
+  habitId: z.string(),
+});
+
+export default async function markComplete(
+  params: z.infer<typeof markCompleteSchema>,
+) {
+  const { habitId } = markCompleteSchema.parse(params);
+
   const session = await auth();
   if (
     !session ||
@@ -16,7 +25,7 @@ export default async function markComplete({ habitId }: { habitId: string }) {
   ) {
     throw new Error("Unauthorized");
   }
- 
+
   const userId = session.user.id;
 
   const dbHabit = await db.select().from(habit).where(eq(habit.id, habitId));

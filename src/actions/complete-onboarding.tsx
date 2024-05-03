@@ -2,16 +2,22 @@
 
 import { db } from "@/db";
 import { users } from "@/db/schema";
+import { USERNAME_REGEX } from "@/globals";
 import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 
-export default async function completeOnboarding({
-  username,
-}: {
-  username: string;
-}) {
+const completeOnboardingSchema = z.object({
+  username: z.string().regex(USERNAME_REGEX),
+});
+
+export default async function completeOnboarding(
+  props: z.infer<typeof completeOnboardingSchema>,
+) {
+  const { username } = completeOnboardingSchema.parse(props);
+
   await new Promise((resolve) => setTimeout(resolve, 500));
 
   const session = await auth();
