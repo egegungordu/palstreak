@@ -25,6 +25,12 @@ export default async function completeOnboarding(
     throw new Error("Unauthorized");
   }
 
+  // if they are somehow stuck in onboarding, early exit
+  if (session.user.onboardingFinished) {
+    revalidatePath("/onboarding");
+    redirect("/");
+  }
+
   const userId = session.user.id;
 
   try {
