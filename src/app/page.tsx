@@ -74,8 +74,6 @@ export default async function Home() {
       <Suspense fallback={<Loader />}>
         <Habits />
       </Suspense>
-
-      <div className="mt-2" />
     </main>
   );
 }

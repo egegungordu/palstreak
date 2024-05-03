@@ -35,7 +35,7 @@ export default async function RootLayout({
             <Navbar />
 
             {isLoggedIn && isOnboarded && (
-              <div className="flex justify-center lg:justify-between xl:justify-center gap-4 xl:gap-8 2xl:gap-12 h-full pt-14">
+              <div className="flex justify-center lg:justify-between xl:justify-center gap-4 xl:gap-8 2xl:gap-12 pt-14 h-full overflow-auto">
                 <LeftSidebar />
                 {children}
                 <RightSidebar />
