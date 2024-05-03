@@ -48,6 +48,7 @@ async function getLeaderboardTop10() {
 export default async function TopLeaderboard() {
   const leaderboardUsers = await getLeaderboardTop10();
   const session = await auth();
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 
   if (!session) {
     throw new Error("Unauthorized");
@@ -76,21 +77,24 @@ export default async function TopLeaderboard() {
 
 export function TopLeaderboardSkeleton() {
   return (
-    <div className="flex gap-2 w-full items-center relative">
+    <div className="flex gap-2 w-full max-w-screen-md items-center relative">
       <div className="overflow-hidden w-full relative">
-        <div className="flex flex-col gap-2">
-          {Array.from({ length: 6 }).map((_, idx) => (
+        <div className="flex flex-col gap-1"
+          style={{
+            maskImage: "linear-gradient(180deg, black 30%, transparent 90%)",
+            WebkitMaskImage: "linear-gradient(180deg, black 30%, transparent 90%)",
+            }}
+        >
+          {Array.from({ length: 4 }).map((_, idx) => (
             <div
               key={idx}
-              className="flex gap-2 items-center min-w-36 select-none group"
+              className="flex gap-2 w-full items-center select-none group py-2 animate-pulse"
             >
-              <div className="font-semibold tabular-nums text-text-disabled">
-                {idx + 1}.
+              <div className="font-semibold tabular-nums text-xs w-6 aspect-square flex items-center justify-center text-text-disabled">
+                {idx + 1}
               </div>
 
-              <div className="rounded-full p-1 bg-foreground shadow relative isolate">
-                <div className="w-8 h-8 bg-foreground-darker rounded-full animate-pulse"></div>
-              </div>
+              <div className="w-9 h-9 pl-2 bg-foreground-darker rounded-full animate-pulse"></div>
 
               <div>
                 <div className="rounded-md w-14 h-4 bg-foreground-darker animate-pulse" />
