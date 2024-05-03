@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { AVATAR_COLORS, USERNAME_REGEX } from "@/globals";
 import updateSettings from "@/actions/update-settings";
 import { useRouter } from "next/navigation";
+import ThemeSwitcher from "./theme-switcher";
 
 const THEMES = [
   { value: "dark", Icon: LuMoon },
@@ -52,7 +53,12 @@ export default function AccountDropdown({ session }: { session: Session }) {
           align="start"
         >
           <DropdownMenu.Item asChild>
-            <ThemeSelector />
+            <ThemeSwitcher className="h-8 px-3">
+              <div className="ml-2">Change theme</div>
+              <Select.Icon className="ml-2">
+                <ChevronDownIcon />
+              </Select.Icon>
+            </ThemeSwitcher>
           </DropdownMenu.Item>
 
           {session && (
@@ -71,74 +77,6 @@ export default function AccountDropdown({ session }: { session: Session }) {
     </DropdownMenu.Root>
   );
 }
-
-const ThemeSelector = forwardRef(function ThemeSelector(_, ref) {
-  const { setTheme, theme } = useTheme();
-
-  const handleThemeChange = (theme: string) => {
-    setTheme(theme);
-  };
-
-  return (
-    <Select.Root onValueChange={handleThemeChange} defaultValue={theme}>
-      <Select.Trigger
-        ref={ref as any}
-        className="leading-none capitalize rounded-md flex items-center h-8 px-3 relative select-none outline-none hover:bg-background-button-hover transition-colors w-full"
-        aria-label="Theme"
-      >
-        <Select.Icon className="mr-2">
-          <AnimatePresence mode="popLayout" initial={false}>
-            {THEMES.filter(({ value }) => value === theme).map(
-              ({ Icon, value }) => (
-                <motion.div
-                  key={value}
-                  initial={{ opacity: 0, rotate: -280 }}
-                  animate={{ opacity: 1, rotate: 0 }}
-                  exit={{ opacity: 0, rotate: 280 }}
-                >
-                  {theme === value && <Icon className="w-4 h-4" />}
-                </motion.div>
-              ),
-            )}
-          </AnimatePresence>
-        </Select.Icon>
-        Change theme
-        <Select.Icon className="ml-2">
-          <ChevronDownIcon />
-        </Select.Icon>
-      </Select.Trigger>
-      <Select.Portal>
-        <Select.Content
-          position="popper"
-          side="right"
-          sideOffset={8}
-          align="start"
-          alignOffset={-4}
-          className="overflow-hidden bg-foreground rounded-lg shadow shadow-shadow"
-        >
-          <Select.Viewport className="p-[5px]">
-            <Select.Group>
-              {THEMES.map(({ value }) => {
-                return (
-                  <Select.Item
-                    value={value}
-                    key={value}
-                    className="leading-none capitalize rounded-md flex items-center text-xs gap-2 h-7 px-2 min-w-20 relative select-none hover:bg-background-button-hover outline-none"
-                  >
-                    <Select.ItemText>{value}</Select.ItemText>
-                    <Select.ItemIndicator>
-                      {value === theme && <CheckIcon />}
-                    </Select.ItemIndicator>
-                  </Select.Item>
-                );
-              })}
-            </Select.Group>
-          </Select.Viewport>
-        </Select.Content>
-      </Select.Portal>
-    </Select.Root>
-  );
-});
 
 const SignOutButton = forwardRef<HTMLButtonElement>(
   function SignOutButton(_, ref) {

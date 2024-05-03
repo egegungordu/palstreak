@@ -4,6 +4,9 @@ import NavbarGridCanvas from "./navbar-grid-canvas";
 import Logo from "./logo";
 import AccountDropdown from "./account-dropdown";
 import { auth } from "@/lib/auth";
+import dynamic from "next/dynamic";
+
+const ThemeSwitcher = dynamic(() => import("./theme-switcher"), { ssr: false });
 
 export default async function Navbar() {
   const session = await auth();
@@ -22,9 +25,16 @@ export default async function Navbar() {
           <span className="text-transparent bg-gradient-to-br from-logo to-logo-light bg-clip-text group-hover:brightness-150 transition-all">
             Streak
           </span>
+          <div className="text-2xs ml-2 rounded-full shadow shadow-shadow px-2 bg-foreground text-text-strong border border-border">
+            BETA
+          </div>
         </Link>
 
         <div className="flex-1" />
+
+        {!isLoggedIn && (
+          <ThemeSwitcher withTooltip side="bottom" className="size-8 justify-center" />
+        )}
 
         <div className="md:hidden">
           {isLoggedIn && <AccountDropdown session={session} />}
