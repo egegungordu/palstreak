@@ -14,7 +14,7 @@ const TabsList = forwardRef<
   <_Tabs.List
     ref={ref}
     className={cn(
-      "shrink-0 flex p-1 bg-foreground-dark gap-1 rounded-xl max-w-fit mb-2",
+      "shrink-0 flex p-1 bg-foreground-dark gap-1 rounded-xl md:max-w-fit mb-2",
       className,
     )}
     {...props}
