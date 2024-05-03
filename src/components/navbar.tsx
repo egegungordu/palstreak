@@ -26,7 +26,7 @@ export default async function Navbar() {
             Streak
           </span>
           <div className="text-2xs ml-2 rounded-full shadow shadow-shadow px-2 bg-foreground text-text-strong border border-border">
-            BETA
+            beta
           </div>
         </Link>
 
