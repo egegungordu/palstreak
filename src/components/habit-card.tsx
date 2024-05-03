@@ -183,7 +183,7 @@ export default function HabitCard({ habit }: { habit: Habit }) {
         <button
           onClick={() => setShowStats(!showStats)}
           className={cn(
-            "w-full hover:bg-gradient-to-t hover:from-foreground-dark flex justify-center",
+            "w-full hover:bg-foreground-dark flex justify-center",
             {
               "p-4": showStats,
               "py-1": !showStats,
@@ -538,15 +538,19 @@ export const ContributionCalendar = ({
               <AnimatePresence>
                 {week.map(({ value }, dayIndex) => {
                   const isToday = dayIndex * 7 + weekIndex === currentDayIndex;
-                  const isBeforeToday = dayIndex * 7 + weekIndex < currentDayIndex;
+                  const isBeforeToday =
+                    dayIndex * 7 + weekIndex < currentDayIndex;
                   return (
                     <td key={dayIndex}>
                       <div
-                        className={cn("w-[10px] h-[10px] rounded border border-border-grid bg-background-grid", {
-                          "shadow-inner shadow-shadow-grid": value !== 0,
-                          "bg-background-grid-today": isToday,
-                          "bg-foreground": isBeforeToday,
-                        })}
+                        className={cn(
+                          "w-[10px] h-[10px] rounded border border-border-grid bg-background-grid",
+                          {
+                            "shadow-inner shadow-shadow-grid": value !== 0,
+                            "bg-background-grid-today": isToday,
+                            "bg-foreground": isBeforeToday,
+                          },
+                        )}
                         style={
                           value !== 0
                             ? {
