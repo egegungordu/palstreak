@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import Button from "./button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { USERNAME_REGEX } from "@/globals";
+import { AVATAR_COLORS, USERNAME_REGEX } from "@/globals";
 import updateSettings from "@/actions/update-settings";
 import { useRouter } from "next/navigation";
 
@@ -34,8 +34,8 @@ export default function AccountDropdown({ session }: { session: Session }) {
             <Avatar
               size={30}
               name={session.user?.username || ""}
-              variant="beam"
-              colors={["#fee9a6", "#fec0ab", "#fa5894", "#660860", "#9380b7"]}
+              variant="marble"
+              colors={AVATAR_COLORS}
             />
           </div>
           <span className="font-medium xl:block hidden">

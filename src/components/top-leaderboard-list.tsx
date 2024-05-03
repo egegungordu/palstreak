@@ -2,6 +2,7 @@
 
 import Avatar from "boring-avatars";
 import { cn } from "@/lib/utils";
+import { AVATAR_COLORS } from "@/globals";
 
 const streakColors = {
   // grey
@@ -61,14 +62,8 @@ export default function TopLeaderboardList({
                   <Avatar
                     size={32}
                     name={user.username ?? ""}
-                    variant="beam"
-                    colors={[
-                      "#fee9a6",
-                      "#fec0ab",
-                      "#fa5894",
-                      "#660860",
-                      "#9380b7",
-                    ]}
+                    variant="marble"
+                    colors={AVATAR_COLORS}
                   />
                 </div>
 

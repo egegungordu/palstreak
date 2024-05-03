@@ -1,5 +1,6 @@
 "use client";
 
+import { AVATAR_COLORS } from "@/globals";
 import Avatar from "boring-avatars";
 
 export default function FriendEntry({
@@ -23,8 +24,8 @@ export default function FriendEntry({
         <Avatar
           size={44}
           name={friend.username || ""}
-          variant="beam"
-          colors={["#fee9a6", "#fec0ab", "#fa5894", "#660860", "#9380b7"]}
+          variant="marble"
+          colors={AVATAR_COLORS}
         />
       </div>
 

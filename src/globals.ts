@@ -1,4 +1,3 @@
-
 export const HABIT_COLORS = [
   "#F87171",
   "#FBBF24",
@@ -14,5 +13,13 @@ export const HABIT_COLORS = [
   "#000000",
 ];
 
+export const AVATAR_COLORS = [
+  '#0ca5b0', '#324050', '#fefeeb', '#f8f4e4', '#a5b3aa'
+  // "#fee9a6",
+  // "#fec0ab",
+  // "#fa5894",
+  // "#660860",
+  // "#9380b7",
+];
 
 export const USERNAME_REGEX = /^(\w){3,15}$/;
