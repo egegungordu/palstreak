@@ -31,7 +31,12 @@ export default function OnboardingForm() {
 
   const onSubmit: SubmitHandler<{ username: string }> = async (data) => {
     startTransition(async () => {
-      await completeOnboarding({ username: data.username });
+      const response = await completeOnboarding({ username: data.username });
+
+      if (response) {
+        toast.error(response.message);
+        return;
+      }
 
       toast.success("Onboarding completed successfully", {
         description: "Welcome to the club! 🎉",
@@ -39,7 +44,7 @@ export default function OnboardingForm() {
 
       await update({});
 
-      router.push("/");
+      router.refresh();
     });
   };
 

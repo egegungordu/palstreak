@@ -59,6 +59,7 @@ export default function LandingPage() {
       >
         {Array.from({ length: 12 * 5 }).map((_, idx) => (
           <div
+            suppressHydrationWarning
             key={idx}
             style={{
               animationDelay: `${Math.random() * 2}s`,
@@ -93,37 +94,64 @@ export default function LandingPage() {
       </motion.h1>
 
       <div className="mt-10 relative max-w-fit mx-auto">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.3, left: "0%" }}
           animate={{ opacity: 1, scale: 0.75, left: "-50%", rotate: -12 }}
-          transition={{ delay: 0.7, stiffness: 200, damping: 20, mass: 1, type: "spring" }}
-        className="p-3 bg-white/10 rounded-3xl border border-border absolute top-4">
+          transition={{
+            delay: 0.7,
+            stiffness: 200,
+            damping: 20,
+            mass: 1,
+            type: "spring",
+          }}
+          className="p-3 bg-white/10 rounded-3xl border border-border absolute top-4"
+        >
           <MockHabitCard habit={MOCK_HABIT1} />
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.5, stiffness: 200, damping: 20, mass: 1, type: "spring" }}
+          transition={{
+            delay: 0.5,
+            stiffness: 200,
+            damping: 20,
+            mass: 1,
+            type: "spring",
+          }}
           className="p-3 bg-white/10 rounded-3xl border border-border shadow shadow-shadow backdrop-blur"
         >
           <MockHabitCard habit={MOCK_HABIT2} />
         </motion.div>
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.3, right: "0%" }}
           animate={{ opacity: 1, scale: 0.75, right: "-50%", rotate: 12 }}
-          transition={{ delay: 0.7, stiffness: 200, damping: 20, mass: 1, type: "spring" }}
-        className="p-3 bg-white/10 rounded-3xl border border-border absolute top-4 -z-10">
+          transition={{
+            delay: 0.7,
+            stiffness: 200,
+            damping: 20,
+            mass: 1,
+            type: "spring",
+          }}
+          className="p-3 bg-white/10 rounded-3xl border border-border absolute top-4 -z-10"
+        >
           <MockHabitCard habit={MOCK_HABIT3} />
         </motion.div>
       </div>
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.5, stiffness: 200, damping: 20, mass: 1, type: "spring" }}
-      className="flex mx-auto mt-8 items-center justify-center">
+        transition={{
+          delay: 0.5,
+          stiffness: 200,
+          damping: 20,
+          mass: 1,
+          type: "spring",
+        }}
+        className="flex mx-auto mt-8 items-center justify-center"
+      >
         <form action={signInAction}>
           <button
             type="submit"

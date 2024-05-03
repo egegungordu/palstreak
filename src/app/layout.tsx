@@ -25,6 +25,7 @@ export default async function RootLayout({
 }>) {
   const session = await auth();
   const isLoggedIn = session !== null;
+  const isOnboarded = session?.user?.onboardingFinished;
 
   return (
     <html lang="en" suppressHydrationWarning className="h-full">
@@ -33,7 +34,7 @@ export default async function RootLayout({
           <SessionProvider session={session}>
             <Navbar />
 
-            {isLoggedIn && (
+            {isLoggedIn && isOnboarded && (
               <div className="flex justify-center lg:justify-between xl:justify-center gap-4 xl:gap-8 2xl:gap-12 h-full pt-14">
                 <LeftSidebar />
                 {children}
@@ -43,9 +44,11 @@ export default async function RootLayout({
               </div>
             )}
 
-            {!isLoggedIn && <div className="pt-14 h-full">
-              {children}
-            </div>}
+            {isLoggedIn && !isOnboarded && (
+              <div className="pt-14 h-full">{children}</div>
+            )}
+
+            {!isLoggedIn && <div className="pt-14 h-full">{children}</div>}
 
             <Toaster />
           </SessionProvider>
