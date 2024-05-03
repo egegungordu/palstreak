@@ -39,7 +39,6 @@ declare module "@auth/core/adapters" {
 let drizzleAdapter = DrizzleAdapter(db);
 
 drizzleAdapter.createUser = async (user) => {
-  console.log("CREATE USER CALLED", {user});
   const [dbUser] = await db.insert(users).values({
     id: user.id,
     email: user.email,
