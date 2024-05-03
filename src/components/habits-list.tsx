@@ -30,7 +30,8 @@ import reorderHabits from "@/actions/reorder-habits";
 import { cn } from "@/lib/utils";
 import { AnimatePresence } from "framer-motion";
 import { createRestrictToParentElementSmooth } from "@/lib/dnd-modifiers";
-import { useSession } from "next-auth/react";
+import { LuLayoutGrid } from "react-icons/lu";
+import MockHabitCard from "./mock-habit-card";
 
 const restrictToParentElementSmooth = createRestrictToParentElementSmooth({
   padding: 32,
@@ -85,6 +86,39 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
   const handleDragCancel = () => {
     setActiveId(null);
   };
+
+  if (optimisticState.length === 0) {
+    return (
+      <div className="mt-4 text-text-disabled text-center">
+        <LuLayoutGrid className="w-6 h-6 text-foreground-darker inline mr-2 mb-1" />
+        Add a habit from the top right to get started!
+        <div
+          className="opacity-30 pointer-events-none mt-12 flex flex-col gap-4"
+          style={{
+            maskImage: "linear-gradient(to bottom, black 50%, transparent 90%)",
+          }}
+        >
+          <MockHabitCard
+            weeks={52}
+            habit={{
+              name: "🧠 Daily learning",
+              color: "transparent",
+              streaks: [],
+            }}
+          />
+
+          <MockHabitCard
+            weeks={52}
+            habit={{
+              name: "🏋️ Workout",
+              color: "transparent",
+              streaks: [],
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <DndContext

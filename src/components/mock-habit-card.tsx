@@ -6,8 +6,10 @@ import { LuCheckSquare, LuLoader, LuSquare } from "react-icons/lu";
 import { ContributionCalendar } from "./habit-card";
 
 export default function MockHabitCard({
+  weeks = 28,
   habit,
 }: {
+  weeks?: number;
   habit: {
     name: string;
     color: string;
@@ -68,7 +70,7 @@ export default function MockHabitCard({
           color={habit.color}
           streaks={habit.streaks}
           currentDayIndex={-1}
-          weeks={28}
+          weeks={weeks}
         />
       </div>
     </div>

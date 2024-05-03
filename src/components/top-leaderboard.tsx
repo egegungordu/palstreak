@@ -3,10 +3,8 @@ import { db } from "@/db";
 import { users, friends } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import TopLeaderboardList from "./top-leaderboard-list";
-import AddFriendButton from "./add-friend-button";
-import Button from "./button";
 import Link from "next/link";
-import { LuApple, LuSquirrel } from "react-icons/lu";
+import { LuUsers2 } from "react-icons/lu";
 
 async function getLeaderboardTop10() {
   const session = await auth();
@@ -57,8 +55,8 @@ export default async function TopLeaderboard() {
   // no friends :(
   if (leaderboardUsers.length <= 1) {
     return (
-      <div className="mt-8 text-text-disabled text-center text-xs">
-        <LuSquirrel className="mx-auto w-10 h-10 text-foreground-darker mb-3" />
+      <div className="mt-6 text-text-disabled text-center text-xs">
+        <LuUsers2 className="mx-auto w-10 h-10 text-foreground-darker mb-4" />
         <Link href="/friends">
           <span className="underline text-text">Add friends</span>
         </Link>{" "}

@@ -5,7 +5,7 @@ import { users, friends, friendRequests } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import NormalFriendEntry from "./normal-friend-entry";
 import PendingFriendEntry from "./pending-friend-entry";
-import { LuSquirrel } from "react-icons/lu";
+import { LuUsers2 } from "react-icons/lu";
 
 async function getAllFriends() {
   const session = await auth();
@@ -103,7 +103,7 @@ export default async function FriendsTabs() {
         ))}
         {allFriends.value.length === 0 && (
           <div className="mt-4 text-text-disabled text-center">
-            <LuSquirrel className="mx-auto w-12 h-12 text-foreground-darker mb-6" />
+            <LuUsers2 className="mx-auto w-12 h-12 text-foreground-darker mb-4" />
             No friends yet. Add some friends to see them here.
           </div>
         )}
@@ -119,7 +119,7 @@ export default async function FriendsTabs() {
         ))}
         {pendingFriends.value.length === 0 && (
           <div className="mt-4 text-text-disabled text-center">
-            <LuSquirrel className="mx-auto w-12 h-12 text-foreground-darker mb-6" />
+            <LuUsers2 className="mx-auto w-12 h-12 text-foreground-darker mb-4" />
             No pending friend requests.
           </div>
         )}
