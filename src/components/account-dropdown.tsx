@@ -142,10 +142,14 @@ const ThemeSelector = forwardRef(function ThemeSelector(_, ref) {
 
 const SignOutButton = forwardRef<HTMLButtonElement>(
   function SignOutButton(_, ref) {
+    const router = useRouter();
     return (
       <button
         ref={ref}
-        onClick={() => signOut()}
+        onClick={async () => {
+          await signOut();
+          router.refresh();
+        }}
         className="leading-none rounded-md flex items-center h-8 px-3 relative select-none outline-none hover:bg-background-button-hover transition-colors w-full"
       >
         <LuLogOut className="w-4 h-4 mr-2" />
