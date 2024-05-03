@@ -1,6 +1,5 @@
 "use client";
 
-import Tooltip from "./tooltip";
 import { LuPlus } from "react-icons/lu";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
@@ -64,14 +63,12 @@ export default function AddHabitButton() {
 
   return (
     <Dialog.Root open={isDialogOpen} onOpenChange={onOpenChange}>
-      <Tooltip content="Delete habit" side="top">
-        <Dialog.Trigger asChild>
-          <Button className="ml-4 rounded-full gap-1.5 pr-3">
-            Add habit
-            <LuPlus className="w-4 h-4" />
-          </Button>
-        </Dialog.Trigger>
-      </Tooltip>
+      <Dialog.Trigger asChild>
+        <Button className="ml-4 rounded-full gap-1.5 pr-3">
+          Add habit
+          <LuPlus className="w-4 h-4" />
+        </Button>
+      </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="bg-black/60 data-[state=open]:animate-overlay-show backdrop-blur-sm fixed inset-0 z-20" />
         <Dialog.Content

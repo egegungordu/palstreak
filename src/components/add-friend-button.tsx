@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import Tooltip from "./tooltip";
 import * as Dialog from "@radix-ui/react-dialog";
 import Button from "./button";
 import { LuPlus } from "react-icons/lu";
@@ -66,14 +65,12 @@ export default function AddFriendButton({ username }: { username: string }) {
 
   return (
     <Dialog.Root open={isDialogOpen} onOpenChange={onOpenChange}>
-      <Tooltip content="Delete habit" side="top">
-        <Dialog.Trigger asChild>
-          <Button className="ml-4 rounded-full gap-1.5 pr-3">
-            Add friend
-            <LuPlus className="w-4 h-4" />
-          </Button>
-        </Dialog.Trigger>
-      </Tooltip>
+      <Dialog.Trigger asChild>
+        <Button className="ml-4 rounded-full gap-1.5 pr-3">
+          Add friend
+          <LuPlus className="w-4 h-4" />
+        </Button>
+      </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="bg-black/60 data-[state=open]:animate-overlay-show backdrop-blur-sm fixed inset-0 z-20" />
         <Dialog.Content
