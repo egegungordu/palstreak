@@ -102,7 +102,7 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
             weeks={52}
             habit={{
               name: "🧠 Daily learning",
-              color: "transparent",
+              colorIndex: -1,
               streaks: [],
             }}
           />
@@ -111,7 +111,7 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
             weeks={52}
             habit={{
               name: "🏋️ Workout",
-              color: "transparent",
+              colorIndex: -1,
               streaks: [],
             }}
           />

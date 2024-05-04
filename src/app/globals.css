@@ -22,6 +22,22 @@
   --shadow-grid: theme('colors.white / 40%');
   --background-grid-today: theme('colors.stone.300');
   --landing-grid: theme('colors.neutral.200 / 60%');
+
+  --habit-color-1: #F87171;
+  --habit-color-2: #FBBF24;
+  --habit-color-3: #34D399;
+
+  --habit-color-4: #60A5FA;
+  --habit-color-5: #818CF8;
+  --habit-color-6: #F472B6;
+
+  --habit-color-7: #b465db;
+  --habit-color-8: #ed8d51;
+  --habit-color-9: #99d98c;
+
+  --habit-color-10: #FBCFE8;
+  --habit-color-11: #FECACA;
+  --habit-color-12: #000000;
 }
 
 [data-theme='dark'] {
@@ -43,4 +59,20 @@
   --shadow-grid: theme('colors.black / 40%');
   --background-grid-today: theme('colors.neutral.700');
   --landing-grid: theme('colors.neutral.800');
+
+  --habit-color-1: #F87171;
+  --habit-color-2: #FBBF24;
+  --habit-color-3: #34D399;
+
+  --habit-color-4: #60A5FA;
+  --habit-color-5: #818CF8;
+  --habit-color-6: #F472B6;
+
+  --habit-color-7: #b465db;
+  --habit-color-8: #ed8d51;
+  --habit-color-9: #99d98c;
+
+  --habit-color-10: #FBCFE8;
+  --habit-color-11: #FECACA;
+  --habit-color-12: #ffffff;
 }

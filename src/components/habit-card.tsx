@@ -174,7 +174,7 @@ export default function HabitCard({ habit }: { habit: Habit }) {
           </div>
 
           <ContributionCalendar
-            color={habit.color}
+            colorIndex={habit.colorIndex}
             streaks={habit.streaks}
             currentDayIndex={currentDayIndex}
           />
@@ -182,13 +182,10 @@ export default function HabitCard({ habit }: { habit: Habit }) {
 
         <button
           onClick={() => setShowStats(!showStats)}
-          className={cn(
-            "w-full hover:bg-foreground-dark flex justify-center",
-            {
-              "p-4": showStats,
-              "py-1": !showStats,
-            },
-          )}
+          className={cn("w-full hover:bg-foreground-dark flex justify-center", {
+            "p-4": showStats,
+            "py-1": !showStats,
+          })}
         >
           {showStats ? (
             <Stats habit={habit} />
@@ -286,7 +283,7 @@ const DeleteHabitButton = ({ habit }: { habit: Habit }) => {
 
 type EditHabitInputs = {
   name: string;
-  color: string;
+  colorIndex: number;
 };
 
 const EditHabitButton = ({ habit }: { habit: Habit }) => {
@@ -302,27 +299,25 @@ const EditHabitButton = ({ habit }: { habit: Habit }) => {
   } = useForm<EditHabitInputs>({
     defaultValues: {
       name: habit.name,
-      color: habit.color,
+      colorIndex: habit.colorIndex,
     },
   });
 
-  const selectedColor = watch("color");
+  const selectedColorIndex = watch("colorIndex");
 
-  const onSubmit: SubmitHandler<{ name: string; color: string }> = async (
-    data,
-  ) => {
+  const onSubmit: SubmitHandler<EditHabitInputs> = async (data) => {
     startTransition(async () => {
       await updateHabit({
         habitId: habit.id,
         name: data.name,
-        color: data.color,
+        colorIndex: parseInt(data.colorIndex as unknown as string),
       });
 
       toast.success("Habit updated!", {
         description: "Your habit has been updated successfully.",
       });
 
-      reset({ name: data.name, color: data.color });
+      reset({ name: data.name, colorIndex: data.colorIndex });
       setIsDialogOpen(false);
     });
   };
@@ -390,7 +385,7 @@ const EditHabitButton = ({ habit }: { habit: Habit }) => {
                 Color
               </label>
               <div className="grid grid-cols-6 items-center gap-1">
-                {HABIT_COLORS.map((color) => (
+                {HABIT_COLORS.map((color, index) => (
                   <label
                     key={color}
                     className="inline-flex items-center justify-center rounded-full cursor-pointer"
@@ -398,17 +393,21 @@ const EditHabitButton = ({ habit }: { habit: Habit }) => {
                     <input
                       type="radio"
                       className="sr-only"
-                      value={color}
-                      {...register("color", { required: true })}
+                      value={index}
+                      {...register("colorIndex", {
+                        required: true,
+                        valueAsNumber: true,
+                      })}
                     />
                     <span
                       className={cn(
                         "block w-5 h-5 border border-border rounded-md hover:brightness-110",
+                        HABIT_COLORS[index],
                         {
-                          "ring-2 ring-text-strong": selectedColor === color,
+                          "ring-2 ring-text-strong":
+                            selectedColorIndex.toString() === index.toString(),
                         },
                       )}
-                      style={{ backgroundColor: color }}
                     />
                   </label>
                 ))}
@@ -496,12 +495,12 @@ const StatSection = ({
 );
 
 export const ContributionCalendar = ({
-  color,
+  colorIndex,
   streaks,
   currentDayIndex,
   weeks = 52,
 }: {
-  color: string;
+  colorIndex: number;
   streaks: Habit["streaks"];
   currentDayIndex: number;
   weeks?: number;
@@ -514,7 +513,7 @@ export const ContributionCalendar = ({
           return {
             value: streaks[index] ? streaks[index].value : 0,
             date: streaks[index]?.date,
-          }
+          };
         }),
       ),
     [streaks, weeks],
@@ -548,19 +547,13 @@ export const ContributionCalendar = ({
                       <div
                         className={cn(
                           "w-[10px] h-[10px] rounded border border-border-grid bg-background-grid",
+                          value !== 0 && HABIT_COLORS[colorIndex],
                           {
                             "shadow-inner shadow-shadow-grid": value !== 0,
-                            "bg-background-grid-today": isToday,
-                            "bg-foreground": isBeforeToday,
+                            "bg-background-grid-today": value === 0 && isToday,
+                            "bg-foreground": value === 0 && isBeforeToday,
                           },
                         )}
-                        style={
-                          value !== 0
-                            ? {
-                                backgroundColor: color,
-                              }
-                            : undefined
-                        }
                       />
                     </td>
                   );

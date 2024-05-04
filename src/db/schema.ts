@@ -25,7 +25,7 @@ export const habit = pgTable(
       }),
     order: serial("order"),
     name: text("name").notNull(),
-    color: text("color").notNull().default("#000000"),
+    colorIndex: integer("colorIndex").notNull().default(0),
     createdAt: timestamp("createdAt", { mode: "date", withTimezone: true })
       .notNull()
       .defaultNow(),
