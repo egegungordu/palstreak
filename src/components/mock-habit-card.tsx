@@ -12,7 +12,7 @@ export default function MockHabitCard({
   weeks?: number;
   habit: {
     name: string;
-    color: string;
+    colorIndex: number;
     currentDayIndex?: number;
     streaks: Record<
       number,
@@ -84,7 +84,7 @@ export default function MockHabitCard({
         </div>
 
         <ContributionCalendar
-          color={habit.color}
+          colorIndex={habit.colorIndex}
           streaks={habit.streaks}
           currentDayIndex={habit.currentDayIndex ?? -1}
           weeks={weeks}

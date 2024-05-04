@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 
 const MOCK_HABIT1 = {
   name: "📚 Read atleast 10 pages",
-  color: "#b465db",
+  colorIndex: 6,
   streaks: Object.fromEntries(
     Array.from({ length: 7 * 7 + 5 }).map((_, i) => [
       i,
@@ -22,7 +22,7 @@ const MOCK_HABIT1 = {
 
 const MOCK_HABIT2 = {
   name: "💧 Drink water",
-  color: "#ed8d51",
+  colorIndex: 7,
   currentDayIndex: 7 * 21 + 3,
   streaks: Object.fromEntries(
     Array.from({ length: 7 * 21 + 3 }).map((_, i) => [
@@ -38,7 +38,7 @@ const MOCK_HABIT2 = {
 
 const MOCK_HABIT3 = {
   name: "🏋️ Workout",
-  color: "#99d98c",
+  colorIndex: 8,
   streaks: Object.fromEntries(
     Array.from({ length: 7 * 21 + 3 }).map((_, i) => [
       i,

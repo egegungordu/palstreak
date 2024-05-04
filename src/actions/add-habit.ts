@@ -9,11 +9,11 @@ import { z } from "zod";
 const addHabitSchema = z.object({
   timezoneOffset: z.number(),
   name: z.string(),
-  color: z.string(),
+  colorIndex: z.number().min(0).int(),
 });
 
 export default async function addHabit(params: z.infer<typeof addHabitSchema>) {
-  const { timezoneOffset, name, color } = addHabitSchema.parse(params);
+  const { timezoneOffset, name, colorIndex } = addHabitSchema.parse(params);
 
   const session = await auth();
   if (
@@ -31,7 +31,7 @@ export default async function addHabit(params: z.infer<typeof addHabitSchema>) {
     userId,
     timezoneOffset: timezoneOffset,
     name: name,
-    color: color,
+    colorIndex: colorIndex,
   });
 
   revalidatePath("/");

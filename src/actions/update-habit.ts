@@ -10,13 +10,13 @@ import { z } from "zod";
 const updateHabitSchema = z.object({
   habitId: z.string(),
   name: z.string(),
-  color: z.string(),
+  colorIndex: z.number().min(0).int(),
 });
 
 export default async function updateHabit(
   params: z.infer<typeof updateHabitSchema>,
 ) {
-  const { habitId, name, color } = updateHabitSchema.parse(params);
+  const { habitId, name, colorIndex } = updateHabitSchema.parse(params);
 
   const session = await auth();
   if (
@@ -32,7 +32,7 @@ export default async function updateHabit(
     .update(habit)
     .set({
       name: name,
-      color: color,
+      colorIndex: colorIndex,
     })
     .where(and(eq(habit.userId, session.user.id), eq(habit.id, habitId)));
 

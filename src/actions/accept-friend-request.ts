@@ -30,7 +30,6 @@ export default async function acceptFriendRequest(
   const userId = session.user.id;
 
   await db.transaction(async (tx) => {
-    console.log({ userId, friendId });
     const deletedFriendRequest = await tx
       .delete(friendRequests)
       .where(
@@ -40,8 +39,6 @@ export default async function acceptFriendRequest(
         ),
       )
       .returning();
-
-    console.log({ deletedFriendRequest });
 
     if (deletedFriendRequest.length === 0) {
       return;

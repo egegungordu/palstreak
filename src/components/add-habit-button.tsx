@@ -13,7 +13,7 @@ import { HABIT_COLORS } from "@/globals";
 
 type AddHabitInputs = {
   name: string;
-  color: string;
+  colorIndex: number;
 };
 
 export default function AddHabitButton() {
@@ -31,20 +31,21 @@ export default function AddHabitButton() {
   } = useForm<AddHabitInputs>({
     defaultValues: {
       name: "",
-      color: HABIT_COLORS[HABIT_COLORS.length - 1],
+      colorIndex: 0,
     },
   });
 
-  const selectedColor = watch("color");
+  const selectedColorIndex = watch("colorIndex");
 
-  const onSubmit: SubmitHandler<{ name: string; color: string }> = async (
+  const onSubmit: SubmitHandler<{ name: string; colorIndex: number }> = async (
     data,
   ) => {
     startTransition(async () => {
+      // TODO: the value on the radio button ins a string, but ts types expect a number
       await addHabit({
         timezoneOffset: new Date().getTimezoneOffset(),
         name: data.name,
-        color: data.color,
+        colorIndex: parseInt(data.colorIndex as unknown as string),
       });
 
       toast.success("Habit added successfully", {
@@ -115,25 +116,25 @@ export default function AddHabitButton() {
                 Color
               </label>
               <div className="grid grid-cols-6 items-center gap-1">
-                {HABIT_COLORS.map((color) => (
+                {HABIT_COLORS.map((color, index) => (
                   <label
-                    key={color}
+                    key={index}
                     className="inline-flex items-center justify-center rounded-full cursor-pointer"
                   >
                     <input
                       type="radio"
                       className="sr-only"
-                      value={color}
-                      {...register("color", { required: true })}
+                      value={index}
+                      {...register("colorIndex", { required: true, valueAsNumber: true})}
                     />
                     <span
                       className={cn(
                         "block w-5 h-5 border border-border rounded-md hover:brightness-110",
+                        color,
                         {
-                          "ring-2 ring-text-strong": selectedColor === color,
+                          "ring-2 ring-text-strong": selectedColorIndex.toString() === index.toString(),
                         },
                       )}
-                      style={{ backgroundColor: color }}
                     />
                   </label>
                 ))}
