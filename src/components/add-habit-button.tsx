@@ -40,7 +40,6 @@ export default function AddHabitButton() {
   const onSubmit: SubmitHandler<AddHabitInputs> = async (data) => {
     startTransition(async () => {
       // TODO: the value on the radio button ins a string, but ts types expect a number
-      console.log(data);
       await addHabit({
         timezoneOffset: new Date().getTimezoneOffset(),
         name: data.name,
