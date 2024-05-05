@@ -79,7 +79,7 @@ export default async function FriendsTabs() {
   }
 
   return (
-    <Tabs defaultValue="All">
+    <Tabs defaultValue="All" className="pb-20">
       <TabsList>
         <TabsTrigger value="All">All</TabsTrigger>
         <TabsTrigger value="Pending" className="relative">
