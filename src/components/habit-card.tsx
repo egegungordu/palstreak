@@ -495,11 +495,13 @@ const StatSection = ({
 );
 
 export const ContributionCalendar = ({
+  showOverflow = true,
   colorIndex,
   streaks,
   currentDayIndex,
   weeks = 52,
 }: {
+  showOverflow?: boolean;
   colorIndex: number;
   streaks: Habit["streaks"];
   currentDayIndex: number;
@@ -520,7 +522,9 @@ export const ContributionCalendar = ({
   );
 
   return (
-    <div className="overflow-auto max-w-[calc(100vw-4rem)]">
+    <div className={cn("overflow-hidden max-w-[calc(100vw-4rem)]", {
+        "overflow-auto": showOverflow,
+      })}>
       <table
         role="grid"
         aria-readonly="true"

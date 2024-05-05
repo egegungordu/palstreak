@@ -84,6 +84,7 @@ export default function MockHabitCard({
         </div>
 
         <ContributionCalendar
+          showOverflow={false}
           colorIndex={habit.colorIndex}
           streaks={habit.streaks}
           currentDayIndex={habit.currentDayIndex ?? -1}
