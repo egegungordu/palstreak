@@ -395,7 +395,6 @@ const EditHabitButton = ({ habit }: { habit: Habit }) => {
                       className="sr-only"
                       value={index}
                       {...register("colorIndex", {
-                        required: true,
                         valueAsNumber: true,
                       })}
                     />

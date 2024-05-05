@@ -37,11 +37,10 @@ export default function AddHabitButton() {
 
   const selectedColorIndex = watch("colorIndex");
 
-  const onSubmit: SubmitHandler<{ name: string; colorIndex: number }> = async (
-    data,
-  ) => {
+  const onSubmit: SubmitHandler<AddHabitInputs> = async (data) => {
     startTransition(async () => {
       // TODO: the value on the radio button ins a string, but ts types expect a number
+      console.log(data);
       await addHabit({
         timezoneOffset: new Date().getTimezoneOffset(),
         name: data.name,
@@ -125,14 +124,17 @@ export default function AddHabitButton() {
                       type="radio"
                       className="sr-only"
                       value={index}
-                      {...register("colorIndex", { required: true, valueAsNumber: true})}
+                      {...register("colorIndex", {
+                        valueAsNumber: true,
+                      })}
                     />
                     <span
                       className={cn(
                         "block w-5 h-5 border border-border rounded-md hover:brightness-110",
                         color,
                         {
-                          "ring-2 ring-text-strong": selectedColorIndex.toString() === index.toString(),
+                          "ring-2 ring-text-strong":
+                            selectedColorIndex.toString() === index.toString(),
                         },
                       )}
                     />
