@@ -31,7 +31,7 @@ export default function LeftSidebar() {
   }
 
   return (
-    <Sidebar className="sticky top-0 border-r border-border w-10 xl:w-48 hidden md:block p-1.5 py-6 shrink-0 box-content">
+    <Sidebar className="sticky h-[calc(100vh_-_6.5rem)] top-14 border-r border-border w-10 xl:w-48 hidden md:block p-1.5 py-6 shrink-0 box-content">
       <div className="flex flex-col gap-1 h-full">
         {LINKS.map(({ href, Icon, name }) => (
           <Tooltip

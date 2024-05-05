@@ -23,7 +23,7 @@ export default function MobileBottomNavbar() {
   const pathname = usePathname();
 
   return (
-    <div className="h-14 fixed md:hidden bottom-0 left-0 bg-background border-t border-border w-full flex gap-1 justify-around p-1">
+    <div className="h-14 sticky md:hidden bottom-0 left-0 bg-background border-t border-border w-full flex gap-1 justify-around p-1">
       {LINKS.map(({ href, Icon, name }) => (
         <Link
           key={href}

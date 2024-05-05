@@ -133,7 +133,7 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
         strategy={verticalListSortingStrategy}
         items={optimisticState.map((habit) => habit.id)}
       >
-        <ol className={cn("flex pb-20 flex-col items-center")}>
+        <ol className={cn("flex flex-col items-center")}>
           <AnimatePresence initial={false}>
             {/*<HabitsHeader habits={habits} />*/}
 

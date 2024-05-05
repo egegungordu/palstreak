@@ -35,22 +35,24 @@ export default async function RootLayout({
             <Navbar />
 
             {isLoggedIn && isOnboarded && (
-              <div className="flex justify-center lg:justify-between xl:justify-center gap-4 xl:gap-8 2xl:gap-12 pt-14 h-full overflow-auto">
-                <LeftSidebar />
-                {children}
-                <RightSidebar />
+              <div className="">
+                <div className="flex justify-center lg:justify-between xl:justify-center gap-4 xl:gap-8 2xl:gap-12">
+                  <LeftSidebar />
+                  {children}
+                  <RightSidebar />
+                </div>
+
+                <Toaster />
 
                 <MobileBottomNavbar />
               </div>
             )}
 
             {isLoggedIn && !isOnboarded && (
-              <div className="pt-14 h-full">{children}</div>
+              <div className="h-full">{children}</div>
             )}
 
-            {!isLoggedIn && <div className="pt-14 h-full">{children}</div>}
-
-            <Toaster />
+            {!isLoggedIn && <div className="h-full">{children}</div>}
           </SessionProvider>
         </ThemeProvider>
       </body>

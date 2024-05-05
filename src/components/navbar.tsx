@@ -13,7 +13,7 @@ export default async function Navbar() {
   const isLoggedIn = session && session.user;
 
   return (
-    <nav className="shadow top-0 left-0 fixed shadow-shadow w-full bg-foreground border-b border-border h-14 z-10">
+    <nav className="shadow top-0 left-0 sticky shadow-shadow w-full bg-foreground border-b border-border h-14 z-10">
       <div className="flex max-w-screen-xl items-center mx-auto h-full px-3 sm:px-2 xl:px-16 relative isolate">
         <NavbarGridCanvas />
 
