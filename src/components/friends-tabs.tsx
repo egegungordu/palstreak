@@ -27,6 +27,8 @@ async function getAllFriends() {
         .where(eq(friends.userId, session.user.id)),
     );
 
+  console.log("Friends", dbFriends);
+
   return dbFriends.map(({ user }) => ({
     id: user.id,
     username: user.username,
@@ -42,11 +44,15 @@ async function getPendingFriends() {
     return [];
   }
 
+  console.log("pendingFriends", session.user.id);
+
   const outgoingRequests = await db
     .select()
     .from(friendRequests)
     .where(eq(friendRequests.fromUserId, session.user.id))
     .innerJoin(users, eq(friendRequests.toUserId, users.id));
+
+  console.log("pendingFriends", outgoingRequests);
 
   const incomingRequests = await db
     .select()

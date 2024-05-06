@@ -1,6 +1,5 @@
 import {
   timestamp,
-  pgTable,
   text,
   primaryKey,
   integer,
@@ -8,9 +7,12 @@ import {
   jsonb,
   serial,
   boolean,
+  pgTableCreator,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "next-auth/adapters";
 import { randomUUID } from "crypto";
+
+const pgTable = pgTableCreator((name) => `palstreak_${name}`);
 
 export const habit = pgTable(
   "habit",
@@ -111,36 +113,5 @@ export const accounts = pgTable(
     compoundKey: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
-  }),
-);
-
-export const sessions = pgTable(
-  "session",
-  {
-    id: text("id")
-      .primaryKey()
-      .$defaultFn(() => randomUUID()),
-    sessionToken: text("sessionToken").notNull().unique(),
-    userId: text("userId")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (table) => {
-    return {
-      userIdIdx: index().on(table.userId),
-    };
-  },
-);
-
-export const verificationTokens = pgTable(
-  "verificationToken",
-  {
-    identifier: text("identifier").notNull(),
-    token: text("token").notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (vt) => ({
-    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   }),
 );

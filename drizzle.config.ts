@@ -9,6 +9,7 @@ export default defineConfig({
   dbCredentials: {
     connectionString: process.env.DATABASE_URL,
   },
+  tablesFilter: ["palstreak_*"],
   verbose: true,
   strict: true,
 });
