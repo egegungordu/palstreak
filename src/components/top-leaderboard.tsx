@@ -46,7 +46,6 @@ async function getLeaderboardTop10() {
 export default async function TopLeaderboard() {
   const leaderboardUsers = await getLeaderboardTop10();
   const session = await auth();
-  await new Promise((resolve) => setTimeout(resolve, 1000));
 
   if (!session) {
     throw new Error("Unauthorized");
