@@ -126,7 +126,7 @@ export default function HabitCard({ habit }: { habit: Habit }) {
           transition,
         }}
       >
-        <Tooltip content="Drag to reorder" side="left">
+        <Tooltip content="Drag to reorder" side="left" disableHoverableContent>
           <button
             {...listeners}
             className="absolute left-[3px] top-1/2 -translate-y-1/2 text-text-disabled group-hover:block hidden cursor-grab"
@@ -200,7 +200,7 @@ export default function HabitCard({ habit }: { habit: Habit }) {
 
 const DragHabitButton = (props: HTMLAttributes<HTMLButtonElement>) => {
   return (
-    <Tooltip content="Drag to reorder" side="top">
+    <Tooltip content="Drag to reorder" side="top" disableHoverableContent>
       <button
         {...props}
         aria-label="Reorder"
@@ -230,7 +230,7 @@ const DeleteHabitButton = ({ habit }: { habit: Habit }) => {
 
   return (
     <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <Tooltip content="Delete habit" side="top">
+      <Tooltip content="Delete habit" side="top" disableHoverableContent>
         <Dialog.Trigger asChild>
           <button
             aria-label="Delete habit"
@@ -329,7 +329,7 @@ const EditHabitButton = ({ habit }: { habit: Habit }) => {
 
   return (
     <Dialog.Root open={isDialogOpen} onOpenChange={onOpenChange}>
-      <Tooltip content="Edit habit" side="top">
+      <Tooltip content="Edit habit" side="top" disableHoverableContent>
         <Dialog.Trigger asChild>
           <button
             aria-label="Edit habit"
