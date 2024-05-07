@@ -60,9 +60,9 @@ export default async function LeaderboardTabs() {
   return (
     <Tabs defaultValue="Overall">
       <TabsList>
-        <TabsTrigger value="Overall">Overall</TabsTrigger>
-        <TabsTrigger value="Consistency">Consistency</TabsTrigger>
-        <TabsTrigger value="Streak">Streak</TabsTrigger>
+        <TabsTrigger className="px-2 text-xs sm:text-sm" value="Overall">Overall</TabsTrigger>
+        <TabsTrigger className="px-2 text-xs sm:text-sm" value="Consistency">Consistency</TabsTrigger>
+        <TabsTrigger className="px-2 text-xs sm:text-sm" value="Streak">Streak</TabsTrigger>
       </TabsList>
       <TabsContent value="Overall" className="grid grid-cols-2 gap-2 pt-2">
         {overallLeaderboard.map((friend, index) => (
