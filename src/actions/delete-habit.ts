@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { habit } from "@/db/schema";
+import { habit, users } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { and, eq, max } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -45,11 +45,11 @@ export default async function deleteHabit(
     )[0];
 
     await tx
-      .update(habit)
+      .update(users)
       .set({
-        longestStreak: longestStreak || 0,
+        longestCurrentStreak: longestStreak || 0,
       })
-      .where(eq(habit.userId, userId));
+      .where(eq(users.id, userId));
   });
 
   revalidatePath("/");
