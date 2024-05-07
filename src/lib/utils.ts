@@ -30,3 +30,10 @@ export function relativeTime({ date }: { date: Date }) {
 
   return rtf.format(diffInSeconds * sign, "second");
 }
+
+export function formatDate({ date }: { date: Date }) {
+  return new Intl.DateTimeFormat("en", {
+    dateStyle: "short",
+    timeStyle: "short",
+  }).format(date);
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { cn, relativeTime } from "@/lib/utils";
+import { cn, relativeTime, formatDate } from "@/lib/utils";
 import Button from "./button";
 import {
   HTMLAttributes,
@@ -521,9 +521,11 @@ export const ContributionCalendar = ({
   );
 
   return (
-    <div className={cn("overflow-hidden max-w-[calc(100vw-4rem)]", {
+    <div
+      className={cn("overflow-hidden max-w-[calc(100vw-4rem)]", {
         "overflow-auto": showOverflow,
-      })}>
+      })}
+    >
       <table
         role="grid"
         aria-readonly="true"
@@ -547,17 +549,29 @@ export const ContributionCalendar = ({
                     dayIndex * 7 + weekIndex < currentDayIndex;
                   return (
                     <td key={dayIndex}>
-                      <div
-                        className={cn(
-                          "w-[10px] h-[10px] rounded border border-border-grid bg-background-grid",
-                          value !== 0 && HABIT_COLORS[colorIndex],
-                          {
-                            "shadow-inner shadow-shadow-grid": value !== 0,
-                            "bg-background-grid-today": value === 0 && isToday,
-                            "bg-foreground": value === 0 && isBeforeToday,
-                          },
-                        )}
-                      />
+                      {value === 0 ? (
+                        <div
+                          className={cn(
+                            "w-[10px] h-[10px] rounded border border-border-grid bg-background-grid hover:brightness-125",
+                            {
+                              "bg-background-grid-today": isToday,
+                              "bg-foreground": isBeforeToday,
+                            },
+                          )}
+                        />
+                      ) : (
+                        <Tooltip
+                          disableHoverableContent
+                          content={formatDate({ date: week[dayIndex].date })}
+                        >
+                          <div
+                            className={cn(
+                              "w-[10px] h-[10px] rounded border border-border-grid bg-background-grid hover:brightness-125 shadow-inner shadow-shadow-grid",
+                              HABIT_COLORS[colorIndex],
+                            )}
+                          />
+                        </Tooltip>
+                      )}
                     </td>
                   );
                 })}
