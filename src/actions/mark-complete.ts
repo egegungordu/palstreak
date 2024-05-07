@@ -6,6 +6,7 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { z } from "zod";
+import { calculateConsistencyScore, calculateNthDay } from "./utils";
 
 const markCompleteSchema = z.object({
   habitId: z.string(),
@@ -36,29 +37,7 @@ export default async function markComplete(
   }
 
   const targetHabit = dbHabit[0];
-
-  // check if already completed today
-  // calculate the nth day of the habit
-  // adjust everything with habit.timezoneOffset
-  const firstDay = new Date(
-    targetHabit.createdAt.getTime() - targetHabit.timezoneOffset * 60 * 1000,
-  );
-  const firstDayStart = new Date(
-    firstDay.getUTCFullYear(),
-    firstDay.getUTCMonth(),
-    firstDay.getUTCDate(),
-  );
-  const today = new Date(
-    new Date().getTime() - targetHabit.timezoneOffset * 60 * 1000,
-  );
-  const todayStart = new Date(
-    today.getUTCFullYear(),
-    today.getUTCMonth(),
-    today.getUTCDate(),
-  );
-  const nthDay = Math.floor(
-    (todayStart.getTime() - firstDayStart.getTime()) / (24 * 60 * 60 * 1000),
-  );
+  const nthDay = calculateNthDay(targetHabit);
 
   // check if already completed today
   if (targetHabit.streaks[nthDay]) {
@@ -96,6 +75,14 @@ export default async function markComplete(
         .where(eq(users.id, userId))
     )[0];
 
+    // update users consistency score
+    const habits = await tx
+      .select()
+      .from(habit)
+      .where(eq(habit.userId, userId));
+
+    const overallConsistencyScore = await calculateConsistencyScore(habits);
+
     await tx
       .update(users)
       .set({
@@ -103,6 +90,7 @@ export default async function markComplete(
           longestCurrentStreak || 0,
           longestStreak,
         ),
+        consistencyScore: overallConsistencyScore.toString(),
       })
       .where(eq(users.id, userId));
   });

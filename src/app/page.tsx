@@ -2,6 +2,7 @@ import AddHabitButton from "@/components/add-habit-button";
 import HabitsList from "@/components/habits-list";
 import LandingPage from "@/components/landing-page";
 import Loader from "@/components/loader";
+import RightSidebarHome from "@/components/right-sidebar-home";
 import { db } from "@/db";
 import { habit } from "@/db/schema";
 import { auth } from "@/lib/auth";
@@ -52,9 +53,7 @@ export default async function Home() {
   const session = await auth();
 
   if (!session) {
-    return (
-      <LandingPage />
-    );
+    return <LandingPage />;
   }
 
   if (session && !session.user.onboardingFinished) {
@@ -62,18 +61,21 @@ export default async function Home() {
   }
 
   return (
-    <main className="w-full pt-8 pb-4 mx-auto lg:mx-0 px-4 md:px-2 max-w-screen-sm flex flex-col items-center">
-      <div className="flex items-center justify-between w-full self-start">
-        <h1 className="font-bold text-lg">Habits</h1>
+    <>
+      <main className="w-full pt-8 pb-4 mx-auto lg:mx-0 px-4 md:px-2 max-w-screen-sm flex flex-col items-center">
+        <div className="flex items-center justify-between w-full self-start">
+          <h1 className="font-bold text-lg">Habits</h1>
 
-        <AddHabitButton />
-      </div>
+          <AddHabitButton />
+        </div>
 
-      <div className="mt-6" />
+        <div className="mt-6" />
 
-      <Suspense fallback={<Loader />}>
-        <Habits />
-      </Suspense>
-    </main>
+        <Suspense fallback={<Loader />}>
+          <Habits />
+        </Suspense>
+      </main>
+      <RightSidebarHome />
+    </>
   );
 }

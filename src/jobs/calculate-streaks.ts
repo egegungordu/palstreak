@@ -3,6 +3,7 @@ import { client } from "@/trigger";
 import { db } from "@/db";
 import { habit, users } from "@/db/schema";
 import { eq, inArray } from "drizzle-orm";
+import { calculateConsistencyScore, calculateNthDay } from "@/actions/utils";
 
 client.defineJob({
   id: "calculate-streaks",
@@ -92,9 +93,12 @@ client.defineJob({
             0,
           );
 
+          const overallConsistencyScore = await calculateConsistencyScore(userHabits);
+
           await tx
             .update(users)
             .set({
+              consistencyScore: overallConsistencyScore.toString(),
               longestCurrentStreak,
             })
             .where(eq(users.id, user.id));

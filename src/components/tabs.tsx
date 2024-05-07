@@ -14,7 +14,7 @@ const TabsList = forwardRef<
   <_Tabs.List
     ref={ref}
     className={cn(
-      "shrink-0 flex p-1 bg-foreground-dark gap-1 rounded-xl md:max-w-fit mb-2",
+      "shrink-0 flex p-1 bg-foreground-dark gap-1 rounded-xl mb-2 w-full",
       className,
     )}
     {...props}
@@ -46,7 +46,6 @@ const TabsContent = forwardRef<
     ref={ref}
     className={cn(
       "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-      className,
     )}
     {...props}
   >
@@ -54,6 +53,7 @@ const TabsContent = forwardRef<
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
+      className={className}
     >
       {props.children}
     </motion.div>

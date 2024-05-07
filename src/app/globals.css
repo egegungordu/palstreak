@@ -22,6 +22,9 @@
   --shadow-grid: theme('colors.white / 40%');
   --background-grid-today: theme('colors.stone.300');
   --landing-grid: theme('colors.neutral.200 / 60%');
+  --gold: theme('colors.amber.400');
+  --silver: theme('colors.gray.400');
+  --bronze: theme('colors.orange.400');
 
   --habit-color-1: #F87171;
   --habit-color-2: #FBBF24;
@@ -59,6 +62,9 @@
   --shadow-grid: theme('colors.black / 40%');
   --background-grid-today: theme('colors.neutral.700');
   --landing-grid: theme('colors.neutral.800');
+  --gold: theme('colors.amber.400');
+  --silver: theme('colors.gray.400');
+  --bronze: theme('colors.orange.400');
 
   --habit-color-1: #F87171;
   --habit-color-2: #FBBF24;

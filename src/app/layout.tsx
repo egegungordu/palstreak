@@ -8,7 +8,6 @@ import ThemeProvider from "@/providers/theme-provider";
 import SessionProvider from "@/providers/session-provider";
 import { auth } from "@/lib/auth";
 import LeftSidebar from "@/components/left-sidebar";
-import RightSidebar from "@/components/right-sidebar";
 import MobileBottomNavbar from "@/components/mobile-bottom-navbar";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -20,9 +19,9 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   const session = await auth();
   const isLoggedIn = session !== null;
   const isOnboarded = session?.user?.onboardingFinished;
@@ -39,7 +38,6 @@ export default async function RootLayout({
                 <div className="flex justify-center lg:justify-between xl:justify-center gap-4 xl:gap-8 2xl:gap-12">
                   <LeftSidebar />
                   {children}
-                  <RightSidebar />
                 </div>
 
                 <Toaster />

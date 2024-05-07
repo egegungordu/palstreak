@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { and, eq, max } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { calculateConsistencyScore, calculateNthDay } from "./utils";
 
 const deleteHabitSchema = z.object({
   habitId: z.string(),
@@ -33,20 +34,22 @@ export default async function deleteHabit(
       .delete(habit)
       .where(and(eq(habit.id, habitId), eq(habit.userId, userId)));
 
-    // we might have deleted the longest streak for the user,
-    // so we need to recompute the longest streak
-    const { longestStreak } = (
-      await tx
-        .select({
-          longestStreak: max(habit.streak),
-        })
-        .from(habit)
-        .where(eq(habit.userId, userId))
-    )[0];
+    const habits = await tx
+      .select()
+      .from(habit)
+      .where(eq(habit.userId, userId));
+
+    const longestStreak = habits.reduce(
+      (acc, h) => Math.max(acc, h.streak),
+      0,
+    );
+
+    const overallConsistencyScore = await calculateConsistencyScore(habits);
 
     await tx
       .update(users)
       .set({
+        consistencyScore: overallConsistencyScore.toString(),
         longestCurrentStreak: longestStreak || 0,
       })
       .where(eq(users.id, userId));

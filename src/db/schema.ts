@@ -2,6 +2,7 @@ import {
   timestamp,
   text,
   primaryKey,
+  numeric,
   integer,
   index,
   jsonb,
@@ -56,25 +57,35 @@ export const users = pgTable("user", {
   username: text("username").unique(),
   email: text("email").notNull().unique(),
   longestCurrentStreak: integer("longestCurrentStreak").notNull().default(0),
+  consistencyScore: numeric("consistencyScore", {
+    precision: 5,
+    scale: 2,
+  })
+    .notNull()
+    .default("0"),
   onboardingFinished: boolean("onboardingFinished").notNull().default(false),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
 });
 
-export const friendRequests = pgTable("friendRequest", {
-  fromUserId: text("fromUserId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  toUserId: text("toUserId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  createdAt: timestamp("createdAt", { mode: "date", withTimezone: true })
-    .notNull()
-    .defaultNow(),
-}, (table) => ({
-  compoundKey: primaryKey({ columns: [table.fromUserId, table.toUserId] }),
-  toIdx: index().on(table.toUserId),
-}));
+export const friendRequests = pgTable(
+  "friendRequest",
+  {
+    fromUserId: text("fromUserId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    toUserId: text("toUserId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    createdAt: timestamp("createdAt", { mode: "date", withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({ columns: [table.fromUserId, table.toUserId] }),
+    toIdx: index().on(table.toUserId),
+  }),
+);
 
 export const friends = pgTable(
   "friend",
