@@ -35,7 +35,7 @@ export default async function RootLayout({
             <Navbar />
 
             {isLoggedIn && isOnboarded && (
-              <div className="">
+              <>
                 <div className="flex justify-center lg:justify-between xl:justify-center gap-4 xl:gap-8 2xl:gap-12">
                   <LeftSidebar />
                   {children}
@@ -45,7 +45,7 @@ export default async function RootLayout({
                 <Toaster />
 
                 <MobileBottomNavbar />
-              </div>
+              </>
             )}
 
             {isLoggedIn && !isOnboarded && (

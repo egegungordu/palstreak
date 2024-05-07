@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LuHome, LuUsers2 } from "react-icons/lu";
+import { LuHome, LuTrophy, LuUsers2 } from "react-icons/lu";
 import Tooltip from "./tooltip";
 import Sidebar from "./sidebar";
 import { useSession } from "next-auth/react";
@@ -20,6 +20,11 @@ const LINKS = [
     Icon: LuUsers2,
     name: "Friends",
   },
+  {
+    href: "/leaderboard",
+    Icon: LuTrophy,
+    name: "Leaderboard",
+  }
 ];
 
 export default function LeftSidebar() {
