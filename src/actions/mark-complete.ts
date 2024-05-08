@@ -91,6 +91,7 @@ export default async function markComplete(
           longestStreak,
         ),
         consistencyScore: overallConsistencyScore.toString(),
+        lastActive: new Date(),
       })
       .where(eq(users.id, userId));
   });

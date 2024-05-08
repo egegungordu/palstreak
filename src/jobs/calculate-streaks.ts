@@ -2,7 +2,7 @@ import { cronTrigger } from "@trigger.dev/sdk";
 import { client } from "@/trigger";
 import { db } from "@/db";
 import { habit, users } from "@/db/schema";
-import { eq, inArray } from "drizzle-orm";
+import { eq, gt, inArray, lt } from "drizzle-orm";
 import { calculateConsistencyScore, calculateNthDay } from "@/actions/utils";
 
 client.defineJob({
@@ -68,21 +68,22 @@ client.defineJob({
             ),
           );
 
-        const usersAffected = await tx
+        // last active 2 weeks
+        const activeUsers = await tx
           .select()
           .from(users)
           .where(
-            inArray(
-              users.id,
-              habitsToReset.map((h) => h.userId),
+            gt(
+              users.lastActive,
+              new Date(payload.ts.getTime() - 14 * 24 * 60 * 60 * 1000),
             ),
           );
 
         io.logger.info(
-          `Users affected: (count: ${usersAffected.length}) ${usersAffected.map((u) => u.id).join(", ")}`,
+          `Active users : (count: ${activeUsers.length}) ${activeUsers.map((u) => u.id).join(", ")}`,
         );
 
-        for (const user of usersAffected) {
+        for (const user of activeUsers) {
           const userHabits = await tx
             .select()
             .from(habit)
@@ -93,7 +94,8 @@ client.defineJob({
             0,
           );
 
-          const overallConsistencyScore = await calculateConsistencyScore(userHabits);
+          const overallConsistencyScore =
+            await calculateConsistencyScore(userHabits);
 
           await tx
             .update(users)

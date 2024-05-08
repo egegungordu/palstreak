@@ -56,6 +56,9 @@ export const users = pgTable("user", {
   name: text("name"),
   username: text("username").unique(),
   email: text("email").notNull().unique(),
+  lastActive: timestamp("lastActive", { mode: "date", withTimezone: true })
+    .notNull()
+    .defaultNow(),
   longestCurrentStreak: integer("longestCurrentStreak").notNull().default(0),
   consistencyScore: numeric("consistencyScore", {
     precision: 5,
@@ -66,7 +69,9 @@ export const users = pgTable("user", {
   onboardingFinished: boolean("onboardingFinished").notNull().default(false),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
-});
+}, (table) => ({
+  lastActiveIdx: index().on(table.lastActive),
+}));
 
 export const friendRequests = pgTable(
   "friendRequest",
