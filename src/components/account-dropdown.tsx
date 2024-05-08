@@ -202,20 +202,20 @@ const SettingsButton = forwardRef(function SettingsButton(
         <Dialog.Overlay className="bg-black/60 data-[state=open]:animate-overlay-show backdrop-blur-sm fixed inset-0 z-20" />
         <Dialog.Content
           onCloseAutoFocus={(e) => e.preventDefault()}
-          className="data-[state=open]:animate-content-show fixed top-1/2 left-1/2 max-h-[85vh] w-[90vw] max-w-[525px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-foreground p-6 border border-border shadow shadow-shadow focus:outline-none z-30"
+          className="overflow-auto data-[state=open]:animate-content-show fixed top-1/2 left-1/2 max-h-[85vh] w-[90vw] max-w-[525px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-foreground p-6 border border-border shadow shadow-shadow focus:outline-none z-30"
         >
           <Dialog.Title className="m-0 text-base font-medium">
             Settings
           </Dialog.Title>
 
-          <div className="flex gap-2 justify-between mt-4 items-start">
+          <div className="flex flex-col sm:flex-row gap-2 justify-between mt-4">
             <div className="font-medium rounded-xl">
-              <div className="bg-foreground h-7 pr-8 flex items-center justify-start">
+              <div className="h-7 pr-8 flex items-center justify-start text-xs">
                 General
               </div>
             </div>
 
-            <div className="flex flex-col gap-6 mt-2">
+            <div className="flex flex-col gap-6 mt-6 sm:mt-2">
               <form className="flex gap-5">
                 <div className="w-[90px] text-right text-xs text-faded">
                   Profile picture
