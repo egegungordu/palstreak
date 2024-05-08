@@ -149,7 +149,7 @@ const SettingsButton = forwardRef(function SettingsButton(
 
       setIsOpened(false);
 
-      // router.refresh();
+      router.refresh();
     });
   };
 
@@ -183,7 +183,7 @@ const SettingsButton = forwardRef(function SettingsButton(
 
       toast.success("Profile picture updated!");
 
-      // router.refresh();
+      router.refresh();
     });
   };
 
