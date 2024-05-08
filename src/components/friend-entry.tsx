@@ -2,6 +2,7 @@
 
 import { AVATAR_COLORS } from "@/globals";
 import Avatar from "boring-avatars";
+import Link from "next/link";
 
 export default function FriendEntry({
   friend,
@@ -16,7 +17,8 @@ export default function FriendEntry({
   children: React.ReactNode;
 }) {
   return (
-    <div
+    <Link
+      href={`/user/${friend.username}`}
       key={friend.id}
       className="flex items-center rounded-xl hover:bg-background-button-hover p-4 transition-colors"
     >
@@ -41,6 +43,6 @@ export default function FriendEntry({
       {friend.username}
 
       {children}
-    </div>
+    </Link>
   );
 }

@@ -3,6 +3,7 @@
 import Avatar from "boring-avatars";
 import { cn } from "@/lib/utils";
 import { AVATAR_COLORS } from "@/globals";
+import Link from "next/link";
 
 const streakColors = {
   // grey
@@ -46,11 +47,12 @@ export default function TopLeaderboardList({
                 {idx + 1}
               </div>
 
-              <div
+              <Link
+                href={`/user/${user.username}`}
                 className={cn(
-                  "flex gap-2 items-center select-none group rounded-xl px-2 py-1.5 w-full",
+                  "flex gap-2 items-center select-none group rounded-xl px-2 py-1.5 w-full hover:bg-foreground-dark",
                   {
-                    "bg-foreground border border-border shadow shadow-shadow":
+                    "bg-foreground border border-border shadow shadow-shadow hover:bg-foreground":
                       user.username === username,
                   },
                 )}
@@ -91,7 +93,7 @@ export default function TopLeaderboardList({
                   </div>
                   <div className="relative bg-neutral-200 w-14 h-2 rounded-full hidden"></div>
                 </div>
-              </div>
+              </Link>
             </div>
           ))}
         </div>

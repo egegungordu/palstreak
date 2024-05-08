@@ -3,6 +3,7 @@
 import { AVATAR_COLORS } from "@/globals";
 import { cn } from "@/lib/utils";
 import Avatar from "boring-avatars";
+import Link from "next/link";
 import { FaMedal } from "react-icons/fa";
 
 export default function LeaderboardEntry({
@@ -20,7 +21,8 @@ export default function LeaderboardEntry({
   rank: number;
 }) {
   return (
-    <div
+    <Link
+      href={`/user/${friend.username}`}
       className={cn(
         "flex col-span-2 items-center rounded-xl gap-4 hover:bg-background-button-hover p-4 transition-colors",
         "first:flex-col first:gap-2 [&:first-child>div]:text-text-strong [&:first-child>div]:text-xl [&:first-child>div]:font-semibold [&:first-child>span]:mr-0",
@@ -62,7 +64,7 @@ export default function LeaderboardEntry({
       <span className="mr-auto">{friend.username}</span>
 
       {children}
-    </div>
+    </Link>
   );
 }
 
