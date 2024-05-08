@@ -1,12 +1,12 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LuHome, LuTrophy, LuUsers2 } from "react-icons/lu";
-import AccountDropdown from "./account-dropdown";
+import { LuHome, LuTrophy, LuUser2, LuUsers2 } from "react-icons/lu";
 
-const LINKS = [
+const generateLinks = (username: string) => ([
   {
     href: "/",
     Icon: LuHome,
@@ -18,20 +18,27 @@ const LINKS = [
     name: "Friends",
   },
   {
+    href: `/user/${username}`,
+    Icon: LuUser2,
+    name: "Profile",
+  },
+  {
     href: "/leaderboard",
     Icon: LuTrophy,
     name: "Leaderboard",
   },
-];
+]);
 
 export default function MobileBottomNavbar() {
   const pathname = usePathname();
+
+  const { data } = useSession();
 
   return (
     <>
       <div className="h-14 md:hidden" />
       <div className="h-14 fixed md:hidden bottom-0 left-0 bg-background border-t border-border w-full flex gap-1 justify-around p-1">
-        {LINKS.map(({ href, Icon, name }) => (
+        {generateLinks(data?.user.username ?? "").map(({ href, Icon, name }) => (
           <Link
             key={href}
             href={href}

@@ -3,13 +3,13 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LuHome, LuTrophy, LuUsers2 } from "react-icons/lu";
+import { LuHome, LuTrophy, LuUser2, LuUsers2 } from "react-icons/lu";
 import Tooltip from "./tooltip";
 import Sidebar from "./sidebar";
 import { useSession } from "next-auth/react";
 import AccountDropdown from "./account-dropdown";
 
-const LINKS = [
+const generateLinks = (username: string) => ([
   {
     href: "/",
     Icon: LuHome,
@@ -21,11 +21,16 @@ const LINKS = [
     name: "Friends",
   },
   {
+    href: `/user/${username}`,
+    Icon: LuUser2,
+    name: "Profile",
+  },
+  {
     href: "/leaderboard",
     Icon: LuTrophy,
     name: "Leaderboard",
-  }
-];
+  },
+]);
 
 export default function LeftSidebar() {
   const pathname = usePathname();
@@ -38,7 +43,7 @@ export default function LeftSidebar() {
   return (
     <Sidebar className="sticky h-[calc(100vh_-_6.5rem)] top-14 border-r border-border w-10 xl:w-48 hidden md:block p-1.5 py-6 shrink-0 box-content">
       <div className="flex flex-col gap-1 h-full">
-        {LINKS.map(({ href, Icon, name }) => (
+        {generateLinks(data.user.username ?? "").map(({ href, Icon, name }) => (
           <Tooltip
             key={href}
             content={name}

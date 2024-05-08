@@ -1,10 +1,10 @@
 "use server";
 
 import { db } from "@/db";
-import { friendRequests, friends } from "@/db/schema";
+import { friendRequests, friends, users } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
-import { and, eq } from "drizzle-orm";
+import { or, and, eq, sql } from "drizzle-orm";
 import { sortIds } from "@/db/utils";
 import { z } from "zod";
 
@@ -50,6 +50,10 @@ export default async function acceptFriendRequest(
       userId: smallId,
       friendId: bigId,
     });
+
+    await db.update(users).set({
+      friendCount: sql`${users.friendCount} + 1`,
+    }).where(or(eq(users.id, smallId), eq(users.id, bigId)));
   });
 
   revalidatePath("/friends");

@@ -62,6 +62,7 @@ export const users = pgTable("user", {
   name: text("name"),
   username: text("username").unique(),
   email: text("email").notNull().unique(),
+  friendCount: integer("friendCount").notNull().default(0),
   lastActive: timestamp("lastActive", { mode: "date", withTimezone: true })
     .notNull()
     .defaultNow(),
@@ -110,6 +111,7 @@ export const friends = pgTable(
   },
   (table) => ({
     compoundKey: primaryKey({ columns: [table.userId, table.friendId] }),
+    friendIdx: index().on(table.friendId),
   }),
 );
 
