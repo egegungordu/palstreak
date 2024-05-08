@@ -8,11 +8,11 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import completeOnboarding from "@/actions/complete-onboarding";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { USERNAME_REGEX } from "@/globals";
 import imageCompression from "browser-image-compression";
 import uploadProfilePicture from "@/actions/upload-profile-picture";
-import { LuCamera, LuLoader } from "react-icons/lu";
+import { LuArrowRight, LuCamera, LuLoader, LuLogOut } from "react-icons/lu";
 
 type OnboardingInputs = {
   username: string;
@@ -98,20 +98,36 @@ export default function OnboardingForm() {
       <form className="my-2">
         <label
           className={cn(
-            "cursor-pointer flex items-center gap-2 rounded-full overflow-hidden mx-auto relative isolate group shadow shadow-shadow",
+            "cursor-pointer flex items-center gap-2 rounded-full mx-auto relative isolate group shadow shadow-shadow",
             {
               "opacity-80 pointer-events-none": profilePicturePending,
             },
           )}
           htmlFor="file"
         >
+          <div className="absolute -right-20 text-xs rotate-6 text-center pointer-events-none">
+            Gifs are
+            <br /> supported!
+            <div
+              className="bg-text-faded size-6 rotate-45 mt-2 ml-2 animate-inviting-arrow origin-top-left"
+              style={{
+                mask: "url(wow-arrow.svg)",
+                maskRepeat: "no-repeat",
+                maskSize: "0.75rem",
+                WebkitMask: "url(wow-arrow.svg)",
+                WebkitMaskRepeat: "no-repeat",
+                WebkitMaskSize: "0.75rem",
+              }}
+            />
+          </div>
+
           {profilePicturePending && (
             <div className="absolute inset-0 flex items-center justify-center text-text-strong">
               <LuLoader className="w-5 h-5 animate-spin" />
             </div>
           )}
 
-          <div className="group-hover:opacity-30 transition-opacity">
+          <div className="group-hover:opacity-30 rounded-full transition-opacity overflow-hidden">
             {data.user.image ? (
               <img
                 src={data.user.image}
@@ -126,10 +142,12 @@ export default function OnboardingForm() {
             )}
           </div>
 
-          {data.user.image && <div className="absolute inset-0 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-2xs text-center leading-tight">
-            <LuCamera className="w-4 h-4" />
-            Change profile picture
-          </div>}
+          {data.user.image && (
+            <div className="absolute rounded-full inset-0 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-2xs text-center leading-tight">
+              <LuCamera className="w-4 h-4" />
+              Change profile picture
+            </div>
+          )}
         </label>
 
         <input
@@ -181,9 +199,22 @@ export default function OnboardingForm() {
           This information will be displayed to your friends
         </small>
 
-        <div className="mt-5 flex justify-end">
+        <div className="flex justify-between mt-5">
+          <Button
+            onClick={async () => {
+              await signOut();
+              router.refresh();
+            }}
+            type="button"
+            className="bg-transparent hover:bg-foreground-dark text-text shadow-none border-none"
+          >
+            <LuLogOut className="size-3.5 mr-2" />
+            Log out
+          </Button>
+
           <Button disabled={pending} loading={pending}>
             Get started
+            <LuArrowRight className="size-3.5 ml-2" />
           </Button>
         </div>
       </form>

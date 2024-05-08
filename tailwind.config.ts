@@ -63,6 +63,7 @@ const config: Config = {
           "habit-card-show 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         "habit-pop": "habit-pop 250ms ease-in-out forwards",
         "logo-show": "logo-show 300ms cubic-bezier(.17,.67,.78,1.32)",
+        "inviting-arrow": "inviting-arrow 3s cubic-bezier(0.16, 1, 0.3, 1) infinite",
       },
       keyframes: {
         "overlay-show": {
@@ -90,6 +91,14 @@ const config: Config = {
         "logo-show": {
           from: { opacity: "0", scale: "0.4", transform: "rotate(-45deg)" },
           to: { opacity: "1", scale: "1", transform: "rotate(0deg)" },
+        },
+        "inviting-arrow": {
+          "0%, 20%, 40%, 100%": {
+            transform: "translateY(0) rotate(45deg)",
+          },
+          "10%, 30%": {
+            transform: "translateY(0) rotate(55deg)",
+          },
         },
       },
     },
