@@ -2,6 +2,9 @@
   "name": "palstreak",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "20"
+  },
   "scripts": {
     "dev": "concurrently --kill-others-on-fail \"pnpm dev:next\" \"pnpm dev:trigger\"",
     "dev:next": "next dev",
