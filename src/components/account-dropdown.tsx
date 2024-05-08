@@ -167,6 +167,7 @@ const SettingsButton = forwardRef(function SettingsButton(
     const formData = new FormData(form);
     const image = formData.get("file") as File;
     if (!image) return;
+    if (!image.type.startsWith("image")) return;
 
     startProfilePictureTransition(async () => {
       const options = {
@@ -174,9 +175,15 @@ const SettingsButton = forwardRef(function SettingsButton(
         maxWidthOrHeight: 1024,
         useWebWorker: true,
       };
-      const compressedImage = await imageCompression(image, options);
+
+      // do local compression only if the image is not a gif
+      if (image.type !== "image/gif") {
+        const compressedImage = await imageCompression(image, options);
+        formData.set("file", compressedImage);
+      }
+
       formData.append("userId", userId);
-      formData.set("file", compressedImage, image.name);
+
       await uploadProfilePicture(formData);
 
       await update({});

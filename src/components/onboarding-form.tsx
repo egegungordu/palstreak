@@ -39,6 +39,9 @@ export default function OnboardingForm() {
     const formData = new FormData(form);
     const image = formData.get("file") as File;
     if (!image) return;
+    if (!image.type.startsWith("image")) return;
+
+    e.preventDefault();
 
     startProfilePictureTransition(async () => {
       const options = {
@@ -46,9 +49,15 @@ export default function OnboardingForm() {
         maxWidthOrHeight: 1024,
         useWebWorker: true,
       };
-      const compressedImage = await imageCompression(image, options);
+
+      // do local compression only if the image is not a gif
+      if (image.type !== "image/gif") {
+        const compressedImage = await imageCompression(image, options);
+        formData.set("file", compressedImage);
+      }
+
       formData.append("userId", data.user.id);
-      formData.set("file", compressedImage, image.name);
+
       await uploadProfilePicture(formData);
 
       await update({});
