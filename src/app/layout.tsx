@@ -43,17 +43,15 @@ export default async function RootLayout({
                   {children}
                 </div>
 
-                <Toaster />
-
                 <MobileBottomNavbar />
               </>
             )}
 
-            {isLoggedIn && !isOnboarded && (
-              <div className="">{children}</div>
-            )}
+            {isLoggedIn && !isOnboarded && <div className="">{children}</div>}
 
             {!isLoggedIn && <div className="">{children}</div>}
+
+            <Toaster />
           </SessionProvider>
         </ThemeProvider>
       </body>
