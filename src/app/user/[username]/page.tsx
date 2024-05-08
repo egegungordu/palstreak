@@ -40,8 +40,8 @@ export default async function Profile({
   return (
     <>
       <main className="w-full pt-8 pb-4 mx-auto lg:mx-0 px-4 md:px-2 max-w-screen-sm">
-        <div className="flex items-center gap-4">
-          <div className="mr-4 shrink-0 relative rounded-full shadow shadow-shadow max-w-fit after:absolute after:inset-0 after:ring-inset after:ring-2 after:ring-white/40 after:rounded-full">
+        <div className="flex items-center gap-4 sm:gap-8">
+          <div className="shrink-0 relative rounded-full shadow shadow-shadow max-w-fit after:absolute after:inset-0 after:ring-inset after:ring-2 after:ring-white/40 after:rounded-full">
             {user.image ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
