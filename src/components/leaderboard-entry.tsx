@@ -31,26 +31,32 @@ export default function LeaderboardEntry({
       <div className="text-text-faded flex gap-1 items-center">
         {rank <= 3 && (
           <FaMedal
-            className={cn(
-              "w-5 h-5 drop-shadow-md",
-              {
-                "text-gold": rank === 1,
-                "text-silver": rank === 2,
-                "text-bronze": rank === 3,
-              },
-            )}
+            className={cn("w-5 h-5 drop-shadow-md", {
+              "text-gold": rank === 1,
+              "text-silver": rank === 2,
+              "text-bronze": rank === 3,
+            })}
           />
         )}
         {rank}
       </div>
 
       <div className="relative rounded-full shadow shadow-shadow max-w-fit after:absolute after:inset-0 after:ring-inset after:ring-2 after:ring-white/40 after:rounded-full">
-        <Avatar
-          size={44}
-          name={friend.username || ""}
-          variant="marble"
-          colors={AVATAR_COLORS}
-        />
+        {friend.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={friend.image}
+            alt="Profile picture"
+            className="rounded-full w-[44px] h-[44px] shrink-0"
+          />
+        ) : (
+          <Avatar
+            size={44}
+            name={friend.username || ""}
+            variant="marble"
+            colors={AVATAR_COLORS}
+          />
+        )}
       </div>
 
       <span className="mr-auto">{friend.username}</span>
@@ -60,7 +66,7 @@ export default function LeaderboardEntry({
   );
 }
 
-export function LeaderboardEntryEmpty({rank}: {rank: number}) {
+export function LeaderboardEntryEmpty({ rank }: { rank: number }) {
   return (
     <div
       className={cn(
@@ -73,26 +79,23 @@ export function LeaderboardEntryEmpty({rank}: {rank: number}) {
       <div className="text-text-faded flex gap-1 items-center">
         {rank <= 3 && (
           <FaMedal
-            className={cn(
-              "w-5 h-5 drop-shadow-md",
-              {
-                "text-gold": rank === 1,
-                "text-silver": rank === 2,
-                "text-bronze": rank === 3,
-              },
-            )}
+            className={cn("w-5 h-5 drop-shadow-md", {
+              "text-gold": rank === 1,
+              "text-silver": rank === 2,
+              "text-bronze": rank === 3,
+            })}
           />
         )}
         {rank}
       </div>
 
       <div className="relative rounded-full shadow shadow-shadow max-w-fit after:absolute after:inset-0 after:ring-inset after:ring-2 after:ring-white/40 after:rounded-full">
-        <div className="size-[44px] rounded-full bg-foreground-darker"/>
+        <div className="size-[44px] rounded-full bg-foreground-darker" />
       </div>
 
-      <span className="w-14 h-4 rounded-md bg-foreground-dark"/>
+      <span className="w-14 h-4 rounded-md bg-foreground-dark" />
 
-      <div className="w-20 h-4 rounded-md bg-foreground-dark"/>
+      <div className="w-20 h-4 rounded-md bg-foreground-dark" />
     </div>
   );
 }

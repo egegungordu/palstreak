@@ -111,6 +111,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.id = token.sub!;
       session.user.onboardingFinished = token.onboardingFinished;
       session.user.username = token.username;
+      session.user.image = token.picture;
       return session;
     },
     jwt: async ({ token, user, trigger }) => {
@@ -125,6 +126,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         token.onboardingFinished = dbUser[0].onboardingFinished;
         token.username = dbUser[0].username;
+        token.picture = dbUser[0].image;
       }
 
       if (user) {

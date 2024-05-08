@@ -25,6 +25,7 @@ export default function TopLeaderboardList({
   leaderboardUsers: {
     username: string | null;
     longestCurrentStreak: number;
+    image: string | null;
   }[];
   username: string;
 }) {
@@ -58,13 +59,21 @@ export default function TopLeaderboardList({
                   {/*<div className="hidden text-text group-hover:grid absolute inset-0 w-full h-full place-items-center bg-foreground rounded-full font-bold">
                   {friend.progress * 100}%
                 </div>*/}
-
-                  <Avatar
-                    size={32}
-                    name={user.username ?? ""}
-                    variant="marble"
-                    colors={AVATAR_COLORS}
-                  />
+                  {user.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={user.image}
+                      alt="Profile picture"
+                      className="rounded-full w-8 h-8 shrink-0"
+                    />
+                  ) : (
+                    <Avatar
+                      size={32}
+                      name={user.username ?? ""}
+                      variant="marble"
+                      colors={AVATAR_COLORS}
+                    />
+                  )}
                 </div>
 
                 <div>

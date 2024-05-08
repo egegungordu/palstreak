@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { forwardRef, useState, useTransition } from "react";
@@ -7,10 +8,8 @@ import * as Dialog from "@radix-ui/react-dialog";
 import Avatar from "boring-avatars";
 import { signOut, useSession } from "next-auth/react";
 import { Session } from "next-auth";
-import { LuLogOut, LuMoon, LuSettings, LuSun } from "react-icons/lu";
-import { useTheme } from "next-themes";
-import { CheckIcon, ChevronDownIcon, Cross2Icon } from "@radix-ui/react-icons";
-import { AnimatePresence, motion } from "framer-motion";
+import { LuCamera, LuLoader, LuLogOut, LuSettings } from "react-icons/lu";
+import { ChevronDownIcon, Cross2Icon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import Button from "./button";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -19,12 +18,8 @@ import { AVATAR_COLORS, USERNAME_REGEX } from "@/globals";
 import updateSettings from "@/actions/update-settings";
 import { useRouter } from "next/navigation";
 import ThemeSwitcher from "./theme-switcher";
-
-const THEMES = [
-  { value: "dark", Icon: LuMoon },
-  { value: "light", Icon: LuSun },
-  { value: "system", Icon: LuSettings },
-];
+import uploadProfilePicture from "@/actions/upload-profile-picture";
+import imageCompression from "browser-image-compression";
 
 export default function AccountDropdown({ session }: { session: Session }) {
   return (
@@ -32,12 +27,21 @@ export default function AccountDropdown({ session }: { session: Session }) {
       <DropdownMenu.Trigger asChild>
         <button className="mt-auto text-xs hover:bg-background-button-hover transition-colors rounded-lg p-2 xl:px-4 xl:py-1 flex justify-center xl:justify-start items-center gap-2">
           <div className="relative after:absolute after:inset-0 after:ring-inset after:ring-2 after:ring-white/40 after:rounded-full">
-            <Avatar
-              size={30}
-              name={session.user?.username || ""}
-              variant="marble"
-              colors={AVATAR_COLORS}
-            />
+            {session.user.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={session.user.image}
+                alt="Profile picture"
+                className="rounded-full w-[30px] h-[30px] shrink-0 min-w-[30px] min-h-[30px]"
+              />
+            ) : (
+              <Avatar
+                size={30}
+                name={session.user?.username || ""}
+                variant="marble"
+                colors={AVATAR_COLORS}
+              />
+            )}
           </div>
           <span className="font-medium xl:block hidden">
             {session.user.username ?? "Account"}
@@ -63,7 +67,11 @@ export default function AccountDropdown({ session }: { session: Session }) {
 
           {session && (
             <DropdownMenu.Item asChild>
-              <SettingsButton username={session.user.username ?? ""} />
+              <SettingsButton
+                userId={session.user.id}
+                image={session.user.image}
+                username={session.user.username ?? ""}
+              />
             </DropdownMenu.Item>
           )}
 
@@ -102,11 +110,17 @@ type SettingsInputs = {
 };
 
 const SettingsButton = forwardRef(function SettingsButton(
-  { username }: { username: string },
+  {
+    userId,
+    image,
+    username,
+  }: { userId: string; image: string | null | undefined; username: string },
   ref,
 ) {
   const [isOpened, setIsOpened] = useState(false);
   const [pending, startTransition] = useTransition();
+  const [profilePicturePending, startProfilePictureTransition] =
+    useTransition();
   const { update } = useSession();
   const router = useRouter();
 
@@ -135,13 +149,42 @@ const SettingsButton = forwardRef(function SettingsButton(
 
       setIsOpened(false);
 
-      router.refresh();
+      // router.refresh();
     });
   };
 
   const handleOpenChange = (open: boolean) => {
     reset();
     setIsOpened(open);
+  };
+
+  const handlePictureUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    e.preventDefault();
+    const form = e.target.form;
+    if (!form) return;
+    const formData = new FormData(form);
+    const image = formData.get("file") as File;
+    if (!image) return;
+
+    startProfilePictureTransition(async () => {
+      const options = {
+        maxSizeMB: 0.2,
+        maxWidthOrHeight: 1024,
+        useWebWorker: true,
+      };
+      const compressedImage = await imageCompression(image, options);
+      formData.append("userId", userId);
+      formData.set("file", compressedImage, image.name);
+      await uploadProfilePicture(formData);
+
+      await update({});
+
+      toast.success("Profile picture updated!");
+
+      // router.refresh();
+    });
   };
 
   return (
@@ -166,58 +209,110 @@ const SettingsButton = forwardRef(function SettingsButton(
           </Dialog.Title>
 
           <div className="flex gap-2 justify-between mt-4 items-start">
-            <div className="font-medium rounded-xl p-1">
+            <div className="font-medium rounded-xl">
               <div className="bg-foreground h-7 pr-8 flex items-center justify-start">
                 General
               </div>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="flex items-center gap-5">
-                <label
-                  className="w-[90px] text-right text-xs text-faded"
-                  htmlFor="habit-name"
-                >
-                  Username
-                </label>
-                <input
-                  className={cn(
-                    "inline-flex h-[35px] w-full flex-1 border border-border items-center justify-center rounded-md px-4 leading-none shadow shadow-shadow outline-none",
-                    errors.username && "border-red-500",
-                  )}
-                  type="text"
-                  autoComplete="off"
-                  id="habit-name"
-                  placeholder="Do 100 pushups"
-                  {...register("username", {
-                    required: {
-                      value: true,
-                      message: "This field is required",
-                    },
-                    pattern: {
-                      value: USERNAME_REGEX,
-                      message: "Invalid username format",
-                    },
-                  })}
-                />
-              </div>
-
-              <div className="text-xs text-text-faded text-end w-full my-1">
-                3-15 characters, letters, numbers, or underscores only.
-              </div>
-
-              {errors.username && (
-                <div className="mt-2 text-end text-red-500 text-xs">
-                  {errors.username.message}
+            <div className="flex flex-col gap-6 mt-2">
+              <form className="flex gap-5">
+                <div className="w-[90px] text-right text-xs text-faded">
+                  Profile picture
                 </div>
-              )}
 
-              <div className="mt-12 flex justify-end">
-                <Button loading={pending} disabled={pending}>
-                  Save
-                </Button>
-              </div>
-            </form>
+                <label
+                  className={cn(
+                    "cursor-pointer flex items-center gap-2 rounded-full overflow-hidden mx-auto relative isolate group",
+                    {
+                      "opacity-80 pointer-events-none": profilePicturePending,
+                    },
+                  )}
+                  htmlFor="file"
+                >
+                  {profilePicturePending && (
+                    <div className="absolute inset-0 flex items-center justify-center text-text-strong">
+                      <LuLoader className="w-5 h-5 animate-spin" />
+                    </div>
+                  )}
+
+                  {image ? (
+                    <img
+                      src={image}
+                      alt="Profile picture"
+                      className="group-hover:opacity-30 transition-opacity size-24"
+                    />
+                  ) : (
+                    <Avatar
+                      size={24}
+                      name={username}
+                      variant="marble"
+                      colors={AVATAR_COLORS}
+                    />
+                  )}
+
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-2xs text-center leading-tight">
+                    <LuCamera className="w-4 h-4" />
+                    Change profile picture
+                  </div>
+                </label>
+
+                <input
+                  className="hidden"
+                  id="file"
+                  type="file"
+                  name="file"
+                  onChange={handlePictureUpload}
+                />
+              </form>
+
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="flex items-center gap-5">
+                  <label
+                    className="w-[90px] text-right text-xs text-faded"
+                    htmlFor="habit-name"
+                  >
+                    Username
+                  </label>
+                  <input
+                    className={cn(
+                      "inline-flex h-[35px] w-full flex-1 border border-border items-center justify-center rounded-md px-4 leading-none shadow shadow-shadow outline-none",
+                      errors.username && "border-red-500",
+                    )}
+                    type="text"
+                    autoComplete="off"
+                    id="habit-name"
+                    placeholder="Do 100 pushups"
+                    {...register("username", {
+                      required: {
+                        value: true,
+                        message: "This field is required",
+                      },
+                      pattern: {
+                        value: USERNAME_REGEX,
+                        message: "Invalid username format",
+                      },
+                    })}
+                  />
+                </div>
+
+                <div className="text-xs text-text-faded text-end w-full my-1">
+                  3-15 characters, letters, numbers, or underscores only.
+                </div>
+
+                {errors.username && (
+                  <div className="mt-2 text-end text-red-500 text-xs">
+                    {errors.username.message}
+                  </div>
+                )}
+
+                <div className="mt-12 flex justify-end">
+                  <Button loading={pending} disabled={pending}>
+                    Save
+                  </Button>
+                </div>
+              </form>
+            </div>
           </div>
 
           <Dialog.Close asChild>
