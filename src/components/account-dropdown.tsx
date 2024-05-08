@@ -236,20 +236,22 @@ const SettingsButton = forwardRef(function SettingsButton(
                     </div>
                   )}
 
-                  {image ? (
-                    <img
-                      src={image}
-                      alt="Profile picture"
-                      className="group-hover:opacity-30 transition-opacity size-24"
-                    />
-                  ) : (
-                    <Avatar
-                      size={24}
-                      name={username}
-                      variant="marble"
-                      colors={AVATAR_COLORS}
-                    />
-                  )}
+                  <div className="group-hover:opacity-30 transition-opacity">
+                    {image ? (
+                      <img
+                        src={image}
+                        alt="Profile picture"
+                        className="size-24"
+                      />
+                    ) : (
+                      <Avatar
+                        size={96}
+                        name={username}
+                        variant="marble"
+                        colors={AVATAR_COLORS}
+                      />
+                    )}
+                  </div>
 
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-2xs text-center leading-tight">
                     <LuCamera className="w-4 h-4" />

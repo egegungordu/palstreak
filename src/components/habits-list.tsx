@@ -93,7 +93,7 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
         <LuLayoutGrid className="w-6 h-6 text-foreground-darker inline mr-2 mb-1" />
         Add a habit from the top right to get started!
         <div
-          className="opacity-30 pointer-events-none mt-12 flex flex-col gap-4"
+          className="opacity-30 pointer-events-none mt-12 flex flex-col gap-4 select-none"
           style={{
             maskImage: "linear-gradient(to bottom, black 50%, transparent 90%)",
           }}
