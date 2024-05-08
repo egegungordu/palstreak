@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -9,6 +10,9 @@ import completeOnboarding from "@/actions/complete-onboarding";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { USERNAME_REGEX } from "@/globals";
+import imageCompression from "browser-image-compression";
+import uploadProfilePicture from "@/actions/upload-profile-picture";
+import { LuCamera, LuLoader } from "react-icons/lu";
 
 type OnboardingInputs = {
   username: string;
@@ -16,8 +20,40 @@ type OnboardingInputs = {
 
 export default function OnboardingForm() {
   const [pending, startTransition] = useTransition();
+  const { data } = useSession();
   const router = useRouter();
   const { update } = useSession();
+  const [profilePicturePending, startProfilePictureTransition] =
+    useTransition();
+
+  if (!data?.user) {
+    throw new Error("User not found");
+  }
+
+  const handlePictureUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    e.preventDefault();
+    const form = e.target.form;
+    if (!form) return;
+    const formData = new FormData(form);
+    const image = formData.get("file") as File;
+    if (!image) return;
+
+    startProfilePictureTransition(async () => {
+      const options = {
+        maxSizeMB: 0.2,
+        maxWidthOrHeight: 1024,
+        useWebWorker: true,
+      };
+      const compressedImage = await imageCompression(image, options);
+      formData.append("userId", data.user.id);
+      formData.set("file", compressedImage, image.name);
+      await uploadProfilePicture(formData);
+
+      await update({});
+    });
+  };
 
   const {
     register,
@@ -49,50 +85,98 @@ export default function OnboardingForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-md">
-      <p className="text-text-faded text-sm mt-2 mb-4">
-        Choose a username. This will be your unique identifier on PalStreak.
-      </p>
+    <>
+      <form className="my-2">
+        <label
+          className={cn(
+            "cursor-pointer flex items-center gap-2 rounded-full overflow-hidden mx-auto relative isolate group shadow shadow-shadow",
+            {
+              "opacity-80 pointer-events-none": profilePicturePending,
+            },
+          )}
+          htmlFor="file"
+        >
+          {profilePicturePending && (
+            <div className="absolute inset-0 flex items-center justify-center text-text-strong">
+              <LuLoader className="w-5 h-5 animate-spin" />
+            </div>
+          )}
 
-      <input
-        className={cn(
-          "inline-flex placeholder:text-text-disabled h-[35px] w-full flex-1 border border-border items-center justify-center rounded-md px-4 leading-none shadow shadow-shadow outline-none",
-          errors.username && "border-red-500",
-        )}
-        type="text"
-        autoComplete="off"
-        placeholder="MyUsername123"
-        {...register("username", {
-          required: {
-            value: true,
-            message: "This field is required",
-          },
-          pattern: {
-            value: USERNAME_REGEX,
-            message: "Invalid username format",
-          },
-        })}
-      />
+          <div className="group-hover:opacity-30 transition-opacity">
+            {data.user.image ? (
+              <img
+                src={data.user.image}
+                alt="Profile picture"
+                className="size-24"
+              />
+            ) : (
+              <div className="inset-0 p-4 size-24 bg-foreground rounded-full border border-border flex flex-col items-center justify-center text-2xs text-center leading-tight">
+                <LuCamera className="w-4 h-4" />
+                Set profile picture
+              </div>
+            )}
+          </div>
 
-      <div className="text-text-faded text-xs pl-[110px] mt-3">
-        3-15 characters, letters, numbers, or underscores only.
-      </div>
+          {data.user.image && <div className="absolute inset-0 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-2xs text-center leading-tight">
+            <LuCamera className="w-4 h-4" />
+            Change profile picture
+          </div>}
+        </label>
 
-      {errors.username && (
-        <div className="mt-2 text-end text-red-500 text-xs">
-          {errors.username.message}
+        <input
+          className="hidden"
+          id="file"
+          type="file"
+          name="file"
+          onChange={handlePictureUpload}
+        />
+      </form>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-md">
+        <p className="text-text-faded text-sm mt-2 mb-4">
+          Choose a username. This will be your unique identifier on PalStreak.
+        </p>
+
+        <input
+          className={cn(
+            "inline-flex placeholder:text-text-disabled h-[35px] w-full flex-1 border border-border items-center justify-center rounded-md px-4 leading-none shadow shadow-shadow outline-none",
+            errors.username && "border-red-500",
+          )}
+          type="text"
+          autoComplete="off"
+          placeholder="MyUsername123"
+          {...register("username", {
+            required: {
+              value: true,
+              message: "This field is required",
+            },
+            pattern: {
+              value: USERNAME_REGEX,
+              message: "Invalid username format",
+            },
+          })}
+        />
+
+        <div className="text-text-faded text-xs pl-[110px] mt-3">
+          3-15 characters, letters, numbers, or underscores only.
         </div>
-      )}
 
-      <small className="block text-end text-xs text-text-disabled mt-4">
-        This information will be displayed to your friends
-      </small>
+        {errors.username && (
+          <div className="mt-2 text-end text-red-500 text-xs">
+            {errors.username.message}
+          </div>
+        )}
 
-      <div className="mt-5 flex justify-end">
-        <Button disabled={pending} loading={pending}>
-          Get started
-        </Button>
-      </div>
-    </form>
+        <small className="block text-end text-xs text-text-disabled mt-4">
+          This information will be displayed to your friends
+        </small>
+
+        <div className="mt-5 flex justify-end">
+          <Button disabled={pending} loading={pending}>
+            Get started
+          </Button>
+        </div>
+      </form>
+    </>
   );
 }

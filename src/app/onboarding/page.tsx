@@ -12,7 +12,7 @@ export default async function Onboarding() {
   }
 
   return (
-    <div className="mx-auto max-w-screen-sm h-full w-full p-8 flex flex-col justify-center items-center">
+    <div className="mx-auto max-w-screen-sm mt-[10vh] w-full p-8 flex flex-col justify-center items-center">
       <h1 className="font-semibold text-base">PalStreak</h1>
 
       <p className="text-text-faded text-sm mt-2 mb-4">
