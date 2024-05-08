@@ -68,7 +68,7 @@ export default async function LeaderboardTabs() {
         {overallLeaderboard.map((friend, index) => (
           <LeaderboardEntry key={friend.id} friend={friend} rank={index + 1}>
             <div className="tabular-nums">
-              {friend.overallScore} points
+              {friend.overallScore.toFixed(0)} points
             </div>
           </LeaderboardEntry>
         ))}
@@ -79,7 +79,7 @@ export default async function LeaderboardTabs() {
       <TabsContent value="Consistency" className="grid grid-cols-2 gap-2 pt-2">
         {consistencyLeaderboard.map((friend, index) => (
           <LeaderboardEntry key={friend.id} friend={friend} rank={index + 1}>
-            <div className="tabular-nums">{friend.consistencyScore * 100} %</div>
+            <div className="tabular-nums">{(friend.consistencyScore * 100).toFixed(1)} %</div>
           </LeaderboardEntry>
         ))}
         {Array.from({ length: 3 - consistencyLeaderboard.length }).map((_, index) => (
