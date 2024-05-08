@@ -309,7 +309,10 @@ const SettingsButton = forwardRef(function SettingsButton(
                 )}
 
                 <div className="mt-12 flex justify-end">
-                  <Button loading={pending} disabled={pending}>
+                  <Button
+                    loading={pending || profilePicturePending}
+                    disabled={pending || profilePicturePending}
+                  >
                     Save
                   </Button>
                 </div>
