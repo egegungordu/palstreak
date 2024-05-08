@@ -50,10 +50,10 @@ export default async function RootLayout({
             )}
 
             {isLoggedIn && !isOnboarded && (
-              <div className="h-full">{children}</div>
+              <div className="">{children}</div>
             )}
 
-            {!isLoggedIn && <div className="h-full">{children}</div>}
+            {!isLoggedIn && <div className="">{children}</div>}
           </SessionProvider>
         </ThemeProvider>
       </body>

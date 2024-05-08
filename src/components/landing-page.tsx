@@ -53,7 +53,7 @@ const MOCK_HABIT3 = {
 
 export default function LandingPage() {
   return (
-    <main className="w-full max-w-screen-lg mx-auto relative isolate h-full overflow-hidden px-4">
+    <main className="w-full max-w-screen-lg mx-auto relative isolate overflow-hidden px-4">
       {/* TODO: do this with svgs or canvas, this might be slow on mobile */}
       <div
         className="absolute grid grid-cols-12 gap-2 -z-10 -top-10 min-w-[500px] w-full left-1/2 -translate-x-1/2"
