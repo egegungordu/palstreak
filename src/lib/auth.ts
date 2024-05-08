@@ -36,19 +36,28 @@ declare module "@auth/core/adapters" {
   }
 }
 
-let drizzleAdapter = DrizzleAdapter(db);
+// we give fake values to the tables that are not used (because jwt)
+let drizzleAdapter = DrizzleAdapter(db, {
+  usersTable: users,
+  accountsTable: accounts,
+  sessionsTable: {} as any,
+  verificationTokensTable: {} as any,
+});
 
 drizzleAdapter.createUser = async (user) => {
-  const [dbUser] = await db.insert(users).values({
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    // do not use the image from google
-    image: null,
-    emailVerified: user.emailVerified,
-  }).returning();
+  const [dbUser] = await db
+    .insert(users)
+    .values({
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      // do not use the image from google
+      image: null,
+      emailVerified: user.emailVerified,
+    })
+    .returning();
   return dbUser;
-}
+};
 
 drizzleAdapter.getUser = async (id) => {
   const user = await db.select().from(users).where(eq(users.id, id));
@@ -74,7 +83,7 @@ drizzleAdapter.getUserByAccount = async ({ providerAccountId }) => {
   const account = await db
     .select()
     .from(accounts)
-    .where(eq(accounts.providerAccountId, providerAccountId))
+    .where(eq(accounts.providerAccountId, providerAccountId));
 
   if (account.length === 0) {
     return null;
@@ -118,7 +127,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // TODO: update means we finished onboarding
       // make it more clear/segmented by maybe using the parameter of update()
       if (trigger === "update") {
-        const dbUser = await db.select().from(users).where(eq(users.id, token.sub!));
+        const dbUser = await db
+          .select()
+          .from(users)
+          .where(eq(users.id, token.sub!));
 
         if (dbUser.length === 0) {
           return token;
@@ -131,7 +143,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       if (user) {
         token.sub = user.id!;
-        token.onboardingFinished = user.onboardingFinished
+        token.onboardingFinished = user.onboardingFinished;
         token.username = user.username;
       }
 
