@@ -1,6 +1,6 @@
 "use client";
 
-import { LuMoreVertical, LuTrash } from "react-icons/lu";
+import { LuHeartCrack, LuMoreVertical } from "react-icons/lu";
 import CircleButton from "./circle-button";
 import Tooltip from "./tooltip";
 import FriendEntry from "./friend-entry";
@@ -73,7 +73,7 @@ const RemoveFriendButton = ({ friendId }: { friendId: string }) => {
         <button
           className="leading-none rounded-md flex items-center h-8 px-3 relative select-none outline-none hover:bg-red-500 hover:text-white transition-colors w-full text-red-500 font-medium"
         >
-          <LuTrash className="w-4 h-4 mr-2" />
+          <LuHeartCrack className="w-4 h-4 mr-2" />
           Remove friend
         </button>
       </Dialog.Trigger>
