@@ -9,6 +9,7 @@ import SessionProvider from "@/providers/session-provider";
 import { auth } from "@/lib/auth";
 import LeftSidebar from "@/components/left-sidebar";
 import MobileBottomNavbar from "@/components/mobile-bottom-navbar";
+import TokenRefresher from "@/components/token-refresher";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,6 +33,8 @@ export default async function RootLayout({
         <ThemeProvider>
           <SessionProvider session={session}>
             <Navbar />
+
+            <TokenRefresher />
 
             {isLoggedIn && isOnboarded && (
               <>
