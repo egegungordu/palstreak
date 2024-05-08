@@ -9,9 +9,12 @@ import {
   serial,
   boolean,
   pgTableCreator,
+  unique,
+  uniqueIndex
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "next-auth/adapters";
 import { randomUUID } from "crypto";
+import { sql } from "drizzle-orm";
 
 const pgTable = pgTableCreator((name) => `palstreak_${name}`);
 
@@ -49,6 +52,9 @@ export const habit = pgTable(
   }),
 );
 
+// TODO: NOTE: https://github.com/drizzle-team/drizzle-orm/issues/1856
+// since drizzle doesnt support .using() yet, we have to use raw sql
+// CREATE UNIQUE INDEX idx_username_lower ON palstreak_user (LOWER(username));
 export const users = pgTable("user", {
   id: text("id")
     .primaryKey()

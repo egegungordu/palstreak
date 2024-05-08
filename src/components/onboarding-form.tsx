@@ -68,6 +68,7 @@ export default function OnboardingForm() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<OnboardingInputs>({
     defaultValues: {
       username: "",
@@ -78,8 +79,13 @@ export default function OnboardingForm() {
     startTransition(async () => {
       const response = await completeOnboarding({ username: data.username });
 
-      if (response) {
-        toast.error(response.message);
+      console.log(response)
+
+      if (!response.ok) {
+        setError("username", {
+          type: "manual",
+          message: response.message,
+        });
         return;
       }
 

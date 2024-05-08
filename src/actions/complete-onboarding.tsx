@@ -40,10 +40,14 @@ export default async function completeOnboarding(
       .where(eq(users.id, userId));
   } catch (e: unknown) {
     return {
+      ok: false,
       message: "Username already taken",
-    };
+    } as const;
   }
 
   revalidatePath("/onboarding");
-  redirect("/");
+
+  return {
+    ok: true,
+  } as const;
 }

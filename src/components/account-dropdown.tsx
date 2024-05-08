@@ -128,6 +128,7 @@ const SettingsButton = forwardRef(function SettingsButton(
     register,
     handleSubmit,
     formState: { errors },
+    setError,
     reset,
   } = useForm<SettingsInputs>({
     defaultValues: {
@@ -137,9 +138,17 @@ const SettingsButton = forwardRef(function SettingsButton(
 
   const onSubmit: SubmitHandler<SettingsInputs> = async (data) => {
     startTransition(async () => {
-      await updateSettings({
+      const res = await updateSettings({
         username: data.username,
       });
+
+      if (!res.ok) {
+        setError("username", {
+          type: "manual",
+          message: res.message,
+        });
+        return;
+      }
 
       toast.success("Settings saved!");
 

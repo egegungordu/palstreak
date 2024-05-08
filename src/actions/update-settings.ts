@@ -29,7 +29,16 @@ export default async function updateSettings(
 
   const userId = session.user.id;
 
-  await db.update(users).set({ username }).where(eq(users.id, userId));
+  try {
+    await db.update(users).set({ username }).where(eq(users.id, userId));
+  } catch (e: unknown) {
+    return {
+      ok: false,
+      message: "Username already taken",
+    } as const;
+  }
 
   revalidatePath("/", "layout");
+
+  return { ok: true } as const;
 }
