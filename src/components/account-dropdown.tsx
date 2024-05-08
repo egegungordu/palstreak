@@ -271,6 +271,7 @@ const SettingsButton = forwardRef(function SettingsButton(
                   id="file"
                   type="file"
                   name="file"
+                  accept="image/*"
                   onChange={handlePictureUpload}
                 />
               </form>

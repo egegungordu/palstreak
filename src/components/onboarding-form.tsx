@@ -137,6 +137,7 @@ export default function OnboardingForm() {
           id="file"
           type="file"
           name="file"
+          accept="image/*"
           onChange={handlePictureUpload}
         />
       </form>
