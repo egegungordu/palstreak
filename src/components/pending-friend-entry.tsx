@@ -1,6 +1,6 @@
 "use client";
 
-import { LuCheck, LuX } from "react-icons/lu";
+import { LuArrowUpRight, LuCheck, LuX } from "react-icons/lu";
 import CircleButton from "./circle-button";
 import { HiMiniArrowDownLeft, HiMiniArrowUpRight } from "react-icons/hi2";
 import Tooltip from "./tooltip";
@@ -26,7 +26,9 @@ export default function PendingFriendEntry({
   const [declinePending, startDeclineTransition] = useTransition();
   const [withdrawPending, startWithdrawTransition] = useTransition();
 
-  const handleAccept = () => {
+  const handleAccept = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
     startAcceptTransition(async () => {
       await acceptFriendRequest({ friendId: friend.id });
 
@@ -35,7 +37,9 @@ export default function PendingFriendEntry({
       });
     });
   };
-  const handleDecline = () => {
+  const handleDecline = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
     startDeclineTransition(async () => {
       await declineFriendRequest({ friendId: friend.id });
 
@@ -44,7 +48,9 @@ export default function PendingFriendEntry({
       });
     });
   };
-  const handleWithdraw = () => {
+  const handleWithdraw = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
     startWithdrawTransition(async () => {
       await withdrawFriendRequest({ friendId: friend.id });
 
@@ -67,9 +73,9 @@ export default function PendingFriendEntry({
           side="right"
         >
           {friend.direction === "incoming" ? (
-            <HiMiniArrowDownLeft className="text-green-500 w-4 h-4" />
+            <LuArrowUpRight className="text-green-500 size-3.5 rotate-180" />
           ) : (
-            <HiMiniArrowUpRight className="text-sky-500 w-4 h-4" />
+            <LuArrowUpRight className="text-green-500 size-3.5" />
           )}
         </Tooltip>
       </div>
