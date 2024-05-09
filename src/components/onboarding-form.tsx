@@ -61,6 +61,8 @@ export default function OnboardingForm() {
       await uploadProfilePicture(formData);
 
       await update({});
+
+      router.refresh();
     });
   };
 

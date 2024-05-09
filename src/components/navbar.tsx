@@ -11,6 +11,7 @@ const ThemeSwitcher = dynamic(() => import("./theme-switcher"), { ssr: false });
 export default async function Navbar() {
   const session = await auth();
   const isLoggedIn = session && session.user;
+  const isOnboarded = session?.user?.onboardingFinished;
 
   return (
     <nav className="shadow top-0 left-0 sticky shadow-shadow w-full bg-foreground border-b border-border h-14 z-10">
@@ -32,7 +33,7 @@ export default async function Navbar() {
 
         <div className="flex-1" />
 
-        {!isLoggedIn && (
+        {!isLoggedIn || !isOnboarded && (
           <ThemeSwitcher withTooltip side="bottom" className="size-8 justify-center" />
         )}
 
