@@ -13,6 +13,7 @@ import { USERNAME_REGEX } from "@/globals";
 import imageCompression from "browser-image-compression";
 import uploadProfilePicture from "@/actions/upload-profile-picture";
 import { LuArrowRight, LuCamera, LuLoader, LuLogOut } from "react-icons/lu";
+import FakeLoadingBar from "./fake-loading-bar";
 
 type OnboardingInputs = {
   username: string;
@@ -81,7 +82,7 @@ export default function OnboardingForm() {
     startTransition(async () => {
       const response = await completeOnboarding({ username: data.username });
 
-      console.log(response)
+      console.log(response);
 
       if (!response.ok) {
         setError("username", {
@@ -157,6 +158,8 @@ export default function OnboardingForm() {
             </div>
           )}
         </label>
+
+        <FakeLoadingBar key={`${profilePicturePending}`} className="mt-3" show={profilePicturePending} />
 
         <input
           className="hidden"

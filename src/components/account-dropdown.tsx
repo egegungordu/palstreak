@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import ThemeSwitcher from "./theme-switcher";
 import uploadProfilePicture from "@/actions/upload-profile-picture";
 import imageCompression from "browser-image-compression";
+import FakeLoadingBar from "./fake-loading-bar";
 
 export default function AccountDropdown({ session }: { session: Session }) {
   return (
@@ -231,49 +232,57 @@ const SettingsButton = forwardRef(function SettingsButton(
               </div>
             </div>
 
-            <div className="flex flex-col gap-6 mt-6 sm:mt-2">
+            <div className="flex flex-col gap-4 mt-6 sm:mt-2">
               <form className="flex gap-5">
-                <div className="w-[90px] text-right text-xs text-faded">
+                <div className="w-[90px] text-right text-xs text-faded shrink-0">
                   Profile picture
                 </div>
 
-                <label
-                  className={cn(
-                    "cursor-pointer flex items-center gap-2 rounded-full overflow-hidden mx-auto relative isolate group",
-                    {
-                      "opacity-80 pointer-events-none": profilePicturePending,
-                    },
-                  )}
-                  htmlFor="file"
-                >
-                  {profilePicturePending && (
-                    <div className="absolute inset-0 flex items-center justify-center text-text-strong">
-                      <LuLoader className="w-5 h-5 animate-spin" />
-                    </div>
-                  )}
-
-                  <div className="group-hover:opacity-30 transition-opacity">
-                    {image ? (
-                      <img
-                        src={image}
-                        alt="Profile picture"
-                        className="size-24"
-                      />
-                    ) : (
-                      <Avatar
-                        size={96}
-                        name={username}
-                        variant="marble"
-                        colors={AVATAR_COLORS}
-                      />
+                <div className="flex flex-col w-full">
+                  <label
+                    className={cn(
+                      "cursor-pointer flex items-center gap-2 rounded-full overflow-hidden mx-auto relative isolate group",
+                      {
+                        "opacity-80 pointer-events-none": profilePicturePending,
+                      },
                     )}
-                  </div>
+                    htmlFor="file"
+                  >
+                    {profilePicturePending && (
+                      <div className="absolute inset-0 flex items-center justify-center text-text-strong">
+                        <LuLoader className="w-5 h-5 animate-spin" />
+                      </div>
+                    )}
 
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-2xs text-center leading-tight">
-                    <LuCamera className="w-4 h-4" />
-                    Change profile picture
-                  </div>
-                </label>
+                    <div className="group-hover:opacity-30 transition-opacity">
+                      {image ? (
+                        <img
+                          src={image}
+                          alt="Profile picture"
+                          className="size-24"
+                        />
+                      ) : (
+                        <Avatar
+                          size={96}
+                          name={username}
+                          variant="marble"
+                          colors={AVATAR_COLORS}
+                        />
+                      )}
+                    </div>
+
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-2xs text-center leading-tight">
+                      <LuCamera className="w-4 h-4" />
+                      Change profile picture
+                    </div>
+                  </label>
+
+                  <FakeLoadingBar
+                    key={`${profilePicturePending}`}
+                    className="mt-3"
+                    show={profilePicturePending}
+                  />
+                </div>
 
                 <input
                   className="hidden"
