@@ -10,6 +10,7 @@ import { auth } from "@/lib/auth";
 import LeftSidebar from "@/components/left-sidebar";
 import MobileBottomNavbar from "@/components/mobile-bottom-navbar";
 import TokenRefresher from "@/components/token-refresher";
+import QueryProvider from "@/providers/query-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,30 +31,34 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="h-full">
       <body className={cn(inter.className, "text-sm bg-background h-full")}>
-        <ThemeProvider>
-          <SessionProvider session={session}>
-            <Navbar />
+        <QueryProvider>
+          <ThemeProvider>
+            <SessionProvider session={session}>
+              <Navbar />
 
-            <TokenRefresher />
+              <TokenRefresher />
 
-            {isLoggedIn && isOnboarded && (
-              <>
-                <div className="flex justify-center lg:justify-between xl:justify-center gap-4 xl:gap-8 2xl:gap-12">
-                  <LeftSidebar />
-                  {children}
-                </div>
+              {isLoggedIn && isOnboarded && (
+                <>
+                  <div className="flex justify-center lg:justify-between xl:justify-center gap-4 xl:gap-8 2xl:gap-12">
+                    <LeftSidebar />
+                    {children}
+                  </div>
 
-                <MobileBottomNavbar />
-              </>
-            )}
+                  <MobileBottomNavbar />
+                </>
+              )}
 
-            {isLoggedIn && !isOnboarded && <div className="">{children}</div>}
+              {isLoggedIn && !isOnboarded && <div className="">{children}</div>}
 
-            {!isLoggedIn && <div className="flex justify-center">{children}</div>}
+              {!isLoggedIn && (
+                <div className="flex justify-center">{children}</div>
+              )}
 
-            <Toaster />
-          </SessionProvider>
-        </ThemeProvider>
+              <Toaster />
+            </SessionProvider>
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );

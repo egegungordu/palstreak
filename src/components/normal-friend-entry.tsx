@@ -25,7 +25,7 @@ export default function NormalFriendEntry({
   return (
     <FriendEntry friend={friend}>
       <DropdownMenu.Root>
-        <Tooltip content="Manage" side="top">
+        <Tooltip disableHoverableContent content="Manage" side="top">
           <DropdownMenu.Trigger asChild>
             <CircleButton className="ml-auto">
               <LuMoreVertical className="w-4 h-4 text-text-faded" />
@@ -36,6 +36,7 @@ export default function NormalFriendEntry({
         <DropdownMenu.Portal>
           <DropdownMenu.Content
             onCloseAutoFocus={(e) => e.preventDefault()}
+            onClick={(e) => e.stopPropagation()}
             className="min-w-[220px] bg-foreground rounded-md p-1 shadow shadow-shadow flex flex-col gap-1"
             sideOffset={10}
             align="end"

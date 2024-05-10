@@ -84,13 +84,17 @@ export default async function FriendsTabs() {
     throw new Error("Failed to load friends");
   }
 
+  const hasIncomingRequests = pendingFriends.value.some(
+    (friend) => friend.direction === "incoming",
+  );
+
   return (
     <Tabs defaultValue="All">
       <TabsList>
         <TabsTrigger value="All">All</TabsTrigger>
         <TabsTrigger value="Pending" className="relative">
           Pending
-          {pendingFriends.value.length > 0 && (
+          {hasIncomingRequests && (
             <>
               <div className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-500 rounded-full animate-ping" />
               <div className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-500 rounded-full" />

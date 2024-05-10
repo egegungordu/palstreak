@@ -10,6 +10,8 @@ import acceptFriendRequest from "@/actions/accept-friend-request";
 import declineFriendRequest from "@/actions/decline-friend-request";
 import withdrawFriendRequest from "@/actions/withdraw-friend-request";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { getIncomingRequestsQuery } from "@/lib/queries";
 
 export default function PendingFriendEntry({
   friend,
@@ -22,6 +24,7 @@ export default function PendingFriendEntry({
     image: string | null;
   };
 }) {
+  const queryClient = useQueryClient();
   const [acceptPending, startAcceptTransition] = useTransition();
   const [declinePending, startDeclineTransition] = useTransition();
   const [withdrawPending, startWithdrawTransition] = useTransition();
@@ -31,6 +34,8 @@ export default function PendingFriendEntry({
     e.preventDefault();
     startAcceptTransition(async () => {
       await acceptFriendRequest({ friendId: friend.id });
+
+      queryClient.invalidateQueries(getIncomingRequestsQuery);
 
       toast.success("Friend request accepted!", {
         description: "The friend request has been successfully accepted.",
@@ -42,6 +47,8 @@ export default function PendingFriendEntry({
     e.preventDefault();
     startDeclineTransition(async () => {
       await declineFriendRequest({ friendId: friend.id });
+
+      queryClient.invalidateQueries(getIncomingRequestsQuery);
 
       toast.success("Friend request declined!", {
         description: "The friend request has been successfully declined.",
@@ -64,6 +71,7 @@ export default function PendingFriendEntry({
     <FriendEntry friend={friend}>
       <div className="bg-foreground p-0.5 rounded-md shadow shadow-shadow text-2xs flex items-center ml-2 mr-auto">
         <Tooltip
+          disableHoverableContent
           asChild={false}
           content={
             friend.direction === "incoming"
@@ -82,13 +90,13 @@ export default function PendingFriendEntry({
 
       {friend.direction === "incoming" && (
         <>
-          <Tooltip content="Accept" side="top">
+          <Tooltip disableHoverableContent content="Accept" side="top">
             <CircleButton loading={acceptPending} onClick={handleAccept}>
               <LuCheck className="w-4 h-4 text-green-500" />
             </CircleButton>
           </Tooltip>
 
-          <Tooltip content="Decline" side="top">
+          <Tooltip disableHoverableContent content="Decline" side="top">
             <CircleButton
               className="ml-2"
               loading={declinePending}
@@ -101,7 +109,7 @@ export default function PendingFriendEntry({
       )}
 
       {friend.direction === "outgoing" && (
-        <Tooltip content="Withdraw" side="top">
+        <Tooltip disableHoverableContent content="Withdraw" side="top">
           <CircleButton loading={withdrawPending} onClick={handleWithdraw}>
             <LuX className="w-4 h-4 text-red-500" />
           </CircleButton>

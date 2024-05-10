@@ -8,8 +8,10 @@ import Tooltip from "./tooltip";
 import Sidebar from "./sidebar";
 import { useSession } from "next-auth/react";
 import AccountDropdown from "./account-dropdown";
+import { useQuery } from "@tanstack/react-query";
+import { getIncomingRequestsQuery } from "@/lib/queries";
 
-const generateLinks = (username: string) => ([
+const generateLinks = (username: string) => [
   {
     href: "/",
     Icon: LuHome,
@@ -30,45 +32,52 @@ const generateLinks = (username: string) => ([
     Icon: LuTrophy,
     name: "Leaderboard",
   },
-]);
+];
 
 export default function LeftSidebar() {
   const pathname = usePathname();
-  const { data } = useSession();
+  const { data: session } = useSession();
 
-  if (!data) {
-    throw Error("Session is not available");
-  }
+  const { data } = useQuery(getIncomingRequestsQuery);
 
   return (
     <Sidebar className="sticky h-[calc(100vh_-_6.5rem)] top-14 border-r border-border w-10 xl:w-48 hidden md:block p-1.5 py-6 shrink-0 box-content">
       <div className="flex flex-col gap-1 h-full">
-        {generateLinks(data.user.username ?? "").map(({ href, Icon, name }) => (
-          <Tooltip
-            key={href}
-            content={name}
-            side="right"
-            tooltipClassName="xl:hidden"
-          >
-            <Link
-              href={href}
-              className={cn(
-                "flex gap-2 w-full text-text-faded items-center rounded-md px-3 h-10 hover:text-text-strong transition-colors",
-                {
-                  "text-text-strong font-semibold bg-foreground-dark":
-                    pathname === href,
-                },
-              )}
+        {generateLinks(session?.user.username ?? "").map(
+          ({ href, Icon, name }) => (
+            <Tooltip
+              key={href}
+              content={name}
+              side="right"
+              tooltipClassName="xl:hidden"
             >
-              <Icon className="w-4 h-4" />
-              <span className="xl:block hidden">{name}</span>
-            </Link>
-          </Tooltip>
-        ))}
+              <Link
+                href={href}
+                className={cn(
+                  "flex gap-2 w-full text-text-faded items-center rounded-md px-3 h-10 hover:text-text-strong transition-colors relative",
+                  {
+                    "text-text-strong font-semibold bg-foreground-dark":
+                      pathname === href,
+                  },
+                )}
+              >
+                <Icon className="w-4 h-4" />
+                <span className="xl:block hidden">{name}</span>
+
+                {name === "Friends" && data && data.count > 0 && (
+                  <>
+                    <div className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-500 rounded-full animate-ping" />
+                    <div className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-500 rounded-full" />
+                  </>
+                )}
+              </Link>
+            </Tooltip>
+          ),
+        )}
 
         <div className="flex-1" />
 
-        <AccountDropdown session={data} />
+        {session && <AccountDropdown session={session} />}
       </div>
     </Sidebar>
   );
