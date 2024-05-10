@@ -73,7 +73,7 @@ export default async function LeaderboardTabs() {
           </LeaderboardEntry>
         ))}
         {Array.from({ length: 3 - overallLeaderboard.length }).map((_, index) => (
-          <LeaderboardEntryEmpty key={index} rank={index - overallLeaderboard.length + 3} />
+          <LeaderboardEntryEmpty key={index} rank={overallLeaderboard.length + 1} />
         ))}
       </TabsContent>
       <TabsContent value="Consistency" className="grid grid-cols-2 gap-2 pt-2">
@@ -83,7 +83,7 @@ export default async function LeaderboardTabs() {
           </LeaderboardEntry>
         ))}
         {Array.from({ length: 3 - consistencyLeaderboard.length }).map((_, index) => (
-          <LeaderboardEntryEmpty key={index} rank={index - consistencyLeaderboard.length + 3} />
+          <LeaderboardEntryEmpty key={index} rank={consistencyLeaderboard.length + 1} />
         ))}
       </TabsContent>
       <TabsContent value="Streak" className="grid grid-cols-2 gap-2 pt-2">
@@ -95,7 +95,7 @@ export default async function LeaderboardTabs() {
           </LeaderboardEntry>
         ))}
         {Array.from({ length: 3 - streakLeaderboard.length }).map((_, index) => (
-          <LeaderboardEntryEmpty key={index} rank={index - streakLeaderboard.length + 3} />
+          <LeaderboardEntryEmpty key={index} rank={streakLeaderboard.length + 1} />
         ))}
       </TabsContent>
     </Tabs>
