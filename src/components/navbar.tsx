@@ -33,7 +33,7 @@ export default async function Navbar() {
 
         <div className="flex-1" />
 
-        {!isLoggedIn || !isOnboarded && (
+        {(!isLoggedIn || !isOnboarded) && (
           <ThemeSwitcher withTooltip side="bottom" className="size-8 justify-center" />
         )}
 

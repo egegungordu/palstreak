@@ -49,7 +49,7 @@ export default async function RootLayout({
 
             {isLoggedIn && !isOnboarded && <div className="">{children}</div>}
 
-            {!isLoggedIn && <div className="">{children}</div>}
+            {!isLoggedIn && <div className="flex justify-center">{children}</div>}
 
             <Toaster />
           </SessionProvider>

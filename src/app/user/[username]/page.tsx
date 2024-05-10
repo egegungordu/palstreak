@@ -1,8 +1,12 @@
+import signInAction from "@/actions/sign-in-action";
+import Button from "@/components/button";
 import RightSidebarEmpty from "@/components/right-sidebar-empty";
+import Sidebar from "@/components/sidebar";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { AVATAR_COLORS } from "@/globals";
-import { formatDate, relativeTime } from "@/lib/utils";
+import { auth } from "@/lib/auth";
+import { relativeTime } from "@/lib/utils";
 import Avatar from "boring-avatars";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
@@ -28,6 +32,8 @@ export default async function Profile({
   params: { username: string };
 }) {
   const user = await getUserByUsername(params.username);
+  const session = await auth();
+  const isLoggedIn = session !== null;
 
   if (!user) {
     notFound();
@@ -81,7 +87,21 @@ export default async function Profile({
           </div>
         </div>
       </main>
-      <RightSidebarEmpty />
+      {isLoggedIn ? (
+        <RightSidebarEmpty />
+      ) : (
+        <Sidebar className="sticky h-full top-14 pt-8 mr-6 xl:mr-0 lg:w-48 shrink-0 hidden lg:block">
+          <p className="text-xs mb-4 text-center">
+            Join PalStreak to connect with {params.username} and other friends.
+          </p>
+
+          <form action={signInAction}>
+            <button className="w-full text-neutral-100 shadow shadow-shadow bg-sky-500 font-semibold rounded-full px-4 py-2 flex justify-center items-center gap-2 ring ring-inset ring-white/20 hover:shadow-md hover:scale-105 duration-150 hover:brightness-105 transition-all">
+              Join PalStreak
+            </button>
+          </form>
+        </Sidebar>
+      )}
     </>
   );
 }
