@@ -1,5 +1,6 @@
 import signInAction from "@/actions/sign-in-action";
-import HabitCard from "@/components/habit-card";
+import Button from "@/components/button";
+import EditProfileButton from "@/components/edit-profile-button";
 import MockHabitCard from "@/components/mock-habit-card";
 import RightSidebarEmpty from "@/components/right-sidebar-empty";
 import Sidebar from "@/components/sidebar";
@@ -11,7 +12,7 @@ import { relativeTime } from "@/lib/utils";
 import Avatar from "boring-avatars";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import { LuFlame, LuUsers2 } from "react-icons/lu";
+import { LuFlame, LuPencil, LuUsers2 } from "react-icons/lu";
 
 const getUserByUsername = async (username: string) => {
   return await db.query.users
@@ -87,10 +88,14 @@ export default async function Profile({
             )}
           </div>
 
-          <div className="w-full">
-            <h1 className="text-2xl font-bold leading-none">
-              {params.username}
-            </h1>
+          <div className="w-full min-w-0">
+            <div className="text-2xl font-bold leading-none flex items-center gap-4 flex-wrap">
+              <div className="overflow-hidden text-ellipsis">
+              thisisfifteenchar
+              </div>
+
+              {user.username === session?.user.username &&  <EditProfileButton />}
+            </div>
             <div className="text-text-faded text-xs mt-2">
               Last active {relativeTime({ date: user.lastActive })}
             </div>
