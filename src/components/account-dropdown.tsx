@@ -94,7 +94,7 @@ const SignOutButton = forwardRef<HTMLButtonElement>(
   },
 );
 
-const SettingsButton = forwardRef(function SettingsButton(ref) {
+const SettingsButton = forwardRef(function SettingsButton(_, ref) {
   const [isOpened, setIsOpened] = useState(false);
 
   const handleOpenChange = (open: boolean) => {
