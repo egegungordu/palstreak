@@ -62,8 +62,6 @@ export default function OnboardingForm() {
       await uploadProfilePicture(formData);
 
       await update({});
-
-      router.refresh();
     });
   };
 
@@ -140,7 +138,7 @@ export default function OnboardingForm() {
             {data.user.image ? (
               <img
                 src={data.user.image}
-                alt="Profile picture"
+                alt=""
                 className="size-24"
               />
             ) : (
@@ -159,7 +157,11 @@ export default function OnboardingForm() {
           )}
         </label>
 
-        <FakeLoadingBar key={`${profilePicturePending}`} className="mt-3" show={profilePicturePending} />
+        <FakeLoadingBar
+          key={`${profilePicturePending}`}
+          className="mt-3"
+          show={profilePicturePending}
+        />
 
         <input
           className="hidden"

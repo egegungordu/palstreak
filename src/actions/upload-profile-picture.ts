@@ -101,7 +101,7 @@ export default async function uploadProfilePicture(formData: FormData) {
   await db
     .update(users)
     .set({
-      image: `${smallUrl}#${new Date().getTime()}`,
+      image: smallUrl + "?v=" + Date.now(),
     })
     .where(eq(users.id, userId));
 
