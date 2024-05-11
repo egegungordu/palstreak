@@ -89,9 +89,9 @@ export default async function Profile({
           </div>
 
           <div className="w-full min-w-0">
-            <div className="text-2xl font-bold leading-none flex items-center gap-4 flex-wrap">
+            <div className="text-2xl font-bold flex items-center gap-4 flex-wrap">
               <div className="overflow-hidden text-ellipsis">
-              thisisfifteenchar
+                {user.username}
               </div>
 
               {user.username === session?.user.username &&  <EditProfileButton />}
