@@ -10,11 +10,11 @@ import {
   boolean,
   pgTableCreator,
   unique,
-  uniqueIndex
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "next-auth/adapters";
 import { randomUUID } from "crypto";
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 
 const pgTable = pgTableCreator((name) => `palstreak_${name}`);
 
@@ -52,32 +52,47 @@ export const habit = pgTable(
   }),
 );
 
+export const habitsRelations = relations(habit, ({ one }) => ({
+  author: one(users, {
+    fields: [habit.userId],
+    references: [users.id],
+  }),
+}));
+
 // TODO: NOTE: https://github.com/drizzle-team/drizzle-orm/issues/1856
 // since drizzle doesnt support .using() yet, we have to use raw sql
 // CREATE UNIQUE INDEX idx_username_lower ON palstreak_user (LOWER(username));
-export const users = pgTable("user", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => randomUUID()),
-  name: text("name"),
-  username: text("username").unique(),
-  email: text("email").notNull().unique(),
-  friendCount: integer("friendCount").notNull().default(0),
-  lastActive: timestamp("lastActive", { mode: "date", withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  longestCurrentStreak: integer("longestCurrentStreak").notNull().default(0),
-  consistencyScore: numeric("consistencyScore", {
-    precision: 5,
-    scale: 2,
-  })
-    .notNull()
-    .default("0"),
-  onboardingFinished: boolean("onboardingFinished").notNull().default(false),
-  emailVerified: timestamp("emailVerified", { mode: "date" }),
-  image: text("image"),
-}, (table) => ({
-  lastActiveIdx: index().on(table.lastActive),
+export const users = pgTable(
+  "user",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => randomUUID()),
+    name: text("name"),
+    username: text("username").unique(),
+    email: text("email").notNull().unique(),
+    friendCount: integer("friendCount").notNull().default(0),
+    lastActive: timestamp("lastActive", { mode: "date", withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    longestCurrentStreak: integer("longestCurrentStreak").notNull().default(0),
+    consistencyScore: numeric("consistencyScore", {
+      precision: 5,
+      scale: 2,
+    })
+      .notNull()
+      .default("0"),
+    onboardingFinished: boolean("onboardingFinished").notNull().default(false),
+    emailVerified: timestamp("emailVerified", { mode: "date" }),
+    image: text("image"),
+  },
+  (table) => ({
+    lastActiveIdx: index().on(table.lastActive),
+  }),
+);
+
+export const usersRelations = relations(users, ({ many }) => ({
+  habits: many(habit),
 }));
 
 export const friendRequests = pgTable(

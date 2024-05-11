@@ -1,5 +1,6 @@
 import signInAction from "@/actions/sign-in-action";
-import Button from "@/components/button";
+import HabitCard from "@/components/habit-card";
+import MockHabitCard from "@/components/mock-habit-card";
 import RightSidebarEmpty from "@/components/right-sidebar-empty";
 import Sidebar from "@/components/sidebar";
 import { db } from "@/db";
@@ -13,17 +14,42 @@ import { notFound } from "next/navigation";
 import { LuFlame, LuUsers2 } from "react-icons/lu";
 
 const getUserByUsername = async (username: string) => {
-  return db
-    .select({
-      username: users.username,
-      image: users.image,
-      lastActive: users.lastActive,
-      longestCurrentStreak: users.longestCurrentStreak,
-      friendCount: users.friendCount,
+  return await db.query.users
+    .findFirst({
+      columns: {
+        username: true,
+        image: true,
+        lastActive: true,
+        longestCurrentStreak: true,
+        friendCount: true,
+      },
+      where: eq(users.username, username),
+      with: {
+        habits: {
+          columns: {
+            userId: false,
+          },
+        },
+      },
     })
-    .from(users)
-    .where(eq(users.username, username))
-    .then((res) => (res.length > 0 ? res[0] : null));
+    .then((user) => {
+      if (!user) {
+        return null;
+      }
+
+      return {
+        ...user,
+        habits: user.habits.map((habit) => ({
+          ...habit,
+          streaks: Array.from({ length: 7 * 52 }).map((_, i) => ({
+            date: habit.streaks[i]?.date
+              ? new Date(habit.streaks[i].date)
+              : new Date(habit.createdAt.getTime() + i * 24 * 60 * 60 * 1000),
+            value: habit.streaks[i]?.value || 0,
+          })),
+        })).sort((a, b) => a.order - b.order),
+      };
+    })
 };
 
 export default async function Profile({
@@ -84,6 +110,15 @@ export default async function Profile({
                 friends
               </div>
             </div>
+          </div>
+        </div>
+
+        <div className="mt-8">
+          <h2 className="font-semibold">Habits</h2>
+          <div className="mt-4 gap-2 grid grid-cols-1 sm:grid-cols-2">
+            {user.habits.map((habit) => (
+              <MockHabitCard weeks={52} showButton={false} key={habit.id} habit={habit} />
+            ))}
           </div>
         </div>
       </main>

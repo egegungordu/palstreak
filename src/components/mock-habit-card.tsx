@@ -8,6 +8,7 @@ import { ContributionCalendar } from "./habit-card";
 export default function MockHabitCard({
   weeks = 28,
   habit: initialHabit,
+  showButton = true,
 }: {
   weeks?: number;
   habit: {
@@ -22,6 +23,7 @@ export default function MockHabitCard({
       }
     >;
   };
+  showButton?: boolean;
 }) {
   const [habit, setHabit] = useState(initialHabit);
   const [isTodayCompleted, setTodayCompleted] = useState(false);
@@ -39,48 +41,50 @@ export default function MockHabitCard({
             {habit.name}
           </div>
 
-          <button
-            disabled={isTodayCompleted}
-            onClick={() => {
-              setPending(true);
-              setTimeout(() => {
-                setTodayCompleted(true);
-                setHabit((prev) => {
-                  if (prev.currentDayIndex === undefined) {
-                    return prev;
-                  }
-                  return {
-                    ...prev,
-                    streaks: {
-                      ...prev.streaks,
-                      [prev.currentDayIndex]: {
-                        date: new Date(),
-                        value: 1,
+          {showButton && (
+            <button
+              disabled={isTodayCompleted}
+              onClick={() => {
+                setPending(true);
+                setTimeout(() => {
+                  setTodayCompleted(true);
+                  setHabit((prev) => {
+                    if (prev.currentDayIndex === undefined) {
+                      return prev;
+                    }
+                    return {
+                      ...prev,
+                      streaks: {
+                        ...prev.streaks,
+                        [prev.currentDayIndex]: {
+                          date: new Date(),
+                          value: 1,
+                        },
                       },
-                    },
-                  };
-                });
-                setPending(false);
-              }, 200);
-            }}
-            className="rounded-full flex text-xs items-center leading-none tracking-tight font-semibold disabled:font-medium disabled:text-text-disabled ml-auto shrink-0 bg-transparent text-text-faded shadow-none p-0 hover:text-text-strong"
-          >
-            {isTodayCompleted ? (
-              <>
-                Completed
-                <LuCheckSquare className="w-4 h-4 ml-1.5" />
-              </>
-            ) : (
-              <>
-                Mark as done
-                {pending ? (
-                  <LuLoader className="w-4 h-4 ml-1.5 animate-spin" />
-                ) : (
-                  <LuSquare className="w-4 h-4 ml-1.5" />
-                )}
-              </>
-            )}
-          </button>
+                    };
+                  });
+                  setPending(false);
+                }, 200);
+              }}
+              className="rounded-full flex text-xs items-center leading-none tracking-tight font-semibold disabled:font-medium disabled:text-text-disabled ml-auto shrink-0 bg-transparent text-text-faded shadow-none p-0 hover:text-text-strong"
+            >
+              {isTodayCompleted ? (
+                <>
+                  Completed
+                  <LuCheckSquare className="w-4 h-4 ml-1.5" />
+                </>
+              ) : (
+                <>
+                  Mark as done
+                  {pending ? (
+                    <LuLoader className="w-4 h-4 ml-1.5 animate-spin" />
+                  ) : (
+                    <LuSquare className="w-4 h-4 ml-1.5" />
+                  )}
+                </>
+              )}
+            </button>
+          )}
         </div>
 
         <ContributionCalendar
