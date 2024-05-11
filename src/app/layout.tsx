@@ -40,7 +40,7 @@ export default async function RootLayout({
 
               {isLoggedIn && isOnboarded && (
                 <>
-                  <div className="flex justify-center lg:justify-between xl:justify-center gap-4 xl:gap-8 2xl:gap-12">
+                  <div vaul-drawer-wrapper="" className="flex justify-center lg:justify-between xl:justify-center gap-4 xl:gap-8 2xl:gap-12">
                     <LeftSidebar />
                     {children}
                   </div>
