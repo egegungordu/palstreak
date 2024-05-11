@@ -32,10 +32,13 @@ import updateHabit from "@/actions/update-habit";
 import { HABIT_COLORS } from "@/globals";
 import { defaultAnimateLayoutChanges, useSortable } from "@dnd-kit/sortable";
 import { AnimatePresence, motion } from "framer-motion";
+import IsMobile from "./is-mobile";
+import useIsMobile from "@/hooks/use-is-mobile";
 
 export default function HabitCard({ habit }: { habit: Habit }) {
   const [showStats, setShowStats] = useState(false);
   const [pending, startTransiiton] = useTransition();
+  const isMobile = useIsMobile();
   const currentDayIndex = useMemo(() => {
     const firstDay = new Date(
       habit.createdAt.getTime() - habit.timezoneOffset * 60 * 1000,
@@ -119,17 +122,19 @@ export default function HabitCard({ habit }: { habit: Habit }) {
           "bg-foreground group rounded-2xl shadow-md shadow-shadow max-w-min border border-border relative cursor-default overflow-hidden",
           {
             "opacity-40": isDragging,
+            "touch-manipulation": isMobile
           },
         )}
         style={{
           transform: `translateY(${transform?.y ?? 0}px)`,
           transition,
         }}
+        {...(isMobile ? listeners : {})}
       >
         <Tooltip content="Drag to reorder" side="left" disableHoverableContent>
           <button
             {...listeners}
-            className="absolute left-[3px] top-1/2 -translate-y-1/2 text-text-disabled group-hover:block hidden cursor-grab"
+            className="absolute left-[3px] top-1/2 -translate-y-1/2 text-text-disabled group-hover:block hidden cursor-grab touch-none"
             aria-label="Reorder"
           >
             <LuGripVertical className="w-4 h-4" />
@@ -144,11 +149,13 @@ export default function HabitCard({ habit }: { habit: Habit }) {
               {habit.name}
             </div>
 
-            <div className="hidden group-hover:flex gap-1 p-1 bg-foreground rounded-lg border border-border shadow shadow-shadow">
-              <EditHabitButton habit={habit} />
-              <DeleteHabitButton habit={habit} />
-              <DragHabitButton {...listeners} />
-            </div>
+            {!isMobile && (
+              <div className="hidden group-hover:flex gap-1 p-1 bg-foreground rounded-lg border border-border shadow shadow-shadow">
+                <EditHabitButton habit={habit} />
+                <DeleteHabitButton habit={habit} />
+                <DragHabitButton {...listeners} />
+              </div>
+            )}
 
             <button
               disabled={isTodayCompleted}
@@ -204,7 +211,7 @@ const DragHabitButton = (props: HTMLAttributes<HTMLButtonElement>) => {
       <button
         {...props}
         aria-label="Reorder"
-        className="flex rounded-md text-text-faded text-xs p-1.5 hover:bg-background-button-hover cursor-grab"
+        className="flex rounded-md text-text-faded text-xs p-1.5 hover:bg-background-button-hover cursor-grab touch-none"
       >
         <LuGrip className="w-3.5 h-3.5" />
       </button>

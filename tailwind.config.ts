@@ -61,7 +61,7 @@ const config: Config = {
         "content-show": "content-show 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         "habit-card-show":
           "habit-card-show 150ms cubic-bezier(0.16, 1, 0.3, 1)",
-        "habit-pop": "habit-pop 250ms ease-in-out forwards",
+        "habit-pop": "habit-pop 150ms ease-in-out forwards",
         "logo-show": "logo-show 300ms cubic-bezier(.17,.67,.78,1.32)",
         "inviting-arrow": "inviting-arrow 3s cubic-bezier(0.16, 1, 0.3, 1) infinite",
       },

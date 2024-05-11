@@ -8,10 +8,15 @@ import {
   DragOverlay,
   DragStartEvent,
   DropAnimation,
+  KeyboardSensor,
   MeasuringStrategy,
+  MouseSensor,
+  TouchSensor,
   UniqueIdentifier,
   closestCenter,
   defaultDropAnimationSideEffects,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -32,6 +37,7 @@ import { AnimatePresence } from "framer-motion";
 import { createRestrictToParentElementSmooth } from "@/lib/dnd-modifiers";
 import { LuLayoutGrid } from "react-icons/lu";
 import MockHabitCard from "./mock-habit-card";
+import useIsMobile from "@/hooks/use-is-mobile";
 
 const restrictToParentElementSmooth = createRestrictToParentElementSmooth({
   padding: 32,
@@ -39,6 +45,7 @@ const restrictToParentElementSmooth = createRestrictToParentElementSmooth({
 });
 
 export default function HabitsList({ habits }: { habits: Habit[] }) {
+  const isMobile = useIsMobile();
   const [pending, startTransition] = useTransition();
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const [optimisticState, moveOptimistic] = useOptimistic(
@@ -57,6 +64,19 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
       },
     }),
   };
+
+  const activationConstraint = {
+    delay: isMobile ? 150 : 0,
+    tolerance: 5
+  };
+
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint,
+  });
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint,
+  });
+  const sensors = useSensors(mouseSensor, touchSensor);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -122,6 +142,7 @@ export default function HabitsList({ habits }: { habits: Habit[] }) {
 
   return (
     <DndContext
+      sensors={sensors}
       measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
       modifiers={[restrictToParentElementSmooth]}
       onDragEnd={handleDragEnd}
