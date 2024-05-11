@@ -20,14 +20,14 @@ const generateLinks = (username: string) => [
     name: "Friends",
   },
   {
-    href: `/user/${username}`,
-    Icon: LuUser2,
-    name: "Profile",
-  },
-  {
     href: "/leaderboard",
     Icon: LuTrophy,
     name: "Leaderboard",
+  },
+  {
+    href: `/user/${username}`,
+    Icon: LuUser2,
+    name: "Profile",
   },
 ];
 

@@ -1,26 +1,17 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import React, { forwardRef, useState, useTransition } from "react";
+import React, { forwardRef, useState } from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Select from "@radix-ui/react-select";
 import * as Dialog from "@radix-ui/react-dialog";
 import Avatar from "boring-avatars";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { Session } from "next-auth";
-import { LuCamera, LuLoader, LuLogOut, LuSettings } from "react-icons/lu";
+import { LuLogOut, LuSettings } from "react-icons/lu";
 import { ChevronDownIcon, Cross2Icon } from "@radix-ui/react-icons";
-import { cn } from "@/lib/utils";
-import Button from "./button";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { AVATAR_COLORS, USERNAME_REGEX } from "@/globals";
-import updateSettings from "@/actions/update-settings";
+import { AVATAR_COLORS } from "@/globals";
 import { useRouter } from "next/navigation";
 import ThemeSwitcher from "./theme-switcher";
-import uploadProfilePicture from "@/actions/upload-profile-picture";
-import imageCompression from "browser-image-compression";
-import FakeLoadingBar from "./fake-loading-bar";
 import ProfileSettings from "./profile-settings";
 
 export default function AccountDropdown({ session }: { session: Session }) {
@@ -69,11 +60,7 @@ export default function AccountDropdown({ session }: { session: Session }) {
 
           {session && (
             <DropdownMenu.Item asChild>
-              <SettingsButton
-                userId={session.user.id}
-                image={session.user.image}
-                username={session.user.username ?? ""}
-              />
+              <SettingsButton />
             </DropdownMenu.Item>
           )}
 
@@ -107,10 +94,7 @@ const SignOutButton = forwardRef<HTMLButtonElement>(
   },
 );
 
-const SettingsButton = forwardRef(function SettingsButton(
-  user: { id: string; image: string | null | undefined; username: string },
-  ref,
-) {
+const SettingsButton = forwardRef(function SettingsButton(ref) {
   const [isOpened, setIsOpened] = useState(false);
 
   const handleOpenChange = (open: boolean) => {
