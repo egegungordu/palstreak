@@ -152,7 +152,7 @@ export default function HabitCard({ habit }: { habit: Habit }) {
         <Tooltip content="Drag to reorder" side="left" disableHoverableContent>
           <button
             {...listeners}
-            className="absolute left-[3px] top-1/2 -translate-y-1/2 text-text-disabled group-hover:block hidden cursor-grab touch-none"
+            className="absolute z-10 left-[3px] top-1/2 -translate-y-1/2 text-text-disabled group-hover:block hidden cursor-grab touch-none"
             aria-label="Reorder"
           >
             <LuGripVertical className="w-4 h-4" />
