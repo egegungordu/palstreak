@@ -85,6 +85,7 @@ export const users = pgTable(
     onboardingFinished: boolean("onboardingFinished").notNull().default(false),
     emailVerified: timestamp("emailVerified", { mode: "date" }),
     image: text("image"),
+    imageBig: text("imageBig"),
   },
   (table) => ({
     lastActiveIdx: index().on(table.lastActive),

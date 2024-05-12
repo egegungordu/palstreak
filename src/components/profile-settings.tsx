@@ -132,9 +132,9 @@ export default function ProfileSettings({
             )}
 
             <div className="group-hover:opacity-30 transition-opacity">
-              {session?.user.image ? (
+              {session?.user.imageBig ? (
                 <img
-                  src={session.user.image}
+                  src={session.user.imageBig}
                   alt="Profile picture"
                   className="size-24"
                 />

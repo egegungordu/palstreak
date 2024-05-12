@@ -135,9 +135,9 @@ export default function OnboardingForm() {
           )}
 
           <div className="group-hover:opacity-30 rounded-full transition-opacity overflow-hidden">
-            {data.user.image ? (
+            {data.user.imageBig ? (
               <img
-                src={data.user.image}
+                src={data.user.imageBig}
                 alt=""
                 className="size-24"
               />

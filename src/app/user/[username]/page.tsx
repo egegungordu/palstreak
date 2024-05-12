@@ -1,5 +1,4 @@
 import signInAction from "@/actions/sign-in-action";
-import Button from "@/components/button";
 import EditProfileButton from "@/components/edit-profile-button";
 import MockHabitCard from "@/components/mock-habit-card";
 import RightSidebarEmpty from "@/components/right-sidebar-empty";
@@ -12,7 +11,7 @@ import { relativeTime } from "@/lib/utils";
 import Avatar from "boring-avatars";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import { LuFlame, LuPencil, LuUsers2 } from "react-icons/lu";
+import { LuFlame, LuUsers2 } from "react-icons/lu";
 
 const getUserByUsername = async (username: string) => {
   return await db.query.users
@@ -20,6 +19,7 @@ const getUserByUsername = async (username: string) => {
       columns: {
         username: true,
         image: true,
+        imageBig: true,
         lastActive: true,
         longestCurrentStreak: true,
         friendCount: true,
@@ -71,10 +71,10 @@ export default async function Profile({
       <main className="w-full pt-8 pb-4 mx-auto lg:mx-0 px-4 md:px-2 max-w-screen-sm">
         <div className="flex items-center gap-4 sm:gap-8">
           <div className="shrink-0 size-20 sm:size-24 overflow-hidden isolate relative rounded-full shadow shadow-shadow max-w-fit after:absolute after:inset-0 after:ring-inset after:ring-2 after:ring-white/40 after:rounded-full">
-            {user.image ? (
+            {user.imageBig ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={user.image}
+                src={user.imageBig}
                 alt="Profile picture"
                 className="rounded-full size-20 sm:size-24 shrink-0"
               />

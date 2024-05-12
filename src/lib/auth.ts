@@ -12,12 +12,14 @@ declare module "next-auth" {
       id: string;
       onboardingFinished: boolean;
       username: string | null;
+      imageBig: string | null;
     } & DefaultSession["user"];
   }
 
   interface User {
     username: string | null;
     onboardingFinished: boolean;
+    imageBig: string | null;
   }
 }
 
@@ -25,6 +27,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     username: string | null;
     onboardingFinished: boolean;
+    imageBig: string | null;
   }
 }
 
@@ -33,6 +36,7 @@ declare module "@auth/core/adapters" {
   interface AdapterUser {
     username: string | null;
     onboardingFinished: boolean;
+    imageBig: string | null;
   }
 }
 
@@ -71,6 +75,7 @@ drizzleAdapter.getUser = async (id) => {
     name: user[0].name,
     email: user[0].email,
     image: user[0].image,
+    imageBig: user[0].imageBig,
     emailVerified: user[0].emailVerified,
     onboardingFinished: user[0].onboardingFinished,
     username: user[0].username,
@@ -99,6 +104,7 @@ drizzleAdapter.getUserByAccount = async ({ providerAccountId }) => {
     name: user[0].name,
     email: user[0].email,
     image: user[0].image,
+    imageBig: user[0].imageBig,
     emailVerified: user[0].emailVerified,
     onboardingFinished: user[0].onboardingFinished,
     username: user[0].username,
@@ -121,6 +127,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.onboardingFinished = token.onboardingFinished;
       session.user.username = token.username;
       session.user.image = token.picture;
+      session.user.imageBig = token.imageBig;
       return session;
     },
     jwt: async ({ token, user, trigger }) => {
@@ -139,12 +146,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.onboardingFinished = dbUser[0].onboardingFinished;
         token.username = dbUser[0].username;
         token.picture = dbUser[0].image;
+        token.imageBig = dbUser[0].imageBig;
       }
 
       if (user) {
         token.sub = user.id!;
         token.onboardingFinished = user.onboardingFinished;
         token.username = user.username;
+        token.imageBig = user.imageBig;
       }
 
       return token;
